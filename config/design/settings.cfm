@@ -4,3 +4,9 @@
 	Example: <cfset set(dataSourceName="devDB")>
 --->
 
+<cfset set(overwritePlugins = true)>
+
+<cfset set(URLRewriting="On")>
+<cfset set(dataSourceName="chronos")>
+  
+<cfset set(functionName="sendEmail", server="", username="", password="")>

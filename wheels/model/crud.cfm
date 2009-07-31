@@ -1030,6 +1030,7 @@
 			{
 				ArrayAppend(loc.sql, variables.wheels.class.properties[loc.key].column);
 				ArrayAppend(loc.sql, ",");
+				//$dump(loc);
 				loc.param = {value=this[loc.key], type=variables.wheels.class.properties[loc.key].type, scale=variables.wheels.class.properties[loc.key].scale, null=this[loc.key] == ""};
 				ArrayAppend(loc.sql2, loc.param);
 				ArrayAppend(loc.sql2, ",");

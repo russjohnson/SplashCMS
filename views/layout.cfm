@@ -1,4 +1,6 @@
-<!--- Place HTML here that should be used as the default layout of your application --->
+<!--- We need to find someway to grab the layout and output it around the content --->
+
+
 <html>
 	<body>
 		<cfoutput>#contentForLayout()#</cfoutput>

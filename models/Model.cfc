@@ -3,4 +3,13 @@
 	Do not delete this file.
 --->
 <cfcomponent extends="wheels.Model">
+
+  <cffunction name="setCreatedByID">
+    <cfset this.createdById = session.currentUser.id>
+  </cffunction>
+  
+  <cffunction name="setUpdatedByID">
+    <cfset this.updatedById = session.currentUser.id>
+  </cffunction>
+  
 </cfcomponent>

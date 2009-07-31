@@ -1,0 +1,3 @@
+<cfoutput>
+  #page.title#
+</cfoutput>
