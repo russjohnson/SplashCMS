@@ -1,7 +1,7 @@
 <cfoutput>
 
   <div id="box">
-    <h1>Skweegee</h1>
+    <h1>CMS Login</h1>
     <div class="block" id="block-login">
       <h2>Login</h2>
     
@@ -19,7 +19,7 @@
           </cfif>  
         </div>
       
-        #startFormTag(action="create", class="form login")#
+        #startFormTag(route="login_path", class="form login")#
           <div class="group">
             <div class="left">
               <label class="label right">Login</label>
@@ -41,7 +41,6 @@
           <div class="group navform">
             <div class="right">
               #submitTag(value="Login", class="button")#
-              <p>Don't have an account? #linkTo(text="Sign up!", route="signup")#</p>
             </div>
             <div class="clear"></div>
           </div>

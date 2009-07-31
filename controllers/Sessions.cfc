@@ -10,7 +10,7 @@
 	<cffunction name="create">
 		<cfif params.login is "" or params.password is "">
 			<cfset flashInsert(error="Login failed, please try again")>
-			<cfset redirectTo(action="new")>
+			<cfset redirectTo(route="login")>
 		<cfelse>
 			<cfset $passwordAuthentication(params.login, params.password) />
 		</cfif>
@@ -57,7 +57,7 @@
 		
 		<!--- This redirects the user to the default account page but you can change this to go where you want --->
 		<cfset flashInsert(success="Hello <strong>#session.currentUser.name#</strong>! You are now signed in.")>
-		<cfset redirectTo(route="home")>
+		<cfset redirectTo(route="admin_path")>
 	</cffunction>
 	
 	<cffunction name="$failedLogin">
@@ -65,7 +65,7 @@
 			TODO : would like to add a method call here to update a failed login table...
 		--->
 		<cfset flashInsert(error="Login failed, please try again!")>
-		<cfset redirectTo(action="new")>
+		<cfset redirectTo(route="login")>
 	</cffunction>
 	
 </cfcomponent>

@@ -1,7 +1,13 @@
+<cfhtmlhead text='<script type="text/javascript" src="/javascripts/jquery.slug.js"></script>'>
+
 <script type="text/javascript">
 $(document).ready(function()
 {
-  //hide the all of the element with class msg_body
+  
+  // slug function
+  $("#page-title").slug({hide: false});
+  
+  
   $(".more").hide();
   //toggle the componenet with class msg_body
   $(".hideShow").click(function()
@@ -38,7 +44,7 @@ $(document).ready(function()
 		<div class="more">
 		  
 		  	<p><label class="label">Slug</label>
-						#textField(objectName='page', property='slug', class="text_field")#</p>
+						#textField(objectName='page', property='slug', class="text_field slug")#</p>
 						
 				<p><label class="label">Breadcrumb</label>
 						#textField(objectName='page', property='breadcrumb', class="text_field")#</p>

@@ -4,7 +4,7 @@
 
 	#errorMessagesFor("layout")#
 	
-	#startFormTag(action="update", class="form", key=params.key)#
+	#startFormTag(route="update_layout_path", class="form", key=params.key)#
 		
 		#includePartial('form')#
 				

@@ -82,7 +82,7 @@
   </cffunction>
 
   <cffunction name="delete">
-  	<cfset "#modelName()#" = model(modelName()).findByKey(params.key)>
+  	<cfset "#modelName()#" = model(modelName()).findByKey(key.id)>
 	
   	<!--- Verify that the record deletes successfully --->
   	<cfif evaluate(modelName()).delete()>

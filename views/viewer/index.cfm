@@ -1,3 +1,3 @@
 <cfoutput>
-  #page.title#
+  #renderedPage#
 </cfoutput>

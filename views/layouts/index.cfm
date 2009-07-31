@@ -10,7 +10,7 @@
   <cfoutput query="layouts">
   <tr>
     <td>#linkTo(text=name, route="edit_layout_path", key=id, class="layout")#</td>
-    <td>#linkTo(text='#imageTag("remove.png")#', action='delete', key=id, confirm='Are you sure you want to delete this Layout? This cannot be undone!')#</td>
+    <td>#linkTo(text='#imageTag("remove.png")#', route='delete_layout_path', id=id, confirm='Are you sure you want to delete this Layout? This cannot be undone!')#</td>
   </tr>
   </cfoutput>
 </table>

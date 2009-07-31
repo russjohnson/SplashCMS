@@ -1,7 +1,8 @@
 <cfcomponent extends="lib.ModelControllerMethods">
   
   <cffunction name="init">
-    <cfset layout("/layout_admin")>
+    <cfset layout("/layout_login")>
+    <cfset filters(through="loginRequired")>
   </cffunction>
   
   <cffunction name="create">

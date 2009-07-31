@@ -4,7 +4,7 @@
 			
 	#errorMessagesFor("layout")#
 
-	#startFormTag(action="create", class="form")#
+	#startFormTag(route="create_layout_path", class="form")#
 
     #includePartial('form')#
     

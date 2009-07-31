@@ -14,6 +14,9 @@
 	  --->
     <cfparam name="params.slug" default="home">
     <cfset page = model('page').findOneBySlug(params.slug)>
+    <cfset pageBody = model('pagePart').findOneByPageidAndName('#page.id#, body')>
+    <cfset pageLayout = page.pageLayout()>
+    <cfset renderedPage = parseDSL(pageLayout.content)>
   </cffunction>
 	
 </cfcomponent>

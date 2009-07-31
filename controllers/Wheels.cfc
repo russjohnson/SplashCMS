@@ -3,6 +3,10 @@
 	Do not delete this file.
 --->
 <cfcomponent extends="Controller">
+  
+  <cffunction name="init">
+    <cfset filters(through="loginRequired")>
+  </cffunction>
 
 	<cffunction name="congratulations">
 		<cfset version = application.wheels.version>

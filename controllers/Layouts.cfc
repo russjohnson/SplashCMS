@@ -2,6 +2,7 @@
   
   <cffunction name="init">
     <cfset layout("/layout_admin")>
+    <cfset filters(through="loginRequired")>
   </cffunction>
   
   <cffunction name="create">
@@ -12,7 +13,7 @@
       <cfset redirectTo(route="layouts_path")>
     <cfelse>
       <cfset flashInsert(error="There was an error creating the layout.")>
-  		<cfset renderPage(action="new")>
+  		<cfset renderPage(route="layouts_path")>
     </cfif>
   </cffunction>
   
@@ -24,7 +25,19 @@
       <cfset redirectTo(route="layouts_path")>
   	<cfelse>
   		<cfset flashInsert(error="There was an error updating the layout.")>
-  		<cfset renderPage(action="edit")>
+  		<cfset renderPage(route="layouts_path")>
+  	</cfif>
+  </cffunction>
+  
+  <cffunction name="delete">
+  	<cfset layout = model('layout').findByKey(params.id)>
+	
+  	<cfif layout.delete()>
+  		<cfset flashInsert(success="The layout was deleted successfully. Make sure that none of your pages are using it.")>	
+      <cfset redirectTo(route="layouts_path")>
+  	<cfelse>
+  		<cfset flashInsert(error="There was an error deleting the layout.")>
+  		<cfset redirectTo(route="layouts_path")>
   	</cfif>
   </cffunction>
 	
