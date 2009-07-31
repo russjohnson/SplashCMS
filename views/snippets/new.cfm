@@ -3,7 +3,7 @@
 <cfoutput>
 #errorMessagesFor("snippet")#
 	
-	#startFormTag(action="create", class="form")#
+	#startFormTag(route="create_snippet_path", class="form")#
 	
 		#includePartial('form')#
 			

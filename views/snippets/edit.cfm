@@ -4,7 +4,7 @@
 			
 	#errorMessagesFor("snippet")#
 	
-	#startFormTag(action="update", key=params.key, class="form")#
+	#startFormTag(route="update_snippet_path", key=params.key, class="form")#
 		
 		#includePartial('form')#
 				
