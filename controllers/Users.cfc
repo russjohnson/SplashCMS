@@ -54,8 +54,8 @@
 		
 		<cfif user.save()>
 		  
-			<cfset flashInsert(success="Thanks for signing up! You cannot login yet however. We have sent you an email with a link to verify your email address.")>
-      <cfset redirectTo(route="login")>
+			<cfset flashInsert(success="The user was created successfully.")>
+      <cfset redirectTo(route="users_path")>
 		<cfelse>
 			<cfset flashInsert(error="There was an error creating the user.")>
 			<cfset renderPage(action="new")>
@@ -65,10 +65,20 @@
 	<cffunction name="update">
 		<cfset user = model("User").findByKey(params.key)>
 		
-		<!--- Verify that the user updates successfully --->
-		<cfif user.update(params.user)>
+		<cfset user.username = params.user['username']>
+		<cfset user.name = params.user['name']>
+		<cfset user.email = params.user['email']>
+		<cfset user.admin = params.user['admin']>
+		<cfset user.developer = params.user['developer']>
+		
+		<cfif params.user['password'] is not "">
+		  <cfset user.password = params.user['password']>
+		</cfif>
+		
+		
+		<cfif user.update()>
 			<cfset flashInsert(success="The user was updated successfully.")>	
-      <cfset redirectTo(action="show", key=user.id)>
+      <cfset redirectTo(route="users_path")>
 		<cfelse>
 			<cfset flashInsert(error="There was an error updating the user.")>
 			<cfset renderPage(action="edit")>

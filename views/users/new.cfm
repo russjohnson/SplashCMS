@@ -1,36 +1,13 @@
-<h2>Sign up</h2>
+<h1>New User</h1>
 
 <cfoutput>
 	#errorMessagesFor("user")#
 
-	#startFormTag(action="create")#
+	#startFormTag(route="create_user_path", class="form")#
 	
-	  <p>
-	    <label>Username</label>
-		  #textField(objectName='user', property='username')#
-		</p>
-		
-		<p>
-		  <label>Name</label>
-			#textField(objectName='user', property='name')#
-		</p>
-		
-		<p>
-		  <label>Email</label>
-			#textField(objectName='user', property='email')#
-		</p>
-			
-		<p>
-		  <label>Password</label>
-		  #textField(objectName='user', property='password')#
-		</p>
-		
-		<p>
-		  <label>Confirm Password</label>
-			#textField(objectName='user', property='passwordConfirmation')#
-		</p>
+	  #includePartial('form')#
 
-	#submitTag()#
+	  #submitTag(class="button", value="Create User &rarr;")# or #linkTo(text="Cancel", route="users_path")#
 		
 	#endFormTag()#
 </cfoutput>

@@ -1,28 +1,31 @@
+<h1>Users</h1>
+
 <table class="table">
   <tr>
-		<th>Id</th>
-		<th>Login</th>
-		<th>Email</th>
-		<th>Actions</th>
+		<th class="first">Name / Login</th>
+		<th>Roles</th>
+		<th class="last">&nbsp;</th>
   </tr>
   <cfoutput query="users">
   	<tr>
-		<td>
-			#id#
-		</td>
-		<td>
-			#login#
-		</td>
-		<td>
-			#email#
-		</td>
-		<td>
-			#linkTo(text='Show', action='show', key=id)# | 
-			#linkTo(text='Edit', action='Edit', key=id)# | 
-			#linkTo(text='Delete', action='Delete', key=id, confirm='Are you sure?')#
-		</td>            
+		  <td>
+    		#linkTo(text="#name#", route="edit_user_path", key="#id#", class="user")# <span class="gray">#username#</span>
+    	</td>
+    	<td>
+    		<cfif admin>Administrator</cfif> <cfif developer>Developer</cfif>
+    	</td>
+    	<td>
+    	  <cfif id eq '1'>
+    	    #imageTag('remove-disabled.png')#
+    	  <cfelse>
+    		#linkTo(text='#imageTag("remove.png")#', route='delete_user_path', id=id, confirm='Are you sure you want to delete this User? This cannot be undone!')#
+    		</cfif>
+    	</td>            
 	  </tr>
   </cfoutput>
 </table>
 
+<cfoutput>
+	<p>#linkTo(text="<span class='new-user'>New User</span>", route="new_user_path", class="button_wide")#</p>
+</cfoutput>
 

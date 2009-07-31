@@ -37,6 +37,11 @@ body {
   text-decoration: none;
 }
 
+#header .site-link {
+  float:right;
+  padding:3px 5px;
+}
+
 #main {  
   width: 100%;
   float: left;    
@@ -243,6 +248,16 @@ table td a.page {
 	line-height:1.8em;
 }
 
+table td a.user {
+  color:#000;
+  font-size:17px;
+  font-weight:bold;
+  text-decoration:none;
+  /*background:url("/images/page.png") no-repeat 0 0;
+	text-indent:35px;
+	display:block;*/
+	line-height:1.8em;
+}
 
 
 .table td.last {
@@ -402,6 +417,12 @@ a.button_wide .new-snippet{
 a.button_wide .new-layout{
 	background:url("/images/new-layout.png") no-repeat 5px 3px;
 	text-indent:35px;
+	display:block;
+}
+
+a.button_wide .new-user{
+	background:url("/images/new-user.png") no-repeat 7px 5px;
+	text-indent:40px;
 	display:block;
 }
 

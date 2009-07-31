@@ -13,6 +13,7 @@
     
 		<!--- this callback is for encypting the password after validation and before saving the user --->
 		<cfset beforeCreate("setPassword") />
+		<cfset beforeUpdate("checkPassword")>
 	</cffunction>
 	
 	<cffunction name="isPassword">
@@ -33,6 +34,12 @@
 	<cffunction name="setPassword">
 		<cfif structKeyExists(this,"password")>
 	    	<cfset this.password = hash(this.password, "SHA-512") /> 			
+		</cfif>
+	</cffunction>
+	
+	<cffunction name="checkPassword">
+		<cfif this.hasChanged(property='password')>
+	    	<cfset this.setPassword() /> 			
 		</cfif>
 	</cffunction>
 	

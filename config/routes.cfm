@@ -31,6 +31,13 @@
 <cfset addRoute(name="edit_layout_path", pattern="/admin/layouts/edit/[key]", controller="layouts", action="edit")>
 <cfset addRoute(name="layouts_path", pattern="/admin/layouts", controller="layouts", action="index")>
 
+<!--- USER MANAGEMENT ROUTES --->
+<cfset addRoute(name="new_user_path", pattern="/admin/users/new", controller="users", action="new")>
+<cfset addRoute(name="edit_user_path", pattern="/admin/users/edit/[key]", controller="users", action="edit")>
+<cfset addRoute(name="delete_user_path", pattern="/admin/users/delete/[id]", controller="users", action="delete")>
+<cfset addRoute(name="create_user_path", pattern="/admin/users/create", controller="users", action="create")>
+<cfset addRoute(name="update_user_path", pattern="/admin/users/update/[key]", controller="users", action="update")>
+<cfset addRoute(name="users_path", pattern="/admin/users", controller="users", action="index")>
 
 <!--- ADMIN HOME --->
 <cfset addRoute(name="admin_path", pattern="/admin", controller="pages", action="index")>

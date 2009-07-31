@@ -28,6 +28,15 @@ hr {
   color: #FFF;
 }
 
+#header .site-link a {
+  color:#fff;
+  background:#470E0E;
+  text-decoration:none;
+  padding:3px 5px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+}
+
 #user-navigation {
   top: auto;
   bottom: 5px;

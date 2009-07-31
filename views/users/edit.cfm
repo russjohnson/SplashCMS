@@ -1,34 +1,14 @@
+<h1>Edit User</h1>
+
 <cfoutput>
 
 	#errorMessagesFor("user")#
 
-	#startFormTag(action="update", class="form")#
+	#startFormTag(route="update_user_path", key=params.key, class="form")#
 		
-		<div class="group">
-			#hiddenField(objectName='user', property='id')#
-		</div>	
+		#includePartial('form')#
 		
-		<div>
-			#textField(objectName='user', property='login', label='Username <em>*</em>')#
-		</div>	
-
-		<div>
-			#textField(objectName='user', property='email', label='Email <em>*</em>')#
-		</div>	
-		
-		<div>
-			<cfloop query="roles">
-				<input type="checkbox" name="user[assignedRoles]" id="user-assigned-roles" value="#roles.name#" <cfif listfind("#user.assignedRoles#", "#roles.name#")>checked</cfif>> #roles.name#<br/>
-			</cfloop>
-		</div>		
-
-		<div class="clear"></div>
-		<div class="group navform">
-			#submitTag()#
-		</div>
+		#submitTag(class="button", value="Update User &rarr;")# or #linkTo(text="Cancel", route="users_path")#
 		
 	#endFormTag()#
-	
-
-#linkTo(text="Return to the listing", action="index")#
 </cfoutput>

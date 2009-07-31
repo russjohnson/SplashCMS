@@ -10,6 +10,9 @@
       <li <cfif params.controller is 'layouts'>class="active"</cfif>>
         #linkTo(text="Layouts", route="layouts_path")#
       </li>
+      <li <cfif params.controller is 'users'>class="active"</cfif>>
+        #linkTo(text="Users", route="users_path")#
+      </li>
       <li <cfif params.controller is 'settings'>class="active"</cfif>>
         <a href="">Settings</a>
       </li>
