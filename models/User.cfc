@@ -14,6 +14,8 @@
 		<!--- this callback is for encypting the password after validation and before saving the user --->
 		<cfset beforeCreate("setPassword") />
 		<cfset beforeUpdate("checkPassword")>
+		<cfset beforeCreate('setCreatedByID')>
+	  <cfset beforeUpdate('setUpdatedByID')>
 	</cffunction>
 	
 	<cffunction name="isPassword">
