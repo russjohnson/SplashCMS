@@ -8,7 +8,7 @@
   
 <!--- PAGE ROUTES --->
 <cfset addRoute(name="new_page_path", pattern="/admin/pages/[parentID]/child/new", controller="pages", action="new")>
-<cfset addRoute(name="edit_page_path", pattern="/admin/pages/edit/[key]", controller="pages", action="edit")>
+<cfset addRoute(name="edit_page_path", pattern="/admin/pages/[parentID]/child/edit/[key]", controller="pages", action="edit")>
 <cfset addRoute(name="delete_page_path", pattern="/admin/pages/delete/[id]", controller="pages", action="delete")>
 <cfset addRoute(name="create_page_path", pattern="/admin/pages/[parentID]/create", controller="pages", action="create")>
 <cfset addRoute(name="update_page_path", pattern="/admin/pages/update/[key]", controller="pages", action="update")>

@@ -32,7 +32,7 @@ $(document).ready(function()
 			
   #errorMessagesFor("page")#
 	
-	#startFormTag(action="create", class="form")#
+	#startFormTag(route="create_page_path", parentID=params.parentID, class="form")#
 		
 		#hiddenField(objectName="page", property="parentid")#
 				
@@ -61,6 +61,7 @@ $(document).ready(function()
 		
 	  <p>
 	    <label class="label">Body</label>
+	    #hiddenField(objectName="pagePart", property="name")#
 	    #textArea(objectName="pagePart", property="content", class="text_area", rows="10")#
 	  </p>
 	 
@@ -69,10 +70,10 @@ $(document).ready(function()
   	  #select(objectName='page', property='layoutID', options=layouts, valueField="id", textField="name")#
   	  &nbsp;&nbsp;&nbsp;&nbsp;
   	<label><strong>Page Type</strong></label>
-  	  #select(objectName='page', property='classID', options=pageClasses, valueField="id", textField="name")#
+  	  #select(objectName='page', property='pageClassID', options=pageClasses, valueField="id", textField="name")#
   	  &nbsp;&nbsp;&nbsp;&nbsp;
   	<label><strong>Status</strong></label>
-  	 #select(objectName="page", property="statusID", options=status)#
+  	 #select(objectName="page", property="status", options=status)#
   </p>
 					
 	  	<p>#submitTag(class="button", value="Save Page &rarr;")# or #linkTo(text="Cancel", route="pages_path")#</p>

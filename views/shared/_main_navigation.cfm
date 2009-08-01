@@ -13,9 +13,9 @@
       <li <cfif params.controller is 'users'>class="active"</cfif>>
         #linkTo(text="Users", route="users_path")#
       </li>
-      <li <cfif params.controller is 'settings'>class="active"</cfif>>
+      <!---<li <cfif params.controller is 'settings'>class="active"</cfif>>
         <a href="">Settings</a>
-      </li>
+      </li>--->
     </ul>
     <div class="clear"></div>
   </div>

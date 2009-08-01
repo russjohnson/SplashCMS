@@ -5,14 +5,10 @@
 <cfcomponent extends="Controller">
 	
 	<cffunction name="init">
-		
 	</cffunction>
 	
 	<cffunction name="index">
-	  <!---
-	   TODO this method needs to parse the layout and page to process the DSL and include relevant files, etc.
-	  --->
-    <cfparam name="params.slug" default="home">
+    <cfparam name="params.slug" default="/">
     <cfset page = model('page').findOneBySlug(params.slug)>
     <cfset pageBody = model('pagePart').findOneByPageidAndName('#page.id#, body')>
     <cfset pageLayout = page.pageLayout()>

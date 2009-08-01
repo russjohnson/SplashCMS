@@ -8,7 +8,7 @@
   </tr>
   <cfoutput query="pages">
   <tr>
-    <td>#linkTo(text=title, route="edit_page_path", key=id, class="page")#</td>
+    <td>#linkTo(text=title, route="edit_page_path", key=id, parentID=parentid, class="page")#</td>
     <td>#status#</td>
     <td>
       #linkTo(text='#imageTag("add-child.png")#', route='new_page_path', parentid=id)#
