@@ -2,3 +2,6 @@ config/environment.cfm
 WEB-INF
 */.DS_Store
 .project
+/public/images/*
+/public/stylesheets/*
+/public/javascripts/*
