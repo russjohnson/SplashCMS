@@ -10,9 +10,13 @@
 	<cffunction name="index">
     <cfparam name="params.slug" default="/">
     <cfset page = model('page').findOneBySlug(params.slug)>
-    <cfset pageBody = model('pagePart').findOneByPageidAndName('#page.id#, body')>
-    <cfset pageLayout = page.pageLayout()>
-    <cfset renderedPage = parseDSL(pageLayout.content)>
+    
+    <!--- todo: we need to make sure a page was returned, if not redirect to the home page --->
+    <cfif isObject(page)>
+      <cfset renderedPage = page.process()>
+    <cfelse>
+      <!--- set something in the flash here and redirect home --->
+    </cfif>
   </cffunction>
 	
 </cfcomponent>

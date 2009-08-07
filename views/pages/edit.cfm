@@ -32,7 +32,12 @@ $(document).ready(function()
 			
   #errorMessagesFor("page")#
 	
-	#startFormTag(route="update_page_path", parentID=params.parentID, key=params.key, class="form")#
+	<cfif structKeyExists(params, 'parentID')>
+	  #startFormTag(route="update_page_path", parentID=params.parentID, key=params.key, class="form")#
+	<cfelse>
+	  #startFormTag(route="update_page_path", key=params.key, class="form")#
+	    #hiddenField(objectName="page", property="parentID")#
+	</cfif>
 				
 		<p><label class="label">Page Title</label>
 			#textField(objectName='page', property='title', class="text_field")#</p>
