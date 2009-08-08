@@ -463,3 +463,7 @@ ul.error-messages {
 ul.error-messages li {
   padding:3px;
 }
+
+.page-properties {
+  float:right;
+}

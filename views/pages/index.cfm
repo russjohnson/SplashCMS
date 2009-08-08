@@ -1,3 +1,12 @@
+<script type="text/javascript">
+    $(document).ready(function()  {
+      $("#pageTree").treeTable();
+      
+      // expand the home node by default
+      $("#node-1").expand();
+    });
+  </script>
+
 <h1>Pages</h1>
 
 <table id="pageTree" class="table">

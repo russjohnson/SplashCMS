@@ -18,7 +18,7 @@ hr {
 }
 
 #header {
- background:#2F427A;
+ background: #000 url( "/images/header_bkgd.gif" ) repeat-x ;
 }
 
 #header h1 {
@@ -254,6 +254,24 @@ ul.list li .item .avatar {
 #box .block h2 {
   background: #2F427A;  
   color: #FFF;
+}
+
+.page-properties a {
+  text-decoration:none;
+  background:#106597;
+  color:#fff;
+  padding:3px 5px;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+}
+
+.page-properties a:hover {
+  text-decoration:none;
+  background:#666666;
+  color:#fff;
+  padding:3px 5px;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
 }
 
 

@@ -1,30 +1,21 @@
 <cfhtmlhead text='<script type="text/javascript" src="/javascripts/jquery.slug.js"></script>'>
 
 <script type="text/javascript">
-$(document).ready(function()
-{
-  
+$(document).ready(function(){
   // slug function
   $("#page-title").slug({hide: false});
   
-  
   $(".more").hide();
-  //toggle the componenet with class msg_body
-  $(".hideShow").click(function()
-  {
-    $(".morelink").hide();
-    $(".more").slideToggle(600);
-    return false;
-  });
-  
-   $(".lessClick").click(function()
-  {
-    $(".morelink").show();
+  $(".hideShow").click(function(){
     $(".more").slideToggle(600);
     return false;
   });
 });
 </script>
+
+<div class="page-properties">
+  <a href="" class="hideShow">Page Properties</a>
+</div>
 
 <h1>New Page</h1>
 
@@ -38,8 +29,6 @@ $(document).ready(function()
 				
 		<p><label class="label">Page Title</label>
 			#textField(objectName='page', property='title', class="text_field")#</p>
-		
-		<p class="morelink"><a href="" class="hideShow">more</a></p>
 													
 		<div class="more">
 		  
@@ -54,9 +43,6 @@ $(document).ready(function()
 							
 				<p><label class="label">Keywords</label>
 						#textField(objectName='page', property='keywords', class="text_field")#</p>
-						
-			<a href="" class="lessClick">less</a>
-				
 		</div>
 		
 	  <p>
