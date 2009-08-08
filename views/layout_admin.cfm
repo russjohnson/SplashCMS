@@ -10,6 +10,14 @@
   <link rel="stylesheet" id="current-theme" href="/stylesheets/themes/blue/style.css" type="text/css" media="screen" />
   <script type="text/javascript" charset="utf-8" src="/javascripts/jquery-1.3.min.js"></script>
   <script type="text/javascript" charset="utf-8" src="/javascripts/jquery.TreeTable.min.js"></script>
+  
+  <script type="text/javascript" src="/javascripts/markitup/jquery.markitup.pack.js"></script>
+  <!-- markItUp! toolbar settings -->
+  <script type="text/javascript" src="/javascripts/markitup/sets/textile/set.js"></script>
+  <!-- markItUp! skin -->
+  <link rel="stylesheet" type="text/css" href="/javascripts/markitup/skins/simple/style.css" />
+  <!--  markItUp! toolbar skin -->
+  <link rel="stylesheet" type="text/css" href="/javascripts/markitup/sets/textile/style.css" />
 
 </head>
 <body>

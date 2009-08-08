@@ -31,11 +31,11 @@ hr {
 
 #header .site-link a {
   color:#fff;
-  background:#470E0E;
+  background:#106597;
   text-decoration:none;
   padding:3px 5px;
-  -moz-border-radius: 3px;
-  -webkit-border-radius: 3px;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
   margin-top:18px;
 }
 

@@ -10,11 +10,30 @@ $(document).ready(function(){
     $(".more").slideToggle(600);
     return false;
   });
+  
+  // Add markItUp! to your textarea in one line
+	// $('textarea').markItUp( { Settings }, { OptionalExtraSettings } );
+	$('#pagePart-content').markItUp(mySettings);
+	
+
+	// $(textarea).markItUpRemove();
+	$('.toggle').click(function() {
+		if ($("#pagePart-content.markItUpEditor").length === 1) {
+ 			$("#pagePart-content").markItUpRemove();
+			$("span", this).text("Show Editor");
+		} else {
+			$('#pagePart-content').markItUp(mySettings);
+			$("span", this).text("Remove Editor");
+		}
+ 		return false;
+	});
+  
+  
 });
 </script>
 
 <div class="page-properties">
-  <a href="" class="hideShow">Page Properties</a>
+  <a href="" class="hideShow">Page Properties</a> <a href="" class="toggle"><span>Remove Editor</span></a>
 </div>
 
 <h1>New Page</h1>
@@ -48,7 +67,7 @@ $(document).ready(function(){
 	  <p>
 	    <label class="label">Body</label>
 	    #hiddenField(objectName="pagePart", property="name")#
-	    #textArea(objectName="pagePart", property="content", class="text_area", rows="10")#
+	    #textArea(objectName="pagePart", property="content", class="text_area", rows="15")#
 	  </p>
 	 
 	 <p>

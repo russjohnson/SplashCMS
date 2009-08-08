@@ -55,6 +55,7 @@
         <cfset pagePart = model('pagePart').findOneByPageidAndName("#this.id#, #pagePartName#")>
         <cfif isObject(pagePart)>
           <cfset pagePart = parseSnippets(pagePart.content)>
+          <cfset pagePart = textile(pagePart)>
           <cfset content = replaceNoCase(content, splashTag, pagePart)>
         <cfelse>
           <!--- if we cant find the pagePart just replace the tag with a comment --->
