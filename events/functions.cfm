@@ -1,38 +1,10 @@
-<!--- Place functions here that should be globally available in your application. ---> 
-
-<cffunction name="parseDSL">
-  <cfargument name="code" type="string" required="true" />
-  <cfset var loc = arguments.code>
- 
-  <cfif findNoCase("<s:title />", loc)>
-    <cfset loc = replaceNoCase(loc, '<s:title />', page.title, "ALL")>
-  </cfif>
-  <!---<cfif findNoCase("<s:content", loc)>
-    <cfset loc = replaceNoCase(loc, '<s:content />', pageBody.content)>
-  </cfif>
-  <cfif findNoCase("<s:snippet", loc)>
-    <cfset loc = replaceNoCase(loc, '<s:content />', pageBody.content)>
-  </cfif>--->
-  <cfset loc = fixScriptTags(loc)>
-    <cfset var splashTag = getTags(stripMode="disallow", myTags="content", myString="#loc#", findOnly="true")>
-    <cfset xmlTag = xmlParse(splashTag)>
-    <cfdump var="#xmltag.xmlRoot.xmlAttributes.name#"><cfabort>
-  <cfreturn loc>
-</cffunction>
-
-
-
 <cfscript>
 /**
-* Strip xml-like tags from a string when they are within or not within a list of tags.
-* 
 * @param stripmode      A string, disallow or allow. Specifies if the list of tags in the mytags attribute is a list of tags to allow or disallow. (Required)
 * @param mytags      List of tags to either allow or disallow. (Required)
 * @param mystring      The string to check. (Required)
 * @param findonly      Boolean value. If true, returns the first match. If false, all instances are replaced. (Optional)
 * @return Returns either a string or the first instance of a match. 
-* @author Isaac Dealey (info@turnkey.to) 
-* @version 2, September 22, 2004 
 */
 function getSplashTag(stripmode,mytags,mystring) {
     var spanquotes = "([^"">]*""[^""]*"")*";
@@ -92,3 +64,73 @@ function getSplashTag(stripmode,mytags,mystring) {
     else { return mystring; } // return the new string discluding any invalid tags
 }
 </cfscript>
+
+<!---
+QueryTreeSort takes a query and efficiently (O(n)) resorts it hierarchically (parent-child), adding a Depth column that can then be used when displaying the data.
+
+@param stuff      Query to sort. (Required)
+@param parentid      Column containing parent id. Defaults to parentid. (Optional)
+@param itemid      Column containing ID value. Defaults to itemid. (Optional)
+@param basedepth      Base depth of data. Defaults to 0. (Optional)
+@param depthname      Name for new column to use for depth. Defaults to TreeDepth. (Optional)
+@return Returns a query. 
+@author Rick Osborne (deliver8r@gmail.com) 
+@version 1, April 9, 2007 
+--->
+<cffunction name="queryTreeSort" returntype="query" output="No">
+    <cfargument name="Stuff" type="query" required="Yes">
+    <cfargument name="ParentID" type="string" required="No" default="ParentID">
+    <cfargument name="ItemID" type="string" required="No" default="ID">
+    <cfargument name="BaseDepth" type="numeric" required="No" default="0">
+    <cfargument name="DepthName" type="string" required="No" default="node">
+    <cfset var RowFromID=StructNew()>
+    <cfset var ChildrenFromID=StructNew()>
+    <cfset var RootItems=ArrayNew(1)>
+    <cfset var Depth=ArrayNew(1)>
+    <cfset var ThisID=0>
+    <cfset var ThisDepth=0>
+    <cfset var RowID=0>
+    <cfset var ChildrenIDs="">
+    <cfset var ColName="">
+    <cfset var Ret=QueryNew(ListAppend(Stuff.ColumnList,Arguments.DepthName))>
+    <!--- Set up all of our indexing --->
+    <cfloop query="Stuff">
+        <cfset RowFromID[Stuff[Arguments.ItemID][Stuff.CurrentRow]]=CurrentRow>
+        <cfif NOT StructKeyExists(ChildrenFromID, Stuff[Arguments.ParentID][Stuff.CurrentRow])>
+            <cfset ChildrenFromID[Stuff[Arguments.ParentID][Stuff.CurrentRow]]=ArrayNew(1)>
+        </cfif>
+        <cfset ArrayAppend(ChildrenFromID[Stuff[Arguments.ParentID][Stuff.CurrentRow]], Stuff[Arguments.ItemID][Stuff.CurrentRow])>
+    </cfloop>
+    <!--- Find parents without rows --->
+    <cfloop query="Stuff">
+        <cfif NOT StructKeyExists(RowFromID, Stuff[Arguments.ParentID][Stuff.CurrentRow])>
+            <cfset ArrayAppend(RootItems, Stuff[Arguments.ItemID][Stuff.CurrentRow])>
+            <cfset ArrayAppend(Depth, Arguments.BaseDepth)>
+        </cfif>
+    </cfloop>
+    <!--- Do the deed --->
+    <cfloop condition="ArrayLen(RootItems) GT 0">
+        <cfset ThisID=RootItems[1]>
+        <cfset ArrayDeleteAt(RootItems, 1)>
+        <cfset ThisDepth=Depth[1]>
+        <cfset ArrayDeleteAt(Depth, 1)>
+        <cfif StructKeyExists(RowFromID, ThisID)>
+            <!--- Add this row to the query --->
+            <cfset RowID=RowFromID[ThisID]>
+            <cfset QueryAddRow(Ret)>
+            <cfset QuerySetCell(Ret, Arguments.DepthName, ThisDepth+1)>
+            <cfloop list="#Stuff.ColumnList#" index="ColName">
+                <cfset QuerySetCell(Ret, ColName, Stuff[ColName][RowID])>
+            </cfloop>
+        </cfif>
+        <cfif StructKeyExists(ChildrenFromID, ThisID)>
+            <!--- Push children into the stack --->
+            <cfset ChildrenIDs=ChildrenFromID[ThisID]>
+            <cfloop from="#ArrayLen(ChildrenIDs)#" to="1" step="-1" index="i">
+                <cfset ArrayPrepend(RootItems, ChildrenIDs[i])>
+                <cfset ArrayPrepend(Depth, ThisDepth + 1)>
+            </cfloop>
+        </cfif>
+    </cfloop>
+    <cfreturn Ret>
+</cffunction>

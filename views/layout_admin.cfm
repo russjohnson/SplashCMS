@@ -6,8 +6,21 @@
 	 <cfoutput>#application.admin.title#</cfoutput>
 	</title>
   <link rel="stylesheet" href="/stylesheets/base.css" type="text/css" media="screen" />
-  <link rel="stylesheet" id="current-theme" href="/stylesheets/themes/default/style.css" type="text/css" media="screen" />
+  <link rel="stylesheet" id="current-theme" href="/stylesheets/jquery.treeTable.css" type="text/css" media="screen" />
+  <link rel="stylesheet" id="current-theme" href="/stylesheets/themes/blue/style.css" type="text/css" media="screen" />
   <script type="text/javascript" charset="utf-8" src="/javascripts/jquery-1.3.min.js"></script>
+  <script type="text/javascript" charset="utf-8" src="/javascripts/jquery.TreeTable.min.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function()  {
+      $("#pageTree").treeTable({
+        //initialState: "expanded"
+      });
+      
+      // expand the home node by default
+      $("#node-1").expand();
+      //$("#node-1").addClass("expanded");
+    });
+  </script>
 </head>
 <body>
   <div id="container">

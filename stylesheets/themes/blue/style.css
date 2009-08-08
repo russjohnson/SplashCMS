@@ -8,7 +8,7 @@ a { -moz-outline: none; }
 body {
   color: #222;
   background: #f0f0ee;
-  font-family: helvetica, arial, sans-serif;
+  font-family: "Trebuchet MS", 'Lucida Grande', 'Bitstream Vera Sans', Helvetica, Verdana, Arial, sans-serif;
   font-size: 14px;
 }
 
@@ -18,7 +18,7 @@ hr {
 }
 
 #header {
-  background: #2F427A;
+ background:#2F427A;
 }
 
 #header h1 {
@@ -27,6 +27,16 @@ hr {
 
 #header h1 a:link, #header h1 a:active, #header h1 a:hover, #header h1 a:visited {
   color: #FFF;
+}
+
+#header .site-link a {
+  color:#fff;
+  background:#470E0E;
+  text-decoration:none;
+  padding:3px 5px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  margin-top:18px;
 }
 
 #user-navigation {

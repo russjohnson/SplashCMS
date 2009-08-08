@@ -12,10 +12,12 @@
     <cfset page = model('page').findOneBySlug(params.slug)>
     
     <!--- todo: we need to make sure a page was returned, if not redirect to the home page --->
-    <cfif isObject(page)>
+    <cfif isObject(page) AND page.status is "published">
       <cfset renderedPage = page.process()>
     <cfelse>
       <!--- set something in the flash here and redirect home --->
+      <cfset flashInsert(warning="The page you were trying to access doesnt exist.")>
+      <cfset redirectTo(route="home")>
     </cfif>
   </cffunction>
 	

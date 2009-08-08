@@ -211,11 +211,11 @@ body {
   
 }
 
-table td a {
+.table td a {
   text-decoration:none;
 }
 
-table td a.snippet {
+.table td a.snippet {
   color:#000;
   font-size:17px;
   font-weight:bold;
@@ -226,7 +226,7 @@ table td a.snippet {
 	line-height:1.7em;
 }
 
-table td a.layout {
+.table td a.layout {
   color:#000;
   font-size:17px;
   font-weight:bold;
@@ -237,7 +237,7 @@ table td a.layout {
 	line-height:1.8em;
 }
 
-table td a.page {
+.table td a.page {
   color:#000;
   font-size:17px;
   font-weight:bold;
@@ -246,9 +246,10 @@ table td a.page {
 	text-indent:35px;
 	display:block;
 	line-height:1.8em;
+	margin-left:15px;
 }
 
-table td a.user {
+.table td a.user {
   color:#000;
   font-size:17px;
   font-weight:bold;

@@ -7,6 +7,12 @@
   
   <cffunction name="index">
     <cfset pages = model('pages').findAll()>
+    <cfset pages = queryTreeSort(pages)>
+  </cffunction>
+  
+  <cffunction name="pageList">
+    
+    <cfset renderNothing()>
   </cffunction>
   
   <cffunction name="new">
