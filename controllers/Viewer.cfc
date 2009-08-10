@@ -8,7 +8,12 @@
 	</cffunction>
 	
 	<cffunction name="index">
-    <cfparam name="params.slug" default="/">
+	  <cfif structKeyExists(params, "slug") AND find("/", params.slug)>
+	   <cfset params.slug = listLast(params.slug, "/")>
+	  <cfelse>
+	    <cfparam name="params.slug" default="/">
+	  </cfif>
+    
     <cfset page = model('page').findOneBySlug(params.slug)>
     
     <!--- todo: we need to make sure a page was returned, if not redirect to the home page --->

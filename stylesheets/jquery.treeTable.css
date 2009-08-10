@@ -7,7 +7,7 @@
 /* jquery.treeTable.collapsible
  * ------------------------------------------------------------------------- */
 .treeTable tr td .expander {
-  background-position: 0 0;
+  background-position: left center;
   background-repeat: no-repeat;
   cursor: pointer;
   padding: 10px;

@@ -1,6 +1,3 @@
-<!--- HOME ROUTE --->
-<cfset addRoute(name="home", pattern="", controller="viewer", action="index")>
-
 <!--- LOGIN ROUTES --->
 <cfset addRoute(name="login", pattern="/admin/login", controller="sessions", action="new")>
 <cfset addRoute(name="login_path", pattern="/admin/doLogin", controller="sessions", action="create")>
@@ -42,7 +39,12 @@
 
 <!--- ADMIN HOME --->
 <cfset addRoute(name="admin_path", pattern="/admin", controller="pages", action="index")>
+
+<!--- HOME ROUTE --->
+<cfset addRoute(name="home", pattern="", controller="viewer", action="index")>
   
 <!--- THIS ROUTE IS WHAT DISPLAYS OUR PAGES FOR US --->
+<cfset addRoute(name="viewer", pattern="[parent]/subpage1/subpage2/[slug]", controller="viewer", action="index")>
+  <cfset addRoute(name="viewer", pattern="[parent]/subpage1/[slug]", controller="viewer", action="index")>
+    <cfset addRoute(name="viewer", pattern="[parent]/[slug]", controller="viewer", action="index")>
 <cfset addRoute(name="viewer", pattern="/[slug]", controller="viewer", action="index")>
-  
