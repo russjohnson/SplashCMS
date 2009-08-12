@@ -13,6 +13,10 @@
   <script type="text/javascript" charset="utf-8" src="/javascripts/jquery-ui-1.7.2.custom.min.js"></script>
   <script type="text/javascript" charset="utf-8" src="/javascripts/jquery.TreeTable.min.js"></script>
   
+  <cfif params.controller is "pages" and (params.action is "new" or params.action is "edit")>
+    <script type="text/javascript" charset="utf-8" src="/javascripts/pages.js"></script>
+  </cfif>
+  
   <script type="text/javascript" src="/javascripts/markitup/jquery.markitup.pack.js"></script>
   <!-- markItUp! toolbar settings -->
   <script type="text/javascript" src="/javascripts/markitup/sets/textile/set.js"></script>
