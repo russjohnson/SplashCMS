@@ -64,5 +64,17 @@
   		<cfset renderPage(action="edit")>
   	</cfif>
   </cffunction>
+  
+  <cffunction name="delete">
+  	<cfset page = model('page').findByKey(params.id)>
+	
+  	<cfif page.delete()>
+  		<cfset flashInsert(success="The Page was deleted successfully.")>	
+      <cfset redirectTo(route="pages_path")>
+  	<cfelse>
+  		<cfset flashInsert(error="There was an error deleting the Page.")>
+  		<cfset redirectTo(route="pages_path")>
+  	</cfif>
+  </cffunction>
 	
 </cfcomponent>
