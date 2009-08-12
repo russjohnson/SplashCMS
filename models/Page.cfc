@@ -18,18 +18,20 @@
 	 
     <!--- get the layout --->
 	  <cfset var layout = this.pageLayout().content>
-	   
-	  <!--- parse the page titles in the layout --->
-	  <cfif findNoCase("<pageTitle />", layout)>
-      <cfset layout = replaceNoCase(layout, '<pageTitle />', this.title, "ALL")>
-    </cfif>
-    
+	     
     <!--- look for snippet tags in the layout and process them --->
     <cfset layout = parseSnippets(layout)>
     
     <!--- look for content tags in the layout and process them --->
     <cfset layout = parseContent(layout)>
       
+    <!--- look for title tags and replace them with the page title attribute --->
+    <cfset layout = parseTitle(layout)>
+      
+    <!--- look for the navigation tags and parse them --->
+    <cfset layout = parseNavigation(layout)>
+    
+    <!--- this fixes our invalid tags due to CF's script protection --->
     <cfset layout = fixScriptTags(layout)>
 	  <cfreturn layout>
 	</cffunction>
@@ -51,7 +53,10 @@
       <cfif findnocase("<content", content) >
         <cfset splashTag = getSplashTag(stripMode="disallow", myTags="content", myString="#content#", findOnly="true")>
         <cfset xmlTag = xmlParse(splashTag)>
-        <cfset pagePartName = xmltag.xmlRoot.xmlAttributes.name>
+          <!---
+            TODO Need to add some checking here for condition attributes
+          --->
+        <cfset pagePartName = xmltag.xmlRoot.xmlAttributes.part>
         <cfset pagePart = model('pagePart').findOneByPageidAndName("#this.id#, #pagePartName#")>
         <cfif isObject(pagePart)>
           <cfset pagePart = parseSnippets(pagePart.content)>
@@ -77,7 +82,6 @@
     <cfset var snippetName = "">
     <cfset var snippet = "">
     
-    
     <cfloop condition=" hasSnippets ">
       <cfif findNoCase("<snippet", content)>
         <cfset splashTag = getSplashTag(stripMode="disallow", myTags="snippet", myString="#content#", findOnly="true")>
@@ -96,6 +100,61 @@
     </cfloop>
     <cfreturn content>
   </cffunction>
+
+  <cffunction name="parseTitle">
+    <cfargument name="content" type="string" required="true" />
+    <cfset var content = arguments.content>
+    <cfset var hasTitle = true>
+      
+      <cfif findNoCase("<title", content)>
+        <!---
+          TODO Need to look at some regex matching for these to clean this up some
+        --->
+        <cfset content = replaceNoCase(content, "<title/>", this.title, "ALL")>
+        <cfset content = replaceNoCase(content, "<title />", this.title, "ALL")>
+      <cfelse>
+        <cfset hasTitle = FALSE>
+      </cfif>
+    <cfreturn content>
+  </cffunction>
+  
+  <cffunction name="parseNavigation">
+    <cfargument name="content" type="string" required="true" />
+    <cfset var content = arguments.content>
+    <cfset var hasNavigation = true>
+    <cfset var splashTag = "">
+    <cfset var xmlTag = "">
+    <cfset var urls = "">
+    <cfset var parsedNav = "">
+    <!---
+      TODO need to add the current state attribute to the parser
+    --->
+    <cfloop condition=" hasNavigation ">
+      <cfif findNoCase("<navigation", content)>
+        <cfset splashTag = getSplashTag(stripMode="disallow", myTags="navigation", myString="#content#", findOnly="true")>
+        <cfset xmlTag = xmlParse(splashTag)>
+        <cfset urls = xmltag.xmlRoot.xmlAttributes.urls>
+          
+        <cfif findNoCase("enclosingTag", splashTag)>
+          <cfset linkPrepend = "<" & xmltag.xmlRoot.xmlAttributes.enclosingTag & ">">
+          <cfset linkAppend = "</" & xmltag.xmlRoot.xmlAttributes.enclosingTag & ">">
+        <cfelse>
+          <cfset linkPrepend = "">
+          <cfset linkAppend = "">
+        </cfif>
+        
+        <cfloop list="#urls#" index="item" delimiters="|">
+          <cfset parsedNav = parsedNav & linkPrepend & '<a href="#listLast(item,':')#">' & listFirst(item,":") & '</a>' & linkAppend>
+        </cfloop>
+
+        <cfset content = replaceNoCase(content, splashTag, parsedNav)>
+      <cfelse>
+        <cfset hasNavigation = FALSE>
+      </cfif>
+    </cfloop>
+    <cfreturn content>
+  </cffunction>
+  
 
   <!--- PRIVATE METHODS --->
 	
