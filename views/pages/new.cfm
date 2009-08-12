@@ -10,7 +10,7 @@
 </style>
 
 <div class="page-properties">
-  <button id="add_tab" class="ui-button ui-state-default ui-corner-all">Add Tab</button> 
+  <button id="add_tab" class="ui-button ui-state-default ui-corner-all">Add Page Part</button> 
   <button id="hideShow" class="ui-button ui-state-default ui-corner-all">Page Properties</button>
   <button id="viewSite" class="ui-button ui-state-default ui-corner-all" onclick="window.open('/');">View Site</button>
 </div>
@@ -69,11 +69,7 @@
 	          #textAreaTag(name="pagePart_#application.defaults.page.parts[i]#[content]", class="text_area", rows="15")#
 	        </div>
 	    </cfloop>
-			<!---<div id="tabs-1">
-			  
-  	    #hiddenField(objectName="pagePart", property="name")#
-  	    #textArea(objectName="pagePart", property="content", class="text_area", rows="15")#
-			</div>--->
+
 		</div>
 	 
 	   <p>

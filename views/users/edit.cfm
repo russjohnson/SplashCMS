@@ -8,7 +8,7 @@
 		
 		#includePartial('form')#
 		
-		#submitTag(class="button", value="Update User &rarr;")# or #linkTo(text="Cancel", route="users_path")#
+		#submitTag(class="ui-button ui-state-default ui-corner-all", value="Update User &rarr;")# or #linkTo(text="Cancel", route="users_path")#
 		
 	#endFormTag()#
 	

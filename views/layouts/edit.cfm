@@ -8,7 +8,7 @@
 		
 		#includePartial('form')#
 				
-		#submitTag(class="button", value="Update Layout &rarr;")# or #linkTo(text="Cancel", route="layouts_path")#
+		#submitTag(class="ui-button ui-state-default ui-corner-all", value="Update Layout &rarr;")# or #linkTo(text="Cancel", route="layouts_path")#
 				
 	#endFormTag()#
 	

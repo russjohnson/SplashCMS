@@ -12,6 +12,7 @@
 	    
 	  <cfset beforeCreate('setCreatedByID')>
 	  <cfset beforeUpdate('setUpdatedByID')>
+	  <cfset beforeSave('checkPublished')>
 	</cffunction>
 	
 	<cffunction name="process">
@@ -35,10 +36,6 @@
     <cfset layout = fixScriptTags(layout)>
 	  <cfreturn layout>
 	</cffunction>
-	
-  <cffunction name="parseTitle">
-    
-  </cffunction>
   
   <cffunction name="parseContent">
     <cfargument name="content" type="string" required="true" />
@@ -162,6 +159,14 @@
     <cfargument name="code" type="string" required="true">
     <cfset var loc = arguments.code>
     <cfreturn replaceNoCase(loc, 'invalidtag', 'script', 'ALL')>
+  </cffunction>
+  
+  <cffunction name="checkPublished" access="private">
+    <cfif this.isNew() and this.status is 'published'>
+      <cfset this.publishedAt = now()>
+    <cfelseif this.StatusHasChanged() and this.status is 'published'>
+      <cfset this.publishedAt = now()>
+    </cfif>
   </cffunction>
 
 </cfcomponent>

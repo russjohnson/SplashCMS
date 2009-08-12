@@ -32,7 +32,7 @@
     <cfset page.parentid = params.parentid>
     <cfset status = ['Draft', 'Reviewed', 'Published', 'Hidden']>
     <cfset page = model('page').new(params.page)>
-      
+    
     <cfif page.save()>
       
       <!--- need to loop through the pageParts that get passed in params and save them --->
@@ -43,10 +43,6 @@
         <cfset pagePart.save()>
       </cfloop>
       
-      <!---<cfset pagePart = page.newPagePart()>
-      <cfset pagePart.name = params.pagePart['name']>
-      <cfset pagePart.content = params.pagePart['content']>
-      <cfset pagePart.save()>--->
       <cfset flashInsert(success="The page has been created successfully.")>
       <cfset redirectTo(route="pages_path")>
     <cfelse>
@@ -60,18 +56,28 @@
     <cfset pageClasses = model('pageClass').findAll()>
     <cfset status = ['Draft', 'Reviewed', 'Published', 'Hidden']>
     <cfset page = model('page').findbykey(params.key)>
-    <cfset pagePart = page.findOnePagePart()>
+    <cfset pageParts = page.pageParts()>
   </cffunction>
   
   <cffunction name="update">
+    <cfset layouts = model('layout').findAll()>
+    <cfset pageClasses = model('pageClass').findAll()>
+    <cfset status = ['Draft', 'Reviewed', 'Published', 'Hidden']>
     <cfset page = model('page').findbykey(params.key)>
-      
+    <cfset pageParts = page.pageParts()>
     <cfif page.update(params.page)>
       
-      <cfset pagePart = model('pagePart').findByKey(params.pagePart['id'])>
-      <cfset pagePart.name = params.pagePart['name']>
-      <cfset pagePart.content = params.pagePart['content']>
-      <cfset pagePart.update()>
+      <!--- first delete all existing page parts before saving the new ones --->
+      <cfset page.deleteAllPageParts()>
+      <!--- need to loop through the pageParts that get passed in params and save them --->
+      <cfloop collection="#params.pagePart#" item="item">
+        <!--- have to see if this pagePart exists, if so update it, if not create it --->
+        <cfset pagePart = page.newPagePart()>
+        <cfset pagePart.name = item>
+        <cfset pagePart.content = evaluate("params.pagePart_#item#").content>
+        <cfset pagePart.save()>
+      </cfloop>
+      
   		<cfset flashInsert(success="The page was updated successfully.")>	
       <cfset redirectTo(route="pages_path")>
   	<cfelse>

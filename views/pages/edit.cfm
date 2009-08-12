@@ -1,42 +1,30 @@
 <cfhtmlhead text='<script type="text/javascript" src="/javascripts/jquery.slug.js"></script>'>
 
-<script type="text/javascript">
-$(document).ready(function(){
-  // slug function
-  $("#page-title").slug({hide: false});
-  
-  $(".more").hide();
-  $(".hideShow").click(function(){
-    $(".more").slideToggle(600);
-    return false;
-  });
-  
-  // Add markItUp! to your textarea in one line
-	// $('textarea').markItUp( { Settings }, { OptionalExtraSettings } );
-	$('#pagePart-content').markItUp(mySettings);
-	
-
-	// $(textarea).markItUpRemove();
-	$('.toggle').click(function() {
-		if ($("#pagePart-content.markItUpEditor").length === 1) {
- 			$("#pagePart-content").markItUpRemove();
-			$("span", this).text("Show Editor");
-		} else {
-			$('#pagePart-content').markItUp(mySettings);
-			$("span", this).text("Remove Editor");
-		}
- 		return false;
-	});
-  
-  
-});
-</script>
+<style type="text/css">
+	#dialog label, #dialog input { display:block; }
+	#dialog label { margin-top: 0.5em; }
+	#dialog input, #dialog textarea { width: 95%; }
+	#tabs { margin-top: 1em; }
+	#tabs li .ui-icon-close { float: left; margin: 0.4em 0.2em 0 0; cursor: pointer; }
+	#add_tab, #hideShow { cursor: pointer; }
+</style>
 
 <div class="page-properties">
-  <a href="" class="hideShow">Page Properties</a> <a href="" class="toggle"><span>Remove Editor</span></a>
+  <button id="add_tab" class="ui-button ui-state-default ui-corner-all">Add Page Part</button> 
+  <button id="hideShow" class="ui-button ui-state-default ui-corner-all">Page Properties</button>
+  <button id="viewSite" class="ui-button ui-state-default ui-corner-all" onclick="window.open('/');">View Site</button>
 </div>
 
 <h1>Edit Page</h1>
+
+<div id="dialog" title="Tab data">
+	<form>
+		<fieldset class="ui-helper-reset">
+			<label for="tab_title">Title</label>
+			<input type="text" name="tab_title" id="tab_title" value="" class="ui-widget-content ui-corner-all" />
+		</fieldset>
+	</form>
+</div>
 
 <cfoutput>
 			
@@ -66,13 +54,26 @@ $(document).ready(function(){
 				<p><label class="label">Keywords</label>
 						#textField(objectName='page', property='keywords', class="text_field")#</p>
 		</div>
-		
-	  <p>
-	    <label class="label">Body</label>
-	    #hiddenField(objectName="pagePart", property="id")#
-	    #hiddenField(objectName="pagePart", property="name")#
-	    #textArea(objectName="pagePart", property="content", class="text_area", rows="15")#
-	  </p>
+	  
+	  <div id="tabs">
+	    <!--- navigation for tabs --->
+	    <ul>
+	      <cfoutput query="pageParts">
+	        <li>
+	          <a href="##tabs-#name#">#name#</a> <span class="ui-icon ui-icon-close">Remove Tab</span>
+	        </li>
+	      </cfoutput>
+			</ul>
+			
+			<!--- tab containers --->
+			<cfoutput query="pageParts">
+	        <div id="tabs-#name#">
+	          #hiddenFieldTag(name="pagePart[#name#]", value="#name#")#
+	          #textAreaTag(name="pagePart_#name#[content]", content="#content#", class="text_area", rows="15")#
+	        </div>
+	    </cfoutput>
+
+		</div>
 	 
 	 <p>
   	<label><strong>Layout</strong></label>
@@ -85,8 +86,17 @@ $(document).ready(function(){
   	 #select(objectName="page", property="status", options=status)#
   </p>
 					
-	  	<p>#submitTag(class="button", value="Update Page &rarr;")# or #linkTo(text="Cancel", route="pages_path")#</p>
+	  	<p>#submitTag(class="ui-button ui-state-default ui-corner-all", value="Update Page &rarr;")# or #linkTo(text="Cancel", route="pages_path")#</p>
 		
 	#endFormTag()#
-			
+	
+	<cfif page.updatedByID is NOT "">
+	  #includePartial(name='/shared/last_update', updatedByID=page.updatedByID, updatedAt=page.updatedAt)#
+	</cfif>
+	
+	<cfif page.publishedAt is NOT "">
+	  <p class="gray">
+	  This page was Published on #dateFormat(page.publishedAt, 'long')# at #timeFormat(page.publishedAt, 'short')#
+	</p>
+	</cfif>
 </cfoutput>

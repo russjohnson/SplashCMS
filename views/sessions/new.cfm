@@ -12,7 +12,7 @@
             <div class="message error">
               <p>#flash('error')#</p>
             </div>
-          <cfelseif flashKeyExists('notice')>
+          <cfelseif flashKeyExists('warning')>
             <div class="message error">
               <p>#flash('notice')#</p>
             </div>
@@ -40,7 +40,7 @@
           </div>
           <div class="group navform">
             <div class="right">
-              #submitTag(value="Login", class="button")#
+              #submitTag(value="Login", class="ui-button ui-state-default ui-corner-all")#
             </div>
             <div class="clear"></div>
           </div>
