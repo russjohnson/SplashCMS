@@ -8,7 +8,9 @@
   <link rel="stylesheet" href="/stylesheets/base.css" type="text/css" media="screen" />
   <link rel="stylesheet" id="current-theme" href="/stylesheets/jquery.treeTable.css" type="text/css" media="screen" />
   <link rel="stylesheet" id="current-theme" href="/stylesheets/themes/blue/style.css" type="text/css" media="screen" />
-  <script type="text/javascript" charset="utf-8" src="/javascripts/jquery-1.3.min.js"></script>
+  <link rel="stylesheet" id="current-theme" href="/stylesheets/splash//jquery-ui-1.7.2.custom.css" type="text/css" media="screen" />
+  <script type="text/javascript" charset="utf-8" src="/javascripts/jquery-1.3.2.min.js"></script>
+  <script type="text/javascript" charset="utf-8" src="/javascripts/jquery-ui-1.7.2.custom.min.js"></script>
   <script type="text/javascript" charset="utf-8" src="/javascripts/jquery.TreeTable.min.js"></script>
   
   <script type="text/javascript" src="/javascripts/markitup/jquery.markitup.pack.js"></script>

@@ -26,12 +26,27 @@
   </cffunction>
   
   <cffunction name="create">
+    <cfdump var="#params#"><cfabort>
+    <cfset layouts = model('layout').findAll()>
+    <cfset pageClasses = model('pageClass').findAll()>
+    <cfset page.parentid = params.parentid>
+    <cfset status = ['Draft', 'Reviewed', 'Published', 'Hidden']>
     <cfset page = model('page').new(params.page)>
+      
     <cfif page.save()>
-      <cfset pagePart = page.newPagePart()>
+      
+      <!--- need to loop through the pageParts that get passed in params and save them --->
+      <cfloop collection="#params.pagePart#" item="item">
+        <cfset pagePart = page.newPagePart()>
+        <cfset pagePart.name = item>
+        <cfset pagePart.content = evaluate("params.pagePart_#item#").content>
+        <cfset pagePart.save()>
+      </cfloop>
+      
+      <!---<cfset pagePart = page.newPagePart()>
       <cfset pagePart.name = params.pagePart['name']>
       <cfset pagePart.content = params.pagePart['content']>
-      <cfset pagePart.save()>
+      <cfset pagePart.save()>--->
       <cfset flashInsert(success="The page has been created successfully.")>
       <cfset redirectTo(route="pages_path")>
     <cfelse>

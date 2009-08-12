@@ -3,5 +3,5 @@
 #textField(objectName='snippet', property='name', class="text_field")#</p>
 
 <p><label class="label">Body</label>
-#textArea(objectName='snippet', property='content', class="text_area", rows="10")#</p>
+#textArea(objectName='snippet', property='content', class="text_area", rows="15")#</p>
 </cfoutput>

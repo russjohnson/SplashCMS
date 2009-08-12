@@ -13,7 +13,7 @@
       <cfset redirectTo(route="layouts_path")>
     <cfelse>
       <cfset flashInsert(error="There was an error creating the layout.")>
-  		<cfset renderPage(route="layouts_path")>
+  		<cfset renderPage(action="new")>
     </cfif>
   </cffunction>
   
@@ -25,7 +25,7 @@
       <cfset redirectTo(route="layouts_path")>
   	<cfelse>
   		<cfset flashInsert(error="There was an error updating the layout.")>
-  		<cfset renderPage(route="layouts_path")>
+  		<cfset renderPage(action="edit")>
   	</cfif>
   </cffunction>
   
