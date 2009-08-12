@@ -2,7 +2,7 @@
 .gray { color:#999999; }
 .hightlight { background-color:#FFFFCC; }
 
-a:link, a:visited, a:hover, a:active, h1, h2, h3 { color: #106597; }
+a:link, a:visited, a:hover, a:active, h1, h2, h3 { color: #0073ea; }
 a { -moz-outline: none; }
 
 body {
@@ -30,13 +30,7 @@ hr {
 }
 
 #header .site-link a {
-  color:#fff;
-  background:#106597;
-  text-decoration:none;
-  padding:3px 5px;
-  -moz-border-radius: 4px;
-  -webkit-border-radius: 4px;
-  margin-top:18px;
+ 
 }
 
 #user-navigation {
@@ -187,8 +181,8 @@ hr {
 /* forms */
 
 .form input.text_field, .form textarea.text_area {
-  width: 100%;
-  border: 1px solid #262626;
+  width: 99%;
+  border: 1px solid #ddd;
 }
 
 .form input.button {

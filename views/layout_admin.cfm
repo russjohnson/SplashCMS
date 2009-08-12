@@ -17,19 +17,31 @@
     <script type="text/javascript" charset="utf-8" src="/javascripts/pages.js"></script>
   </cfif>
   
+  <!---
+    TODO Needs to be conditional upon controller/action
+  --->
   <script type="text/javascript" src="/javascripts/markitup/jquery.markitup.pack.js"></script>
-  <!-- markItUp! toolbar settings -->
   <script type="text/javascript" src="/javascripts/markitup/sets/textile/set.js"></script>
-  <!-- markItUp! skin -->
   <link rel="stylesheet" type="text/css" href="/javascripts/markitup/skins/simple/style.css" />
-  <!--  markItUp! toolbar skin -->
   <link rel="stylesheet" type="text/css" href="/javascripts/markitup/sets/textile/style.css" />
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+      
+      // this adds the nice hover state to all of our buttons    	
+    	$('.ui-button').hover(function() {
+      		$(this).addClass("ui-state-hover");
+      	}, function() {
+      		$(this).removeClass("ui-state-hover");
+    	});
+    	
+    });
+  </script>
 
 </head>
 <body>
   <div id="container">
     <div id="header">
-      <div class="site-link"><a href="/" target="new">View Site</a></div>
       <h1><a href="/admin"><cfoutput>#application.admin.title#</cfoutput></a></h1>
       
       <cfoutput>

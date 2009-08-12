@@ -12,6 +12,7 @@
 <div class="page-properties">
   <button id="add_tab" class="ui-button ui-state-default ui-corner-all">Add Tab</button> 
   <button id="hideShow" class="ui-button ui-state-default ui-corner-all">Page Properties</button>
+  <button id="viewSite" class="ui-button ui-state-default ui-corner-all" onclick="window.open('/');">View Site</button>
 </div>
 
 <h1>New Page</h1>
@@ -86,7 +87,7 @@
     	 #select(objectName="page", property="status", options=status)#
     </p>
 					
-	  <p>#submitTag(class="button", value="Save Page &rarr;")# or #linkTo(text="Cancel", route="pages_path")#</p>
+	  <p>#submitTag(class="ui-button ui-state-default ui-corner-all", value="Save Page &rarr;")# or #linkTo(text="Cancel", route="pages_path")#</p>
 		
 	#endFormTag()#
 			
