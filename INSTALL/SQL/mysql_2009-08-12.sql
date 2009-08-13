@@ -1,10 +1,10 @@
 # Sequel Pro dump
-# Version 1176
+# Version 1191
 # http://code.google.com/p/sequel-pro
 #
 # Host: localhost (MySQL 5.0.67)
 # Database: splash_development
-# Generation Time: 2009-08-12 22:24:54 -0400
+# Generation Time: 2009-08-13 02:55:39 -0400
 # ************************************************************
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -76,15 +76,15 @@ CREATE TABLE `pageParts` (
   `name` varchar(100) default NULL,
   `content` text,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
 
 LOCK TABLES `pageParts` WRITE;
 /*!40000 ALTER TABLE `pageParts` DISABLE KEYS */;
 INSERT INTO `pageParts` (`id`,`pageID`,`name`,`content`)
 VALUES
-	(1,1,'body','h2. Home Page\r\n\r\nLorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean ut orci vel massa suscipit pulvinar. Nulla sollicitudin. Fusce varius, ligula non tempus aliquam, nunc turpis ullamcorper nibh, in tempus sapien eros vitae ligula. Pellentesque rhoncus nunc et augue. Integer id felis. Curabitur aliquet pellentesque diam. Integer quis metus vitae elit lobortis egestas. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Morbi vel erat non mauris convallis vehicula. Nulla et sapien. Integer tortor tellus, aliquam faucibus, convallis id, congue eu, quam. Mauris ullamcorper felis vitae erat. Proin feugiat, augue non elementum posuere, metus purus iaculis lectus, et tristique ligula justo vitae magna.'),
-	(2,1,'extended',NULL),
-	(3,2,'body','h3. <title />\r\n\r\nThe file you were looking for could not be found.\r\n\r\nIt is possible that you typed the URL incorrectly or that you clicked on a bad link.\r\n\r\n<a href="/">Back to home page</a>');
+	(5,1,'body','<h2>Home Page</h2>\r\n\r\nLorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean ut orci vel massa suscipit pulvinar. Nulla sollicitudin. Fusce varius, ligula non tempus aliquam, nunc turpis ullamcorper nibh, in tempus sapien eros vitae ligula. Pellentesque rhoncus nunc et augue. Integer id felis. Curabitur aliquet pellentesque diam. Integer quis metus vitae elit lobortis egestas. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Morbi vel erat non mauris convallis vehicula. Nulla et sapien. Integer tortor tellus, aliquam faucibus, convallis id, congue eu, quam. Mauris ullamcorper felis vitae erat. Proin feugiat, augue non elementum posuere, metus purus iaculis lectus, et tristique ligula justo vitae magna.'),
+	(4,1,'extended',NULL),
+	(7,2,'body','<h3><title /></h3>\r\n\r\n<p>The file you were looking for could not be found.</p>\r\n\r\n\r\n<p>It is possible that you typed the URL incorrectly or that you clicked on a bad link.</p>\r\n\r\n<p><a href=\"/\">Back to home page</a></p>');
 
 /*!40000 ALTER TABLE `pageParts` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -146,7 +146,7 @@ LOCK TABLES `snippets` WRITE;
 INSERT INTO `snippets` (`id`,`name`,`content`,`createdAt`,`updatedAt`,`createdByID`,`updatedByID`)
 VALUES
 	(2,'Footer','Splash CMS 0.1.0 - Copyright &copy; 2009 Mad Piranha, Inc. All Rights Reserved.','2009-07-30 16:59:36',NULL,1,NULL),
-	(1,'Header','h1. Splash CMS','2009-07-31 11:05:13',NULL,1,NULL),
+	(1,'Header','<h1>Splash CMS</h1>','2009-07-31 11:05:13',NULL,1,NULL),
 	(3,'MainNav','<ul class=\"lavaLampNoImage\" id=\"nav\">\r\n<navigation urls=\"Home: /|Features: /features|Tour: /tour|Download: /download|Contact: /contact\" enclosingTag=\"li\" />\r\n</ul>','2009-08-07 18:35:09',NULL,1,NULL);
 
 /*!40000 ALTER TABLE `snippets` ENABLE KEYS */;
@@ -178,7 +178,7 @@ LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
 INSERT INTO `users` (`id`,`username`,`password`,`email`,`name`,`admin`,`developer`,`lastLogin`,`createdAt`,`updatedAt`,`createdByID`,`updatedByID`)
 VALUES
-	(1,'admin','010039FC01003A1F98B6E4AF6EDF37187DE2E2B2BAADB074DB1DDF1903DA390A31FB4413A3111505011E693158542FD311189D6BC7651AA87D7113336F8A82C9','admin@yoursite.com','Administrator',1,0,NULL,'2009-07-30 14:55:53',NULL,NULL,NULL);
+	(1,'admin','010039FC01003A1F98B6E4AF6EDF37187DE2E2B2BAADB074DB1DDF1903DA390A31FB4413A3111505011E693158542FD311189D6BC7651AA87D7113336F8A82C9','admin@yoursite.com','Administrator',1,0,'2009-08-13 02:50:14','2009-07-30 14:55:53',NULL,1,NULL);
 
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;

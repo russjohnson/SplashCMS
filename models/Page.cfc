@@ -56,9 +56,7 @@
         <cfset pagePartName = xmltag.xmlRoot.xmlAttributes.part>
         <cfset pagePart = model('pagePart').findOneByPageidAndName("#this.id#, #pagePartName#")>
         <cfif isObject(pagePart)>
-          
-          <cfset pagePart = textile(pagePart.content)>
-          <cfset pagePart = parseSnippets(pagePart)>
+          <cfset pagePart = parseSnippets(pagePart.content)>
           <cfset content = replaceNoCase(content, splashTag, pagePart)>
         <cfelse>
           <!--- if we cant find the pagePart just replace the tag with a comment --->
@@ -87,9 +85,7 @@
         <cfset snippetName = xmltag.xmlRoot.xmlAttributes.name>
         <cfset snippet = model('snippet').findOneByName(snippetName)>
         <cfif isObject(snippet)>
-          <cfset snippet.content = textile(snippet.content)>
           <cfset content = replaceNoCase(content, splashTag, snippet.content)>
-          
         <cfelse>
           <!--- if we cant find the snippet just replace the tag with a comment --->
           <cfset content = replaceNoCase(content, splashTag, "<!-- You referenced a snippet that doesnt exist --->")>

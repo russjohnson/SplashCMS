@@ -21,9 +21,9 @@
     TODO Needs to be conditional upon controller/action
   --->
   <script type="text/javascript" src="/javascripts/markitup/jquery.markitup.pack.js"></script>
-  <script type="text/javascript" src="/javascripts/markitup/sets/textile/set.js"></script>
+  <script type="text/javascript" src="/javascripts/markitup/sets/html/set.js"></script>
   <link rel="stylesheet" type="text/css" href="/javascripts/markitup/skins/simple/style.css" />
-  <link rel="stylesheet" type="text/css" href="/javascripts/markitup/sets/textile/style.css" />
+  <link rel="stylesheet" type="text/css" href="/javascripts/markitup/sets/html/style.css" />
   
   <script type="text/javascript">
     $(document).ready(function(){
