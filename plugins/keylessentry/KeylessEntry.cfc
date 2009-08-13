@@ -7,7 +7,7 @@
   
   <cffunction name="loginRequired">
 		<cfif Not structKeyExists(session,"currentUser")>
-			<cfset flashInsert(error="You do not have permissions to do that!")>
+			<!---<cfset flashInsert(error="You do not have permissions to do that!")>--->
 			<cfset redirectTo(route="login")>
 		</cfif>
 	</cffunction>

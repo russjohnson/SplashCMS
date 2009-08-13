@@ -61,7 +61,7 @@
       `createdAt` datetime default NULL,<br/>
       `updatedAt` datetime default NULL,<br/>
       PRIMARY KEY  (`id`)<br/>
-      ) ENGINE=MyISAM AUTO_INCREMENT=14 DEFAULT CHARSET=latin1
+      ) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=latin1
     </tt>
   </p>
   

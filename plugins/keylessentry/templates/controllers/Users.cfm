@@ -57,7 +57,7 @@
 		  <!---
 		    TODO would like to move this method somewhere else, but sendEmail is only available to the controller i believe
 		  --->
-		  <cfset sendEmail(from="admin@workingwithcfml.com", to=user.email, subject="WorkingWithCFML.com account activation", template="new_user_activation_email", activationCode=user.activationCode) />
+		  <cfset sendEmail(from="", to=user.email, subject="Online account activation", template="new_user_activation_email", activationCode=user.activationCode) />
 		  
 			<cfset flashInsert(success="Thanks for signing up! You cannot login yet however. We have sent you an email with a link to verify your email address.")>
       <cfset redirectTo(route="login")>
