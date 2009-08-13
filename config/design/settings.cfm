@@ -4,9 +4,11 @@
 	Example: <cfset set(dataSourceName="devDB")>
 --->
 
-<cfset set(overwritePlugins = true)>
-
-<cfset set(URLRewriting="On")>
+<!--- Datasource Setting --->
 <cfset set(dataSourceName="splashcms")>
-  
+
+<!--- URL Rewriting Setting --->
+<cfset set(URLRewriting="On")>
+
+<!--- Email Server Settings --->
 <cfset set(functionName="sendEmail", server="", username="", password="")>

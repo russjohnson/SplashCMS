@@ -1,7 +1,6 @@
 <cfcomponent extends="Controller">
   
  <cffunction name="init">
-   <cfset layout("/layout_admin")>
    <cfset filters(through="loginRequired")>
  </cffunction>
 	
