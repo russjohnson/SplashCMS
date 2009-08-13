@@ -54,7 +54,7 @@
 				<p><label class="label">Keywords</label>
 						#textField(objectName='page', property='keywords', class="text_field")#</p>
 		</div>
-	  
+	  </cfoutput>
 	  <div id="tabs">
 	    <!--- navigation for tabs --->
 	    <ul>
@@ -74,7 +74,7 @@
 	    </cfoutput>
 
 		</div>
-	 
+	 <cfoutput>
 	 <p>
   	<label><strong>Layout</strong></label>
   	  #select(objectName='page', property='layoutID', options=layouts, valueField="id", textField="name")#
