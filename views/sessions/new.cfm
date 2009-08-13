@@ -1,7 +1,6 @@
 <cfoutput>
 
   <div id="box">
-    <h1>CMS Login</h1>
     <div class="block" id="block-login">
       <h2>Login</h2>
     

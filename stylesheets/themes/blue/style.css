@@ -18,7 +18,7 @@ hr {
 }
 
 #header {
- background: #000 url( "/images/header_bkgd.gif" ) repeat-x ;
+ background: #000 url( "/images/header_bkgd.png" ) repeat-x ;
 }
 
 #header h1 {
@@ -57,7 +57,7 @@ hr {
 }
 
 #sidebar h3 {  
-  background: #2F427A;
+  background: #0073ea;
   color: #FFF;
   border-bottom: 10px solid #262626;
   font-size: 15px;
@@ -124,7 +124,7 @@ hr {
 }
 
 .secondary-navigation {
-  background: #2F427A;
+  background: #0073ea;
   border-bottom-color: #262626;
   font-size: 15px;
 }
@@ -246,7 +246,7 @@ ul.list li .item .avatar {
 }
 
 #box .block h2 {
-  background: #2F427A;  
+  background: #0073ea;  
   color: #FFF;
 }
 
