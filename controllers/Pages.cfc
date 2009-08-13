@@ -87,7 +87,8 @@
   
   <cffunction name="delete">
   	<cfset page = model('page').findByKey(params.id)>
-	
+    <cfset page.deleteAllPageParts()>
+      
   	<cfif page.delete()>
   		<cfset flashInsert(success="The Page was deleted successfully.")>	
       <cfset redirectTo(route="pages_path")>
