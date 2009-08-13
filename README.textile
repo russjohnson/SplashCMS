@@ -1,0 +1,18 @@
+h1. Splash CMS
+
+h2. Requirements
+
+Splash CMS current requires Railo 3 or higher or ColdFusion 8 or higher.
+MySQL is already supported, MSSQL is supported but I havent created the SQL scripts for it yet.
+
+
+
+h2. Installation
+# Unzip the archive to the root of your webserver
+# Create a MySQL database named whatever you want (MSSQL creation scripts coming soon)
+# Open the Railo web-admin or ColdFusion admin and add a DSN for the database you created.
+# Open config/environment.cfm and set the appropriate enivronment for your install
+# Open the settings file for your environment. ie, design/settings.cfm, production/settings.cfm and edit your datasource setting.
+# Open the Splash Admin and login. (http://yourwebroot/admin) Default username is 'admin' and password is 'splash'
+# Start building your site!
+
