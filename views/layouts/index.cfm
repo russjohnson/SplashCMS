@@ -1,6 +1,6 @@
 <h1>Layouts</h1>
 
-<p>Use layouts to apply a visual look to a Web page. Layouts can contain special tags to include page content and other elements such as the header or footer. Click on a layout name below to edit it or click Remove to delete it.</p>
+<p>Use layouts to apply a visual look to a Web page. Layouts can contain SplashTags to include page content and other elements such as the header or footer using snippets. Click on a layout name below to edit it or click Remove to delete it.</p>
 
 <table class="table">
   <tr>
