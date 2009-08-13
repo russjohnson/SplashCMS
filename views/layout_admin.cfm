@@ -65,11 +65,7 @@
           </div>
         </div>
 
-        <div id="footer">
-          <div class="block">
-            <p>Copyright &copy; 2009 Mad Piranha, Inc.</p>
-          </div>
-        </div>
+        <cfoutput>#includePartial('/shared/footer')#</cfoutput>
       </div>
     </div>
   </div>
