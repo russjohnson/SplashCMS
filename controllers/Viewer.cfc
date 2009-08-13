@@ -8,11 +8,7 @@
 	</cffunction>
 	
 	<cffunction name="index">
-	  <cfif structKeyExists(params, "slug") AND find("/", params.slug)>
-	   <cfset params.slug = listLast(params.slug, "/")>
-	  <cfelse>
-	    <cfparam name="params.slug" default="/">
-	  </cfif>
+    <cfparam name="params.slug" default="/">
     
     <cfset page = model('page').findOneBySlug(params.slug)>
     

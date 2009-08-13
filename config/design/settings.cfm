@@ -7,6 +7,6 @@
 <cfset set(overwritePlugins = true)>
 
 <cfset set(URLRewriting="On")>
-<cfset set(dataSourceName="chronos")>
+<cfset set(dataSourceName="splashcms")>
   
 <cfset set(functionName="sendEmail", server="", username="", password="")>

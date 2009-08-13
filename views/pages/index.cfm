@@ -31,7 +31,11 @@
       <td>#status#</td>
       <td>
         #linkTo(text='#imageTag("add-child.png")#', route='new_page_path', parentid=id)#
-        #linkTo(text='#imageTag("remove.png")#', route='delete_page_path', id=id, confirm='Are you sure you want to delete this Page? This cannot be undone!')#
+        <cfif parentId is '0'>
+          #imageTag("remove-disabled.png")#
+        <cfelse>
+          #linkTo(text='#imageTag("remove.png")#', route='delete_page_path', id=id, confirm='Are you sure you want to delete this Page? This cannot be undone!')#
+        </cfif>
       </td>
     </tr>
   </cfoutput>

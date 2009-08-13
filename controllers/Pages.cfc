@@ -26,7 +26,6 @@
   </cffunction>
   
   <cffunction name="create">
-    <cfdump var="#params#"><cfabort>
     <cfset layouts = model('layout').findAll()>
     <cfset pageClasses = model('pageClass').findAll()>
     <cfset page.parentid = params.parentid>
