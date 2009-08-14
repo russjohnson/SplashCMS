@@ -16,6 +16,7 @@
 	</cffunction>
 	
 	<cffunction name="process">
+	  <cfargument name="currentPage" type="string" required="true" />
 	 
     <!--- get the layout --->
 	  <cfset var layout = this.pageLayout().content>
@@ -30,8 +31,8 @@
     <cfset layout = parseTitle(layout)>
       
     <!--- look for the navigation tags and parse them --->
-    <cfset layout = parseNavigation(layout)>
-    
+    <cfset layout = parseNavigation(layout,arguments.currentPage)>
+
     <!--- this fixes our invalid tags due to CF's script protection --->
     <cfset layout = fixScriptTags(layout)>
 	  <cfreturn layout>
@@ -116,12 +117,16 @@
   
   <cffunction name="parseNavigation">
     <cfargument name="content" type="string" required="true" />
+    <cfargument name="currentPage" type="string" required="true" />
     <cfset var localContent = arguments.content>
     <cfset var hasNavigation = true>
     <cfset var splashTag = "">
     <cfset var xmlTag = "">
     <cfset var urls = "">
     <cfset var parsedNav = "">
+    <cfset var linkCurrState = "">
+    <cfset var href = "">
+    <cfset var label = "">
     <!---
       TODO need to add the current state attribute to the parser
     --->
@@ -139,8 +144,20 @@
           <cfset linkAppend = "">
         </cfif>
         
+        <cfif findNoCase("currentState", splashTag)>
+          <cfset linkCurrState = '<' & xmltag.xmlRoot.xmlAttributes.enclosingTag & ' class="' & xmltag.xmlRoot.xmlAttributes.currentState & '">'>
+        <cfelse>
+          <cfset currState = "">
+        </cfif>
+        
         <cfloop list="#urls#" index="item" delimiters="|">
-          <cfset parsedNav = parsedNav & linkPrepend & '<a href="#listLast(item,':')#">' & listFirst(item,":") & '</a>' & linkAppend>
+          <cfset href = listLast(item, ':')>
+          <cfset label = listFirst(item, ':')>
+          <cfif arguments.currentPage is listLast(href, '/')>
+            <cfset parsedNav = parsedNav & linkCurrState & '<a href="#href#">' & label & '</a>' & linkAppend>
+          <cfelse>
+            <cfset parsedNav = parsedNav & linkPrepend & '<a href="#href#">' & label & '</a>' & linkAppend>
+          </cfif>
         </cfloop>
 
         <cfset localContent = replaceNoCase(localContent, splashTag, parsedNav)>

@@ -1,3 +1,26 @@
+
+<cfscript>
+/**
+* Returns the content enclosed in a tag pair.
+* 
+* @param tag      The tag to look for. Should be passed without < or > and without attributes. (Required)
+* @param string      The string to search. (Required)
+* @return Returns a string. 
+* @author Johan Steenkamp (johan@orbital.co.nz) 
+* @version 1, September 16, 2002 
+*/
+function getTagContent(tag,str) {
+    var matchStruct = structNew();
+    var startTag = "<#tag#[^>]*>";
+    var endTag = "</#tag#>";
+    var endTagStart = 0;
+    matchStruct = REFindNoCase(startTag,str,1,"true");
+    if(matchStruct.len[1] eq 0 ) return ""; 
+    endTagStart = REFindNoCase(endTag,str,matchStruct.pos[1],"false");
+    return Mid(str,matchStruct.pos[1]+matchStruct.len[1],endTagStart-matchStruct.pos[1]-matchStruct.len[1]);
+}
+</cfscript>
+
 <cfscript>
 /**
 * @param stripmode      A string, disallow or allow. Specifies if the list of tags in the mytags attribute is a list of tags to allow or disallow. (Required)
