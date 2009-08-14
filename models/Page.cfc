@@ -127,9 +127,7 @@
     <cfset var linkCurrState = "">
     <cfset var href = "">
     <cfset var label = "">
-    <!---
-      TODO need to add the current state attribute to the parser
-    --->
+   
     <cfloop condition=" hasNavigation ">
       <cfif findNoCase("<navigation", localContent)>
         <cfset splashTag = getSplashTag(stripMode="disallow", myTags="navigation", myString="#localContent#", findOnly="true")>
