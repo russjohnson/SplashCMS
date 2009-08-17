@@ -1,7 +1,31 @@
-<cfcomponent extends="lib.ModelControllerMethods">
+<cfcomponent extends="Controller">
   
   <cffunction name="init">
     <cfset filters(through="loginRequired")>
+  </cffunction>
+  
+  <cffunction name="index">
+    <cfset layouts = model('layout').findAll() />
+  </cffunction>
+  
+  <cffunction name="new">
+    <cfset layout = model('layout').new()>
+  </cffunction>
+  
+  <cffunction name="edit">
+  	<cfset layout = model('layout').findByKey(params.key)>
+	
+    <cfif NOT IsObject(layout)>
+      <cfset flashInsert(info="No layout exists for ID #params.key#")>
+   	
+     	<cftry>
+      	<cfset redirectTo(back=true)>
+    	
+      	<cfcatch type="Wheels.RedirectBackError">
+      		<cfset redirectTo(route="layouts_path")>
+      	</cfcatch>
+      </cftry>
+    </cfif>
   </cffunction>
   
   <cffunction name="create">

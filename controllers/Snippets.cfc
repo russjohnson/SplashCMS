@@ -1,7 +1,31 @@
-<cfcomponent extends="lib.ModelControllerMethods">
+<cfcomponent extends="Controller">
   
   <cffunction name="init">
     <cfset filters(through="loginRequired")>
+  </cffunction>
+  
+  <cffunction name="index">
+    <cfset snippets = model('snippet').findAll()>
+  </cffunction>
+  
+  <cffunction name="new">
+    <cfset snippet = model('snippet').new()>
+  </cffunction>
+  
+  <cffunction name="edit">
+  	<cfset snippet = model('snippet').findByKey(params.key)>
+	
+    <cfif NOT IsObject(snippet)>
+      <cfset flashInsert(info="No snippet exists for ID #params.key#")>
+   	
+     	<cftry>
+      	<cfset redirectTo(back=true)>
+    	
+      	<cfcatch type="Wheels.RedirectBackError">
+      		<cfset redirectTo(route="snippets_path")>
+      	</cfcatch>
+      </cftry>
+    </cfif>
   </cffunction>
   
   <cffunction name="create">

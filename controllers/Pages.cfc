@@ -1,4 +1,4 @@
-<cfcomponent extends="lib.ModelControllerMethods">
+<cfcomponent extends="Controller">
   
   <cffunction name="init">
     <cfset filters(through="loginRequired")>
