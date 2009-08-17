@@ -12,7 +12,7 @@ h2. Installation
 # Create a MySQL or MSSQL database named whatever you want (db scripts included in the INSTALL folder)
 # Open the Railo web-admin or ColdFusion admin and add a DSN for the database you created.
 # Open config/environment.cfm and set the appropriate enivronment for your install
-# Open the settings file for your environment. ie, design/settings.cfm, production/settings.cfm and edit your datasource setting.
+# Open the directory for your environment. Rename the *settings_sample.cfm* file for that environment to *settings.cfm* ie, design/settings.cfm, production/settings.cfm and edit your datasource setting.
 # Open the Splash Admin and login. (http://yourwebroot/admin) Default username is 'admin' and password is 'splash'
 # Start building your site!
 
