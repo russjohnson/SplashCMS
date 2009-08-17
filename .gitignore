@@ -5,7 +5,7 @@ WEB-INF
 /public/images/*
 /public/stylesheets/*
 /public/javascripts/*
-/design/settings.cfm
-/development/settings.cfm
-/maintenance/settings.cfm
-/production/settings.cfm
+/config/design/settings.cfm
+/config/development/settings.cfm
+/config/maintenance/settings.cfm
+/config/production/settings.cfm
