@@ -12,3 +12,6 @@
 
 <!--- Email Server Settings --->
 <cfset set(functionName="sendEmail", server="", username="", password="")>
+
+<!--- Error Email Address --->  
+<cfset set(errorEmailAddress="someone@somewhere.com")
