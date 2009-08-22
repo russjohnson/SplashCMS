@@ -1,10 +1,7 @@
-config/environment.cfm
+/config/environment.cfm
 WEB-INF
 */.DS_Store
 .project
-/public/images/*
-/public/stylesheets/*
-/public/javascripts/*
 /config/design/settings.cfm
 /config/development/settings.cfm
 /config/maintenance/settings.cfm

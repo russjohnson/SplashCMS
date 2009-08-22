@@ -1,0 +1,62 @@
+/* Default Stylesheet */
+
+/** BODY ELEMENTS **/
+body {
+	/*font-size: .75em;*/
+	text-align: center;
+}
+
+/** MAIN CONTAINERS **/
+div#container {
+	width: 700px;
+	margin: 0 auto;
+	text-align: left;
+}
+body.fullwidth div#container { width: 100%; }
+div#header {
+		
+}
+div#header-in {
+			
+}
+div#content-wrap {
+		
+}
+div.content {
+			
+}
+div.content-in {
+				
+}
+div#footer {
+		
+}
+div#footer-in {
+			
+}
+
+pre {
+  border:1px dotted #ddd;
+  padding:2px;
+  background:#ccccff;
+  font-size:.9em;
+  color:#000;
+}
+
+a, a:visited {
+  color:#333366;
+  text-decoration:none;
+  padding:3px;
+}
+
+#nav li {
+  display: inline;
+  list-style-type: none;
+  padding-right: 10px;
+  padding-left:10px;
+}
+
+li.active a {
+  background: #333366;
+  color:#fff;
+}
