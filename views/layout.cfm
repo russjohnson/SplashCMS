@@ -5,23 +5,25 @@
 	<title>
 	 <cfoutput>#application.admin.title#</cfoutput>
 	</title>
-  <link rel="stylesheet" href="/stylesheets/base.css" type="text/css" media="screen" />
-  <link rel="stylesheet" id="current-theme" href="/stylesheets/jquery.treeTable.css" type="text/css" media="screen" />
-  <link rel="stylesheet" id="current-theme" href="/stylesheets/themes/blue/style.css" type="text/css" media="screen" />
-  <link rel="stylesheet" id="current-theme" href="/stylesheets/splash//jquery-ui-1.7.2.custom.css" type="text/css" media="screen" />
-  <script type="text/javascript" charset="utf-8" src="/javascripts/jquery-1.3.2.min.js"></script>
-  <script type="text/javascript" charset="utf-8" src="/javascripts/jquery-ui-1.7.2.custom.min.js"></script>
-  <script type="text/javascript" charset="utf-8" src="/javascripts/jquery.TreeTable.min.js"></script>
+	<cfoutput>
+	 #stylesheetLinkTag("base, jquery.treeTable.css, themes/blue/style.css, splash//jquery-ui-1.7.2.custom.css")#
+	 #javascriptIncludeTag("jquery-1.3.2.min.js, jquery-ui-1.7.2.custom.min.js, jquery.TreeTable.min.js")#
+	</cfoutput>
   
   <cfif params.controller is "pages" and (params.action is "new" or params.action is "edit")>
-    <script type="text/javascript" charset="utf-8" src="/javascripts/pages.js"></script>
+    <cfoutput>#javascriptIncludeTag("pages")#</cfoutput>
   </cfif>
   
   <!---
     TODO Needs to be conditional upon controller/action
   --->
-  <script type="text/javascript" src="/javascripts/markitup/jquery.markitup.pack.js"></script>
-  <script type="text/javascript" src="/javascripts/markitup/sets/html/set.js"></script>
+  <cfoutput>
+    #javascriptIncludeTag("markitup/jquery.markitup.pack.js, markitup/sets/html/set.js")#
+  </cfoutput>
+ 
+ <!---
+  TODO need to figure out a way to either move these to the stylesheets folder or make the path relevant
+ --->
   <link rel="stylesheet" type="text/css" href="/javascripts/markitup/skins/simple/style.css" />
   <link rel="stylesheet" type="text/css" href="/javascripts/markitup/sets/html/style.css" />
   
