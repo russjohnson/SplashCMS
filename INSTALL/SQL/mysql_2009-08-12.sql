@@ -26,6 +26,7 @@ CREATE TABLE `layouts` (
   `id` int(11) NOT NULL auto_increment,
   `name` varchar(100) default NULL,
   `content` text,
+  `fileName` varchar(35) default NULL,
   `createdAt` datetime default NULL,
   `updatedAt` datetime default NULL,
   `createdById` int(11) default NULL,
@@ -75,6 +76,7 @@ CREATE TABLE `pageParts` (
   `pageID` int(11) default NULL,
   `name` varchar(100) default NULL,
   `content` text,
+  `fileName` varchar(35) default NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
 
@@ -134,6 +136,7 @@ CREATE TABLE `snippets` (
   `id` int(11) NOT NULL auto_increment,
   `name` varchar(100) default NULL,
   `content` text,
+  `fileName` varchar(35) default NULL,
   `createdAt` datetime default NULL,
   `updatedAt` datetime default NULL,
   `createdByID` int(11) default NULL,
