@@ -1,7 +1,7 @@
 <cfif thisTag.executionMode is "start">
   
   <cfparam name="attributes.part" default="">
-  <cfparam name="page" default="#caller.page#">
+  <cfparam name="page" default="#request.page#">
 
   <cfquery name="pagePart" datasource="#caller.get('dataSourceName')#" maxrows="1">
     select * from pageParts

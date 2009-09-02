@@ -1,3 +1,3 @@
 <cfif thisTag.executionMode is "start">
-  <cfoutput>#caller.page.title#</cfoutput>
+  <cfoutput>#request.page.title#</cfoutput>
 </cfif>

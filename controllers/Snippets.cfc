@@ -36,7 +36,7 @@
     
     <cfif snippet.save()>
     	<!--- write the file to disk --->
-		  <cffile action="write" file="#application.defaults.snippetsPath#/#snippet.fileName#" output="#snippet.content#" addnewline="no" fixnewline="yes" />
+		  <cffile action="write" file="#application.defaults.snippetsPath#/#snippet.fileName#" output="<cfimport taglib='../../lib/splash/tags' prefix='splash' />#snippet.content#" addnewline="no" fixnewline="yes" />
 	
       <cfset flashInsert(success="The snippet was created successfully")>
       <cfset redirectTo(route="snippets_path")>
@@ -58,7 +58,7 @@
 		  
   	<cfif snippet.update(params.snippet)>
   	  <!--- write the file to disk --->
-		  <cffile action="write" file="#application.defaults.snippetsPath#/#snippet.fileName#" output="#snippet.content#" addnewline="no" fixnewline="yes" />
+		  <cffile action="write" file="#application.defaults.snippetsPath#/#snippet.fileName#" output="<cfimport taglib='../../lib/splash/tags' prefix='splash' />#snippet.content#" addnewline="no" fixnewline="yes" />
 		  
   		<cfset flashInsert(success="The snippet was updated successfully.")>	
       <cfset redirectTo(route="snippets_path")>
