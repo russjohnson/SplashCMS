@@ -1,1 +1,0 @@
-Splash CMS 0.1.0 - Copyright &copy; 2009 Mad Piranha, Inc. All Rights Reserved.

@@ -1,1 +1,0 @@
-<h1>Splash CMS</h1>

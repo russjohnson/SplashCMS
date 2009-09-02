@@ -1,1 +1,0 @@
-<cfimport taglib='../../lib/splash/tags' prefix='splash' />
