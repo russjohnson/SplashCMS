@@ -19,6 +19,7 @@ CREATE TABLE [dbo].[layouts](
 	[id] [int] IDENTITY(1,1) NOT NULL,
 	[name] [varchar](100) NULL,
 	[content] [text] NULL,
+	[fileName] [varchar](35) NULL,
 	[createdAt] [datetime] NULL,
 	[updatedAt] [datetime] NULL,
 	[createdById] [int] NULL,
@@ -87,6 +88,7 @@ CREATE TABLE [dbo].[pageParts](
 	[pageId] [int] NULL,
 	[name] [varchar](100) NULL,
 	[content] [text] NULL,
+	[fileName] [varchar](35) NULL,
  CONSTRAINT [PK_pageParts] PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
@@ -171,6 +173,7 @@ CREATE TABLE [dbo].[snippets](
 	[id] [int] IDENTITY(1,1) NOT NULL,
 	[name] [varchar](100) NULL,
 	[content] [text] NULL,
+	[fileName] [varchar](35) NULL,
 	[createdAt] [datetime] NULL,
 	[updatedAt] [datetime] NULL,
 	[createdById] [int] NULL,
