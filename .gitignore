@@ -6,3 +6,6 @@ WEB-INF
 /config/development/settings.cfm
 /config/maintenance/settings.cfm
 /config/production/settings.cfm
+/public/pages/*
+/public/layouts/*
+/public/snippets/*
