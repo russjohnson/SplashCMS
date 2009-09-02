@@ -31,7 +31,13 @@
   <cffunction name="create">
     <cfset snippet = model('snippet').new(params.snippet)>
     
+    <!--- create our snippets filename --->
+    <cfset snippet.fileName = dateTimeFormat(now()) & ".cfm">
+    
     <cfif snippet.save()>
+    	<!--- write the file to disk --->
+		  <cffile action="write" file="#application.defaults.snippetsPath#/#snippet.fileName#" output="#snippet.content#" addnewline="no" fixnewline="yes" />
+	
       <cfset flashInsert(success="The snippet was created successfully")>
       <cfset redirectTo(route="snippets_path")>
     <cfelse>
@@ -42,8 +48,18 @@
   
   <cffunction name="update">
   	<cfset snippet = model('snippet').findByKey(params.key)>
+  	
+    <!--- delete our old file --->
+    <cfif fileExists("#application.defaults.snippetsPath#/#snippet.fileName#")>
+  	  <cffile action="delete" file="#application.defaults.snippetsPath#/#snippet.fileName#">
+  	</cfif>
+    <!--- change our filename to the new file --->
+		<cfset snippet.fileName = dateTimeFormat(now()) & ".cfm">
 		  
   	<cfif snippet.update(params.snippet)>
+  	  <!--- write the file to disk --->
+		  <cffile action="write" file="#application.defaults.snippetsPath#/#snippet.fileName#" output="#snippet.content#" addnewline="no" fixnewline="yes" />
+		  
   		<cfset flashInsert(success="The snippet was updated successfully.")>	
       <cfset redirectTo(route="snippets_path")>
   	<cfelse>

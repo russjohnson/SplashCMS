@@ -22,7 +22,7 @@
 	  <cfset var layout = this.pageLayout().content>
 	     
     <!--- look for snippet tags in the layout and process them --->
-    <cfset layout = parseSnippets(layout)>
+    <!--- <cfset layout = parseSnippets(layout)> --->
     
     <!--- look for content tags in the layout and process them --->
     <cfset layout = parseContent(layout)>

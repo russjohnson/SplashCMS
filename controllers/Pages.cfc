@@ -38,7 +38,9 @@
         <cfset pagePart = page.newPagePart()>
         <cfset pagePart.name = item>
         <cfset pagePart.content = evaluate("params.pagePart_#item#").content>
+        <cfset pagePart.fileName = dateTimeFormat(now()) & ".cfm">
         <cfset pagePart.save()>
+        <cffile action="write" file="#application.defaults.pagesPath#/#pagePart.fileName#" output="<cfimport taglib='../../lib/splash/tags' prefix='splash' />#pagePart.content#" addnewline="no" fixnewline="yes" />
       </cfloop>
       
       <cfset flashInsert(success="The page has been created successfully.")>
@@ -66,14 +68,22 @@
     <cfif page.update(params.page)>
       
       <!--- first delete all existing page parts before saving the new ones --->
+      <cfloop query="pageParts">
+        <cfif pageParts.fileName is NOT "" and fileExists("#application.defaults.pagesPath#/#pageParts.fileName#")>
+  	      <cffile action="delete" file="#application.defaults.pagesPath#/#pageParts.fileName#">
+  	    </cfif>
+      </cfloop>  
       <cfset page.deleteAllPageParts()>
+        
       <!--- need to loop through the pageParts that get passed in params and save them --->
       <cfloop collection="#params.pagePart#" item="item">
         <!--- have to see if this pagePart exists, if so update it, if not create it --->
         <cfset pagePart = page.newPagePart()>
         <cfset pagePart.name = item>
         <cfset pagePart.content = evaluate("params.pagePart_#item#").content>
+        <cfset pagePart.fileName = dateTimeFormat(now()) & ".cfm">
         <cfset pagePart.save()>
+        <cffile action="write" file="#application.defaults.pagesPath#/#pagePart.fileName#" output="<cfimport taglib='../../lib/splash/tags' prefix='splash' />#pagePart.content#" addnewline="no" fixnewline="yes" />
       </cfloop>
       
   		<cfset flashInsert(success="The page was updated successfully.")>	

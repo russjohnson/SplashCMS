@@ -1,5 +1,23 @@
-
 <cfscript>
+/**
+* Calls both DateFormat and TimeFormat on a data object.
+* 
+* @param time      A data object. 
+* @param dateFormat      The string to use to format dates. Defaults to 
+* @param timeFormat      The string to use to format time. Defaults to 
+* @param joinStr      This string is placed between the date and time. Defaults to one space character. 
+* @return This function returns a string. 
+* @author Raymond Camden (ray@camdenfamily.com) 
+* @version 1, November 26, 2001 
+*/
+function DateTimeFormat(time) {
+    var str = "";
+    var dateFormat = "mmddyyyy";
+    var timeFormat = "HHmmssL";
+    
+    return DateFormat(time, dateFormat) & TimeFormat(time, timeFormat);
+}
+
 /**
 * Returns the content enclosed in a tag pair.
 * 

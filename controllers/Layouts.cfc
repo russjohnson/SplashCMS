@@ -30,8 +30,14 @@
   
   <cffunction name="create">
     <cfset layout = model('layout').new(params.layout)>
+      
+    <!--- create our layouts filename --->
+    <cfset layout.fileName = dateTimeFormat(now()) & ".cfm">
 
     <cfif layout.save()>
+      <!--- write the file to disk --->
+		  <cffile action="write" file="#application.defaults.layoutsPath#/#layout.fileName#" output="<cfimport taglib='../../lib/splash/tags' prefix='splash' />#layout.content#" addnewline="no" fixnewline="yes" />
+		  
       <cfset flashInsert(success="The layout was created successfully")>
       <cfset redirectTo(route="layouts_path")>
     <cfelse>
@@ -42,8 +48,18 @@
   
   <cffunction name="update">
   	<cfset layout = model('layout').findByKey(params.key)>
+  	  
+	  <!--- delete our old file --->
+	  <cfif fileExists("#application.defaults.layoutsPath#/#layout.fileName#")>
+  	  <cffile action="delete" file="#application.defaults.layoutsPath#/#layout.fileName#">
+  	</cfif>
+    <!--- change our filename to the new file --->
+		<cfset layout.fileName = dateTimeFormat(now()) & ".cfm">
 		
   	<cfif layout.update(params.layout)>
+  	  <!--- write the file to disk --->
+		  <cffile action="write" file="#application.defaults.layoutsPath#/#layout.fileName#" output="<cfimport taglib='../../lib/splash/tags' prefix='splash' />#layout.content#" addnewline="no" fixnewline="yes" />
+  	  
   		<cfset flashInsert(success="The layout was updated successfully.")>	
       <cfset redirectTo(route="layouts_path")>
   	<cfelse>

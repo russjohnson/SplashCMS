@@ -13,7 +13,13 @@
     <cfset page = model('page').findOneBySlug(params.slug)>
     
     <cfif isObject(page) AND page.status is "published">
-      <cfset renderedPage = page.process(page.slug)>
+      <cfset layoutFile = page.pageLayout().fileName>
+        
+      <cfsavecontent variable="renderedPage">
+        <!--- include the layout --->
+        <cfinclude template="#application.defaults.rootPath#public/layouts/#layoutFile#">
+      </cfsavecontent>
+      <!--- <cfset renderedPage = page.process(page.slug)> --->
     <cfelse>
       <!---
         TODO this should redirect to an admin themed 404 page unless a "page not found" type of page exists

@@ -1,3 +1,1 @@
-<cfoutput>
-  #renderedPage#
-</cfoutput>
+<cfoutput>#renderedPage#</cfoutput>
