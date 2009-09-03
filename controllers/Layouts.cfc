@@ -33,7 +33,7 @@
       
     <!--- create our layouts filename --->
     <cfset layout.fileName = dateTimeFormat(now()) & ".cfm">
-
+    <cfset layout.content = htmlEditFormat(layout.content)>
     <cfif layout.save()>
       <!--- write the file to disk --->
 		  <cffile action="write" file="#application.defaults.layoutsPath#/#layout.fileName#" output="<cfimport taglib='../../lib/splash/tags' prefix='s' />#layout.content#" addnewline="no" fixnewline="yes" />
@@ -55,6 +55,8 @@
   	</cfif>
     <!--- change our filename to the new file --->
 		<cfset layout.fileName = dateTimeFormat(now()) & ".cfm">
+		
+		<cfset layout.content = htmlEditFormat(layout.content)>
 		
   	<cfif layout.update(params.layout)>
   	  <!--- write the file to disk --->

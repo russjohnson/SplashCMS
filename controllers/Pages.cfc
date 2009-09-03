@@ -37,7 +37,7 @@
       <cfloop collection="#params.pagePart#" item="item">
         <cfset pagePart = page.newPagePart()>
         <cfset pagePart.name = item>
-        <cfset pagePart.content = evaluate("params.pagePart_#item#").content>
+        <cfset pagePart.content = htmlEditFormat(evaluate("params.pagePart_#item#").content)>
         <cfset pagePart.fileName = dateTimeFormat(now()) & ".cfm">
         <cfset pagePart.save()>
         <cffile action="write" file="#application.defaults.pagesPath#/#pagePart.fileName#" output="<cfimport taglib='../../lib/splash/tags' prefix='s' />#pagePart.content#" addnewline="no" fixnewline="yes" />
@@ -80,7 +80,7 @@
         <!--- have to see if this pagePart exists, if so update it, if not create it --->
         <cfset pagePart = page.newPagePart()>
         <cfset pagePart.name = item>
-        <cfset pagePart.content = evaluate("params.pagePart_#item#").content>
+        <cfset pagePart.content = htmlEditFormat(evaluate("params.pagePart_#item#").content)>
         <cfset pagePart.fileName = dateTimeFormat(now()) & ".cfm">
         <cfset pagePart.save()>
         <cffile action="write" file="#application.defaults.pagesPath#/#pagePart.fileName#" output="<cfimport taglib='../../lib/splash/tags' prefix='s' />#pagePart.content#" addnewline="no" fixnewline="yes" />
