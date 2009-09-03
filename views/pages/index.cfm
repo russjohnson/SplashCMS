@@ -28,7 +28,7 @@
         </cfif>
         #linkTo(text=pageTitle, route="edit_page_path", key=id, parentID=parentid, class="page")#
       </td>
-      <td>#status#</td>
+      <td><cfif status is "Draft"><span style="color:red;">#status#</span><cfelse>#status#</cfif></td>
       <td>
         #linkTo(text='#imageTag("add-child.png")#', route='new_page_path', parentid=id)#
         <cfif parentId is '0'>

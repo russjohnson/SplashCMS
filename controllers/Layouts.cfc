@@ -36,7 +36,7 @@
 
     <cfif layout.save()>
       <!--- write the file to disk --->
-		  <cffile action="write" file="#application.defaults.layoutsPath#/#layout.fileName#" output="<cfimport taglib='../../lib/splash/tags' prefix='splash' />#layout.content#" addnewline="no" fixnewline="yes" />
+		  <cffile action="write" file="#application.defaults.layoutsPath#/#layout.fileName#" output="<cfimport taglib='../../lib/splash/tags' prefix='s' />#layout.content#" addnewline="no" fixnewline="yes" />
 		  
       <cfset flashInsert(success="The layout was created successfully")>
       <cfset redirectTo(route="layouts_path")>
@@ -58,7 +58,7 @@
 		
   	<cfif layout.update(params.layout)>
   	  <!--- write the file to disk --->
-		  <cffile action="write" file="#application.defaults.layoutsPath#/#layout.fileName#" output="<cfimport taglib='../../lib/splash/tags' prefix='splash' />#layout.content#" addnewline="no" fixnewline="yes" />
+		  <cffile action="write" file="#application.defaults.layoutsPath#/#layout.fileName#" output="<cfimport taglib='../../lib/splash/tags' prefix='s' />#layout.content#" addnewline="no" fixnewline="yes" />
   	  
   		<cfset flashInsert(success="The layout was updated successfully.")>	
       <cfset redirectTo(route="layouts_path")>
