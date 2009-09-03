@@ -1,7 +1,7 @@
 <cfif thisTag.executionMode is "start">
   <cfparam name="attributes.name" default="">
   
-  <cfquery name="snippet" datasource="#caller.get('dataSourceName')#" maxrows="1">
+  <cfquery name="snippet" datasource="#application.wheels.dataSourceName#" maxrows="1">
     select * from snippets
     where name = '#attributes.name#'
   </cfquery>
