@@ -34,7 +34,7 @@
 
   <cfloop from="1" to="#arrayLen(crumbs)#" index="i">
     <c>
-    <cfset breadCrumbs = '<a href="#links[i]#">#crumbs[i]#</a>' & attributes.seperator & breadCrumbs>
+    <cfset breadCrumbs = attributes.seperator & '<a href="#links[i]#">#crumbs[i]#</a>' & breadCrumbs>
   </cfloop>
   <cfoutput>#breadcrumbs#</cfoutput>
 </cfif>
