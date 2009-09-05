@@ -4,6 +4,7 @@ h2. Requirements
 
 Splash CMS currently requires Railo 3 or higher or ColdFusion 8 or higher.
 MySQL or MSSQL
+You will need either Apache or IIS rewrite module to use the friendly url support
 
 
 
