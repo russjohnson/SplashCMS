@@ -1,3 +1,15 @@
+<cffunction name="$cgiScope" returntype="struct" access="public" output="false" hint="This copies all the variables Wheels needs from the CGI scope to the request scope.">
+	<cfargument name="keys" type="string" required="false" default="request_method,http_x_requested_with,http_referer,server_name,path_info,script_name,query_string,remote_addr,server_port,server_protocol">
+	<cfscript>
+		var loc = {};
+		loc.returnValue = {};
+		loc.iEnd = ListLen(arguments.keys);
+		for (loc.i=1; loc.i <= loc.iEnd; loc.i++)
+			loc.returnValue[ListGetAt(arguments.keys, loc.i)] = cgi[ListGetAt(arguments.keys, loc.i)];
+	</cfscript>
+	<cfreturn loc.returnValue>
+</cffunction>
+
 <cffunction name="$dollarify" returntype="struct" access="public" output="false">
 	<cfargument name="input" type="struct" required="true">
 	<cfargument name="on" type="string" required="true">
@@ -46,6 +58,11 @@
 <cffunction name="$findRoute" returntype="struct" access="public" output="false">
 	<cfscript>
 		var loc = {};
+		
+		// throw an error if a route with this name has not been set by developer in the config/routes.cfm file
+		if (application.wheels.showErrorInformation && !StructKeyExists(application.wheels.namedRoutePositions, arguments.route))
+			$throw(type="Wheels.RouteNotFound", message="Could not find the `#arguments.route#` route.", extendedInfo="Create a new route in `config/routes.cfm` with the name `#arguments.route#`.");
+
 		loc.routePos = application.wheels.namedRoutePositions[arguments.route];
 		if (loc.routePos Contains ",")
 		{
@@ -93,7 +110,7 @@
 		if (application.wheels.URLRewriting == "Off")
 			loc.delim = "&";
 		else
-			loc.delim = "?";		
+			loc.delim = "?";
 		loc.returnValue = "";
 		loc.iEnd = ListLen(arguments.params, "&");
 		for (loc.i=1; loc.i <= loc.iEnd; loc.i++)
@@ -104,7 +121,7 @@
 			if (ArrayLen(loc.temp) == 2)
 			{
 				loc.param = $URLEncode(loc.temp[2]);
-				if (application.wheels.obfuscateUrls)
+				if (application.wheels.obfuscateUrls && !ListFindNoCase("cfid,cftoken", loc.temp[1]))
 					loc.param = obfuscateParam(loc.param);
 				loc.returnValue = loc.returnValue & loc.param;
 			}
@@ -113,13 +130,13 @@
 	<cfreturn loc.returnValue>
 </cffunction>
 
-<cffunction name="$insertDefaults" returntype="struct" access="public" output="false">
+<cffunction name="$insertDefaults" returntype="void" access="public" output="false">
 	<cfargument name="name" type="string" required="true">
 	<cfargument name="input" type="struct" required="true">
 	<cfargument name="reserved" type="string" required="false" default="">
 	<cfscript>
 		var loc = {};
-		if (application.wheels.environment != "production")
+		if (application.wheels.showErrorInformation)
 		{
 			if (ListLen(arguments.reserved))
 			{
@@ -128,14 +145,12 @@
 				{
 					loc.item = ListGetAt(arguments.reserved, loc.i);
 					if (StructKeyExists(arguments.input, loc.item))
-						$throw(type="Wheels.IncorrectArguments", message="The '#loc.item#' argument is not allowed.", extendedInfo="Do not pass in the '#loc.item#' argument. It will be set automatically by Wheels.");
+						$throw(type="Wheels.IncorrectArguments", message="The `#loc.item#` argument is not allowed.", extendedInfo="Do not pass in the `#loc.item#` argument, it will be set automatically by Wheels.");
 				}
-			}			
+			}
 		}
-		StructAppend(arguments.input, application.wheels[arguments.name], false);
-		loc.returnValue = arguments.input;
+		StructAppend(arguments.input, application.wheels.functions[arguments.name], false);
 	</cfscript>
-	<cfreturn loc.returnValue>
 </cffunction>
 
 <cffunction name="$createObjectFromRoot" returntype="any" access="public" output="false">
@@ -186,7 +201,7 @@
 	<cfscript>
 		var loc = {};
 		loc.fileName = capitalize(arguments.name);
-		
+
 		// check if the controller file exists and store the results for performance reasons
 		if (!ListFindNoCase(application.wheels.existingControllerFiles, arguments.name) && !ListFindNoCase(application.wheels.nonExistingControllerFiles, arguments.name))
 		{
@@ -195,16 +210,16 @@
 			else
 				application.wheels.nonExistingControllerFiles = ListAppend(application.wheels.nonExistingControllerFiles, arguments.name);
 		}
-	
+
 		// check if the controller's view helper file exists and store the results for performance reasons
 		if (!ListFindNoCase(application.wheels.existingHelperFiles, arguments.name) && !ListFindNoCase(application.wheels.nonExistingHelperFiles, arguments.name))
 		{
-			if (FileExists(ExpandPath("#application.wheels.viewPath#/#arguments.name#/helpers.cfm")))
+			if (FileExists(ExpandPath("#application.wheels.viewPath#/#LCase(arguments.name)#/helpers.cfm")))
 				application.wheels.existingHelperFiles = ListAppend(application.wheels.existingHelperFiles, arguments.name);
 			else
 				application.wheels.nonExistingHelperFiles = ListAppend(application.wheels.nonExistingHelperFiles, arguments.name);
 		}
-	
+
 		if (!ListFindNoCase(application.wheels.existingControllerFiles, arguments.name))
 			loc.fileName = "Controller";
 		application.wheels.controllers[arguments.name] = $createObjectFromRoot(path=application.wheels.controllerComponentPath, fileName=loc.fileName, method="$initControllerClass", name=arguments.name);
@@ -222,40 +237,9 @@
 	<cfreturn loc.returnValue>
 </cffunction>
 
-<cffunction name="$flatten" returntype="string" access="public" output="false">
-	<cfargument name="values" type="struct" required="true">
-	<cfscript>
-		var loc = {};
-		loc.returnValue = "";
-		if (IsStruct(arguments.values))
-		{
-			for (loc.key in arguments.values)
-			{
-				if (IsSimpleValue(arguments.values[loc.key]))
-					loc.returnValue = loc.returnValue & "&" & loc.key & "=""" & arguments.values[loc.key] & """";
-				else
-					loc.returnValue = loc.returnValue & "&" & $flatten(arguments.values[loc.key]);
-			}
-		}
-		else if (IsArray(arguments.values))
-		{
-			loc.iEnd = ArrayLen(arguments.values);
-			for (loc.i=1; loc.i <= loc.iEnd; loc.i++)
-			{
-				if (IsSimpleValue(arguments.values[loc.i]))
-					loc.returnValue = loc.returnValue & "&" & loc.i & "=""" & arguments.values[loc.i] & """";
-				else
-					loc.returnValue = loc.returnValue & "&" & $flatten(arguments.values[loc.i]);
-			}
-		}
-		loc.returnValue = Right(loc.returnValue, Len(loc.returnValue)-1);
-	</cfscript>
-	<cfreturn loc.returnValue>
-</cffunction>
-
 <cffunction name="$hashStruct" returntype="string" access="public" output="false">
 	<cfargument name="args" type="struct" required="true">
-	<cfreturn Hash(ListSort($flatten(arguments.args), "text", "asc", "&"))>
+	<cfreturn Hash(SerializeJSON(arguments.args))>
 </cffunction>
 
 <cffunction name="$addToCache" returntype="void" access="public" output="false">
@@ -308,7 +292,7 @@
 		{
 			if (Now() > application.wheels.cache[arguments.category][arguments.key].expiresAt)
 			{
-				$removeFromCache(key=arguments.key, category=arguments.category);		
+				$removeFromCache(key=arguments.key, category=arguments.category);
 			}
 			else
 			{
@@ -376,7 +360,7 @@
 	<cfreturn loc.returnValue>
 </cffunction>
 
-<!--- 
+<!---
 Used to announce to the developer that a feature they are using will be removed at some point.
 DOES NOT work in production mode.
 
@@ -412,19 +396,19 @@ Should now call bar() instead and marking foo() as deprecated
 	<cfargument name="announce" type="boolean" required="false" default="true">
 	<cfset var loc = {}>
 	<cfset loc.ret = {}>
-	<cfif get("environment") eq "production">
+	<cfif not application.wheels.showErrorInformation>
 		<cfreturn loc.ret>
 	</cfif>
 	<!--- set return value --->
 	<cfset loc.data = []>
 	<cfset loc.ret = {message=arguments.message, line="", method="", template="", data=loc.data}>
-	<!--- 	
+	<!---
 	create an exception so we can get the TagContext and display what file and line number the
 	deprecated method is being called in
 	 --->
 	<cfset loc.exception = createObject("java","java.lang.Exception").init()>
 	<cfset loc.tagcontext = loc.exception.tagcontext>
-	<!--- 
+	<!---
 	TagContext is an array. The first element of the array will always be the context for this
 	method announcing the deprecation. The second element will be the deprecated function that
 	is being called. We need to look at the third element of the array to get the method that
@@ -438,7 +422,7 @@ Should now call bar() instead and marking foo() as deprecated
 		<!--- the deprecated method that was called --->
 		<cfset loc.ret.method = rereplacenocase(loc.context.raw_trace, ".*\$func([^\.]*)\..*", "\1")>
 		<!--- the user template where the method called occurred --->
-		<cfset loc.ret.template = loc.context.template>		
+		<cfset loc.ret.template = loc.context.template>
 		<!--- try to get the code --->
  		<cfif len(loc.ret.template) and FileExists(loc.ret.template)>
 			<!--- grab a one line radius from where the deprecation occurred. --->

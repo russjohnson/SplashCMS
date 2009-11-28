@@ -91,7 +91,7 @@
 	#endFormTag()#
 	
 	<cfif page.updatedByID is NOT "">
-	  #includePartial(name='/shared/last_update', updatedByID=page.updatedByID, updatedAt=page.updatedAt)#
+	  #includePartial(partial='/shared/last_update', updatedByID=page.updatedByID, updatedAt=page.updatedAt)#
 	</cfif>
 	
 	<cfif page.publishedAt is NOT "">

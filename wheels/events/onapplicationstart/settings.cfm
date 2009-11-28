@@ -1,8 +1,8 @@
 <cfscript>
 	// rewrite settings based on web server rewrite capabilites
-	if (Right(cgi.script_name, 12) == "/rewrite.cfm")
+	if (Right(request.cgi.script_name, 12) == "/rewrite.cfm")
 		application.wheels.URLRewriting = "On";
-	else if (Len(cgi.path_info))
+	else if (Len(request.cgi.path_info))
 		application.wheels.URLRewriting = "Partial";
 	else
 		application.wheels.URLRewriting = "Off";
@@ -49,10 +49,10 @@
 	if (application.wheels.environment == "production")
 	{
 		application.wheels.showErrorInformation = false;
-		if (cgi.server_name Contains ".")
+		if (request.cgi.server_name Contains ".")
 		{
 			application.wheels.sendEmailOnError = true;
-			application.wheels.errorEmailAddress = "webmaster@" & Reverse(ListGetAt(Reverse(cgi.server_name), 2,".")) & "." & Reverse(ListGetAt(Reverse(cgi.server_name), 1, "."));
+			application.wheels.errorEmailAddress = "webmaster@" & Reverse(ListGetAt(Reverse(request.cgi.server_name), 2,".")) & "." & Reverse(ListGetAt(Reverse(request.cgi.server_name), 1, "."));
 		}
 	}
 
@@ -74,81 +74,82 @@
 	application.wheels.defaultCacheTime = 60;
 
 	// function defaults
-	application.wheels.average = {distinct=false};
-	application.wheels.belongsTo = {dependent=true};
-	application.wheels.buttonTo = {onlyPath=true, host="", protocol="", port=0, text="", confirm="", image="", disable=""};
-	application.wheels.caches = {time=60};
-	application.wheels.checkBox = {label="", wrapLabel=true, prepend="", append="", prependToLabel="", appendToLabel="", errorElement="span", checkedValue=1, unCheckedValue=0};
-	application.wheels.checkBoxTag = {label="", wrapLabel=true, prepend="", append="", prependToLabel="", appendToLabel="", value=1};
-	application.wheels.create = {parameterize=true, defaults=true};
-	application.wheels.dateSelect = {label="", wrapLabel=true, prepend="", append="", prependToLabel="", appendToLabel="", errorElement="span", includeBlank=false, order="month,day,year", separator=" ", startYear=Year(Now())-5, endYear=Year(Now())+5, monthDisplay="names"};
-	application.wheels.dateSelectTags = {label="", wrapLabel=true, prepend="", append="", prependToLabel="", appendToLabel="", includeBlank=false, order="month,day,year", separator=" ", startYear=Year(Now())-5, endYear=Year(Now())+5, monthDisplay="names"};
-	application.wheels.dateTimeSelect = {label="", wrapLabel=true, prepend="", append="", prependToLabel="", appendToLabel="", errorElement="span", includeBlank=false, dateOrder="month,day,year", dateSeparator=" ", startYear=Year(Now())-5, endYear=Year(Now())+5, monthDisplay="names", timeOrder="hour,minute,second", timeSeparator=":", minuteStep=1, separator=" - "};
-	application.wheels.dateTimeSelectTags = {label="", wrapLabel=true, prepend="", append="", prependToLabel="", appendToLabel="", includeBlank=false, dateOrder="month,day,year", dateSeparator=" ", startYear=Year(Now())-5, endYear=Year(Now())+5, monthDisplay="names", timeOrder="hour,minute,second", timeSeparator=":", minuteStep=1, separator=" - "};
-	application.wheels.daySelectTag = {label="", wrapLabel=true, prepend="", append="", prependToLabel="", appendToLabel="", includeBlank=false};
-	application.wheels.delete = {parameterize=true};
-	application.wheels.deleteAll = {parameterize=true, instantiate=false};
-	application.wheels.distanceOfTimeInWords = {includeSeconds=false};
-	application.wheels.errorMessageOn = {prependText="", appendText="", wrapperElement="span", class="error-message"};
-	application.wheels.errorMessagesFor = {class="error-messages", showDuplicates=true};
-	application.wheels.exists = {reload=false, parameterize=true};
-	application.wheels.fileField = {label="", wrapLabel=true, prepend="", append="", prependToLabel="", appendToLabel="", errorElement="span"};
-	application.wheels.fileFieldTag = {label="", wrapLabel=true, prepend="", append="", prependToLabel="", appendToLabel=""};
-	application.wheels.findAll = {reload=false, parameterize=true, perPage=10, order=""};
-	application.wheels.findByKey = {reload=false, parameterize=true};
-	application.wheels.findOne = {reload=false, parameterize=true};
-	application.wheels.hasMany = {dependent=false};
-	application.wheels.hasOne = {dependent=false};
-	application.wheels.hiddenField = {};
-	application.wheels.hourSelectTag = {label="", wrapLabel=true, prepend="", append="", prependToLabel="", appendToLabel="", includeBlank=false};
-	application.wheels.imageTag = {};
-	application.wheels.includePartial = {layout=""};
-	application.wheels.javaScriptIncludeTag = {type="text/javascript"};
-	application.wheels.linkTo = {onlyPath=true, host="", protocol="", port=0};
-	application.wheels.mailTo = {encode=false};
-	application.wheels.minuteSelectTag = {label="", wrapLabel=true, prepend="", append="", prependToLabel="", appendToLabel="", includeBlank=false, minuteStep=1};
-	application.wheels.monthSelectTag = {label="", wrapLabel=true, prepend="", append="", prependToLabel="", appendToLabel="", includeBlank=false, monthDisplay="names"};
-	application.wheels.new = {defaults=false};
-	application.wheels.paginationLinks = {windowSize=2, alwaysShowAnchors=true, anchorDivider=" ... ", linkToCurrentPage=false, prepend="", append="", prependToPage="", prependOnFirst=true, appendToPage="", appendOnLast=true, classForCurrent="", name="page", showSinglePage=false};
-	application.wheels.passwordField = {label="", wrapLabel=true, prepend="", append="", prependToLabel="", appendToLabel="", errorElement="span"};
-	application.wheels.passwordFieldTag = {label="", wrapLabel=true, prepend="", append="", prependToLabel="", appendToLabel=""};
-	application.wheels.radioButton = {label="", wrapLabel=true, prepend="", append="", prependToLabel="", appendToLabel="", errorElement="span"};
-	application.wheels.radioButtonTag = {label="", wrapLabel=true, prepend="", append="", prependToLabel="", appendToLabel=""};
-	application.wheels.redirectTo = {onlyPath=true, host="", protocol="", port=0, addToken=false, statusCode=302};
-	application.wheels.renderPage = {layout=true};
-	application.wheels.renderPageToString = {layout=true};
-	application.wheels.renderPartial = {layout=""};
-	application.wheels.save = {parameterize=true, defaults=true};
-	application.wheels.secondSelectTag = {label="", wrapLabel=true, prepend="", append="", prependToLabel="", appendToLabel="", includeBlank=false};
-	application.wheels.select = {label="", wrapLabel=true, prepend="", append="", prependToLabel="", appendToLabel="", errorElement="span", includeBlank=false, valueField="", textField=""};
-	application.wheels.selectTag = {label="", wrapLabel=true, prepend="", append="", prependToLabel="", appendToLabel="", includeBlank=false, multiple=false, valueField="", textField=""};
-	application.wheels.sendEmail = {layout=false, detectMultipart=true};
-	application.wheels.sendFile = {disposition="attachment"};
-	application.wheels.startFormTag = {onlyPath=true, host="", protocol="", port=0, method="post", multipart=false, spamProtection=false};
-	application.wheels.styleSheetLinkTag = {type="text/css", media="all"};
-	application.wheels.submitTag = {value="Save changes", image="", disable=""};
-	application.wheels.sum = {distinct=false};
-	application.wheels.textArea = {label="", wrapLabel=true, prepend="", append="", prependToLabel="", appendToLabel="", errorElement="span"};
-	application.wheels.textAreaTag = {label="", wrapLabel=true, prepend="", append="", prependToLabel="", appendToLabel=""};
-	application.wheels.textField = {label="", wrapLabel=true, prepend="", append="", prependToLabel="", appendToLabel="", errorElement="span"};
-	application.wheels.textFieldTag = {label="", wrapLabel=true, prepend="", append="", prependToLabel="", appendToLabel=""};
-	application.wheels.timeAgoInWords = {includeSeconds=false};
-	application.wheels.timeSelect = {label="", wrapLabel=true, prepend="", append="", prependToLabel="", appendToLabel="", errorElement="span", includeBlank=false, order="hour,minute,second", separator=":", minuteStep=1};
-	application.wheels.timeSelectTags = {label="", wrapLabel=true, prepend="", append="", prependToLabel="", appendToLabel="", includeBlank=false, order="hour,minute,second", separator=":", minuteStep=1};
-	application.wheels.timeUntilInWords = {includeSeconds=false};
-	application.wheels.update = {parameterize=true};
-	application.wheels.updateAll = {parameterize=true, instantiate=false};
-	application.wheels.URLFor = {onlyPath=true, host="", protocol="", port=0};
-	application.wheels.validatesConfirmationOf = {message="[property] should match confirmation"};
-	application.wheels.validatesExclusionOf = {message="[property] is reserved", allowBlank=false};
-	application.wheels.validatesFormatOf = {message="[property] is invalid", allowBlank=false};
-	application.wheels.validatesInclusionOf = {message="[property] is not included in the list", allowBlank=false};
-	application.wheels.validatesLengthOf = {message="[property] is the wrong length", allowBlank=false, exactly=0, maximum=0, minimum=0, within=""};
-	application.wheels.validatesNumericalityOf = {message="[property] is not a number", allowBlank=false, onlyInteger=false};
-	application.wheels.validatesPresenceOf = {message="[property] can't be empty"};
-	application.wheels.validatesUniquenessOf = {message="[property] has already been taken"};
-	application.wheels.verifies = {handler=""};
-	application.wheels.yearSelectTag = {label="", wrapLabel=true, prepend="", append="", prependToLabel="", appendToLabel="", includeBlank=false, startYear=Year(Now())-5, endYear=Year(Now())+5};
+	application.wheels.functions = {};
+	application.wheels.functions.average = {distinct=false};
+	application.wheels.functions.belongsTo = {joinType="inner"};
+	application.wheels.functions.buttonTo = {onlyPath=true, host="", protocol="", port=0, text="", confirm="", image="", disable=""};
+	application.wheels.functions.caches = {time=60};
+	application.wheels.functions.checkBox = {label="", labelPlacement="around", prepend="", append="", prependToLabel="", appendToLabel="", errorElement="span", checkedValue=1, unCheckedValue=0};
+	application.wheels.functions.checkBoxTag = {label="", labelPlacement="around", prepend="", append="", prependToLabel="", appendToLabel="", value=1};
+	application.wheels.functions.create = {parameterize=true, defaults=true};
+	application.wheels.functions.dateSelect = {label="", labelPlacement="around", prepend="", append="", prependToLabel="", appendToLabel="", errorElement="span", includeBlank=false, order="month,day,year", separator=" ", startYear=Year(Now())-5, endYear=Year(Now())+5, monthDisplay="names"};
+	application.wheels.functions.dateSelectTags = {label="", labelPlacement="around", prepend="", append="", prependToLabel="", appendToLabel="", includeBlank=false, order="month,day,year", separator=" ", startYear=Year(Now())-5, endYear=Year(Now())+5, monthDisplay="names"};
+	application.wheels.functions.dateTimeSelect = {label="", labelPlacement="around", prepend="", append="", prependToLabel="", appendToLabel="", errorElement="span", includeBlank=false, dateOrder="month,day,year", dateSeparator=" ", startYear=Year(Now())-5, endYear=Year(Now())+5, monthDisplay="names", timeOrder="hour,minute,second", timeSeparator=":", minuteStep=1, separator=" - "};
+	application.wheels.functions.dateTimeSelectTags = {label="", labelPlacement="around", prepend="", append="", prependToLabel="", appendToLabel="", includeBlank=false, dateOrder="month,day,year", dateSeparator=" ", startYear=Year(Now())-5, endYear=Year(Now())+5, monthDisplay="names", timeOrder="hour,minute,second", timeSeparator=":", minuteStep=1, separator=" - "};
+	application.wheels.functions.daySelectTag = {label="", labelPlacement="around", prepend="", append="", prependToLabel="", appendToLabel="", includeBlank=false};
+	application.wheels.functions.delete = {parameterize=true};
+	application.wheels.functions.deleteAll = {parameterize=true, instantiate=false};
+	application.wheels.functions.distanceOfTimeInWords = {includeSeconds=false};
+	application.wheels.functions.errorMessageOn = {prependText="", appendText="", wrapperElement="span", class="error-message"};
+	application.wheels.functions.errorMessagesFor = {class="error-messages", showDuplicates=true};
+	application.wheels.functions.exists = {reload=false, parameterize=true};
+	application.wheels.functions.fileField = {label="", labelPlacement="around", prepend="", append="", prependToLabel="", appendToLabel="", errorElement="span"};
+	application.wheels.functions.fileFieldTag = {label="", labelPlacement="around", prepend="", append="", prependToLabel="", appendToLabel=""};
+	application.wheels.functions.findAll = {reload=false, parameterize=true, perPage=10, order="", returnAs="query", returnIncluded=true};
+	application.wheels.functions.findByKey = {reload=false, parameterize=true, returnAs="object"};
+	application.wheels.functions.findOne = {reload=false, parameterize=true, returnAs="object"};
+	application.wheels.functions.hasMany = {joinType="outer"};
+	application.wheels.functions.hasOne = {joinType="outer"};
+	application.wheels.functions.hiddenField = {};
+	application.wheels.functions.hourSelectTag = {label="", labelPlacement="around", prepend="", append="", prependToLabel="", appendToLabel="", includeBlank=false};
+	application.wheels.functions.imageTag = {};
+	application.wheels.functions.includePartial = {layout=""};
+	application.wheels.functions.javaScriptIncludeTag = {type="text/javascript"};
+	application.wheels.functions.linkTo = {onlyPath=true, host="", protocol="", port=0};
+	application.wheels.functions.mailTo = {encode=false};
+	application.wheels.functions.minuteSelectTag = {label="", labelPlacement="around", prepend="", append="", prependToLabel="", appendToLabel="", includeBlank=false, minuteStep=1};
+	application.wheels.functions.monthSelectTag = {label="", labelPlacement="around", prepend="", append="", prependToLabel="", appendToLabel="", includeBlank=false, monthDisplay="names"};
+	application.wheels.functions.new = {defaults=false};
+	application.wheels.functions.paginationLinks = {windowSize=2, alwaysShowAnchors=true, anchorDivider=" ... ", linkToCurrentPage=false, prepend="", append="", prependToPage="", prependOnFirst=true, appendToPage="", appendOnLast=true, classForCurrent="", name="page", showSinglePage=false};
+	application.wheels.functions.passwordField = {label="", labelPlacement="around", prepend="", append="", prependToLabel="", appendToLabel="", errorElement="span"};
+	application.wheels.functions.passwordFieldTag = {label="", labelPlacement="around", prepend="", append="", prependToLabel="", appendToLabel=""};
+	application.wheels.functions.radioButton = {label="", labelPlacement="around", prepend="", append="", prependToLabel="", appendToLabel="", errorElement="span"};
+	application.wheels.functions.radioButtonTag = {label="", labelPlacement="around", prepend="", append="", prependToLabel="", appendToLabel=""};
+	application.wheels.functions.redirectTo = {onlyPath=true, host="", protocol="", port=0, addToken=false, statusCode=302};
+	application.wheels.functions.renderPage = {layout=true};
+	application.wheels.functions.renderPageToString = {layout=true};
+	application.wheels.functions.renderPartial = {layout=""};
+	application.wheels.functions.save = {parameterize=true, defaults=true};
+	application.wheels.functions.secondSelectTag = {label="", labelPlacement="around", prepend="", append="", prependToLabel="", appendToLabel="", includeBlank=false};
+	application.wheels.functions.select = {label="", labelPlacement="around", prepend="", append="", prependToLabel="", appendToLabel="", errorElement="span", includeBlank=false, valueField="", textField=""};
+	application.wheels.functions.selectTag = {label="", labelPlacement="around", prepend="", append="", prependToLabel="", appendToLabel="", includeBlank=false, multiple=false, valueField="", textField=""};
+	application.wheels.functions.sendEmail = {layouts=false, detectMultipart=true};
+	application.wheels.functions.sendFile = {disposition="attachment"};
+	application.wheels.functions.startFormTag = {onlyPath=true, host="", protocol="", port=0, method="post", multipart=false, spamProtection=false};
+	application.wheels.functions.styleSheetLinkTag = {type="text/css", media="all"};
+	application.wheels.functions.submitTag = {value="Save changes", image="", disable=""};
+	application.wheels.functions.sum = {distinct=false};
+	application.wheels.functions.textArea = {label="", labelPlacement="around", prepend="", append="", prependToLabel="", appendToLabel="", errorElement="span"};
+	application.wheels.functions.textAreaTag = {label="", labelPlacement="around", prepend="", append="", prependToLabel="", appendToLabel=""};
+	application.wheels.functions.textField = {label="", labelPlacement="around", prepend="", append="", prependToLabel="", appendToLabel="", errorElement="span"};
+	application.wheels.functions.textFieldTag = {label="", labelPlacement="around", prepend="", append="", prependToLabel="", appendToLabel=""};
+	application.wheels.functions.timeAgoInWords = {includeSeconds=false};
+	application.wheels.functions.timeSelect = {label="", labelPlacement="around", prepend="", append="", prependToLabel="", appendToLabel="", errorElement="span", includeBlank=false, order="hour,minute,second", separator=":", minuteStep=1};
+	application.wheels.functions.timeSelectTags = {label="", labelPlacement="around", prepend="", append="", prependToLabel="", appendToLabel="", includeBlank=false, order="hour,minute,second", separator=":", minuteStep=1};
+	application.wheels.functions.timeUntilInWords = {includeSeconds=false};
+	application.wheels.functions.update = {parameterize=true};
+	application.wheels.functions.updateAll = {parameterize=true, instantiate=false};
+	application.wheels.functions.URLFor = {onlyPath=true, host="", protocol="", port=0};
+	application.wheels.functions.validatesConfirmationOf = {message="[property] should match confirmation"};
+	application.wheels.functions.validatesExclusionOf = {message="[property] is reserved", allowBlank=false};
+	application.wheels.functions.validatesFormatOf = {message="[property] is invalid", allowBlank=false};
+	application.wheels.functions.validatesInclusionOf = {message="[property] is not included in the list", allowBlank=false};
+	application.wheels.functions.validatesLengthOf = {message="[property] is the wrong length", allowBlank=false, exactly=0, maximum=0, minimum=0, within=""};
+	application.wheels.functions.validatesNumericalityOf = {message="[property] is not a number", allowBlank=false, onlyInteger=false};
+	application.wheels.functions.validatesPresenceOf = {message="[property] can't be empty"};
+	application.wheels.functions.validatesUniquenessOf = {message="[property] has already been taken", allowBlank=false};
+	application.wheels.functions.verifies = {handler=""};
+	application.wheels.functions.yearSelectTag = {label="", labelPlacement="around", prepend="", append="", prependToLabel="", appendToLabel="", includeBlank=false, startYear=Year(Now())-5, endYear=Year(Now())+5};
 
 	// set a flag to indicate that all settings have been loaded
 	application.wheels.initialized = true;

@@ -24,6 +24,6 @@
 	#endFormTag()#
 	
 	<cfif snippet.updatedByID is NOT "">
-	  #includePartial(name='/shared/last_update', updatedByID=snippet.updatedByID, updatedAt=snippet.updatedAt)#
+	  #includePartial(partial='/shared/last_update', updatedByID=snippet.updatedByID, updatedAt=snippet.updatedAt)#
 	</cfif>
 </cfoutput>

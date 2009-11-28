@@ -2,7 +2,7 @@
 	This is the parent model file that all your models should extend.
 	Do not delete this file.
 --->
-<cfcomponent extends="wheels.Model">
+<cfcomponent extends="Wheels">
 
   <cffunction name="setCreatedByID">
     <cfset this.createdById = session.currentUser.id>

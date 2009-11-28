@@ -1,3 +1,7 @@
+<cffunction name="$returnDispatcher" returntype="any" access="public" output="false">
+	<cfreturn this>
+</cffunction>
+
 <cffunction name="$runFilters" returntype="void" access="public" output="false">
 	<cfargument name="controller" type="any" required="true">
 	<cfargument name="actionName" type="string" required="true">
@@ -32,11 +36,11 @@
 			loc.verification = loc.verifications[loc.i];
 			if ((!Len(loc.verification.only) && !Len(loc.verification.except)) || (Len(loc.verification.only) && ListFindNoCase(loc.verification.only, arguments.actionName)) || (Len(loc.verification.except) && !ListFindNoCase(loc.verification.except, arguments.actionName)))
 			{
-				if (IsBoolean(loc.verification.post) && ((loc.verification.post && cgi.request_method != "post") || (!loc.verification.post && cgi.request_method == "post")))
+				if (IsBoolean(loc.verification.post) && ((loc.verification.post && request.cgi.request_method != "post") || (!loc.verification.post && request.cgi.request_method == "post")))
 					loc.abort = true;
-				if (IsBoolean(loc.verification.get) && ((loc.verification.get && cgi.request_method != "get") || (!loc.verification.get && cgi.request_method == "get")))
+				if (IsBoolean(loc.verification.get) && ((loc.verification.get && request.cgi.request_method != "get") || (!loc.verification.get && request.cgi.request_method == "get")))
 					loc.abort = true;
-				if (IsBoolean(loc.verification.ajax) && ((loc.verification.ajax && cgi.http_x_requested_with != "XMLHTTPRequest") || (!loc.verification.ajax && cgi.http_x_requested_with == "XMLHTTPRequest")))
+				if (IsBoolean(loc.verification.ajax) && ((loc.verification.ajax && request.cgi.http_x_requested_with != "XMLHTTPRequest") || (!loc.verification.ajax && request.cgi.http_x_requested_with == "XMLHTTPRequest")))
 					loc.abort = true;
 				loc.jEnd = ListLen(loc.verification.params);
 				for (loc.j=1; loc.j <= loc.jEnd; loc.j++)
@@ -62,7 +66,7 @@
 				if (Len(loc.verification.handler))
 				{
 					$invoke(componentReference=arguments.controller, method=loc.verification.handler);
-					$location(url=cgi.http_referer, addToken=false);
+					$location(url=request.cgi.http_referer, addToken=false);
 				}
 				else
 				{
@@ -74,8 +78,8 @@
 </cffunction>
 
 <cffunction name="$getRouteFromRequest" returntype="string" access="public" output="false">
-	<cfargument name="pathInfo" type="string" required="false" default="#cgi.path_info#">
-	<cfargument name="scriptName" type="string" required="false" default="#cgi.script_name#">
+	<cfargument name="pathInfo" type="string" required="false" default="#request.cgi.path_info#">
+	<cfargument name="scriptName" type="string" required="false" default="#request.cgi.script_name#">
 	<cfscript>
 		var returnValue = "";
 		if (arguments.pathInfo == arguments.scriptName || arguments.pathInfo == "/" || arguments.pathInfo == "")
@@ -123,7 +127,7 @@
 			}
 		}
 		if (!StructKeyExists(loc, "returnValue"))
-			$throw(type="Wheels.RouteNotFound", message="Wheels couldn't find a route that matched this request.", extendedInfo="Make sure there is a route setup in your 'config/routes.cfm' file that matches the '#arguments.route#' request.");
+			$throw(type="Wheels.RouteNotFound", message="Wheels couldn't find a route that matched this request.", extendedInfo="Make sure there is a route setup in your `config/routes.cfm` file that matches the `#arguments.route#` request.");
 		</cfscript>
 		<cfreturn loc.returnValue>
 </cffunction>
@@ -186,10 +190,10 @@
 			{
 				if (FindNoCase("($checkbox)", loc.key))
 				{
-					// if no other form parameter exists with this name it means that the checkbox was left blank and therefore we force the value to 0 (to get around the problem that unchecked checkboxes don't post at all)
+					// if no other form parameter exists with this name it means that the checkbox was left blank and therefore we force the value to the unchecked values for the checkbox (to get around the problem that unchecked checkboxes don't post at all)
 					loc.formParamName = ReplaceNoCase(loc.key, "($checkbox)", "");
 					if (!StructKeyExists(arguments.formScope, loc.formParamName))
-						arguments.formScope[loc.formParamName] = 0;
+						arguments.formScope[loc.formParamName] = arguments.formScope[loc.key];
 					StructDelete(arguments.formScope, loc.key);
 				}
 				else if (REFindNoCase(".*\((\$year|\$month|\$day|\$hour|\$minute|\$second)\)$", loc.key))
@@ -241,20 +245,34 @@
 			// add form variables to the params struct
 			for (loc.key in arguments.formScope)
 			{
-				loc.match = REFindNoCase("(.*?)\[(.*?)\]", loc.key, 1, true);
-				if (ArrayLen(loc.match.pos) == 3)
+				if (loc.key != "fieldnames")
 				{
-					// model object form field, build a struct to hold the data, named after the model object
-					loc.objectName = LCase(Mid(loc.key, loc.match.pos[2], loc.match.len[2]));
-					loc.fieldName = LCase(Mid(loc.key, loc.match.pos[3], loc.match.len[3]));
-					if (!StructKeyExists(loc.returnValue, loc.objectName))
-						loc.returnValue[loc.objectName] = {};
-					loc.returnValue[loc.objectName][loc.fieldName] = arguments.formScope[loc.key];
-				}
-				else
-				{
-					// normal form field
-					loc.returnValue[loc.key] = arguments.formScope[loc.key];
+					if (Find("[", loc.key) && Right(loc.key, 1) == "]")
+					{
+						// object form field
+						loc.name = SpanExcluding(loc.key, "[");
+						loc.property = SpanExcluding(Reverse(SpanExcluding(Reverse(loc.key), "[")), "]");
+						if (!StructKeyExists(loc.returnValue, loc.name))
+							loc.returnValue[loc.name] = {};
+						if (Find("][", loc.key))
+						{
+							// a collection of objects was passed in
+							loc.primaryKeyValue = Replace(SpanExcluding(loc.key, "]"), loc.name & "[", "", "one");
+							if (!StructKeyExists(loc.returnValue[loc.name], loc.primaryKeyValue))
+								loc.returnValue[loc.name][loc.primaryKeyValue] = {};
+							loc.returnValue[loc.name][loc.primaryKeyValue][loc.property] = arguments.formScope[loc.key];
+						}
+						else
+						{
+							// just one object was passed in
+							loc.returnValue[loc.name][loc.property] = arguments.formScope[loc.key];
+						}
+					}
+					else
+					{
+						// normal form field
+						loc.returnValue[loc.key] = arguments.formScope[loc.key];
+					}
 				}
 			}
 		}
@@ -311,7 +329,7 @@
 		if (loc.actionIsCachable)
 		{
 			loc.category = "action";
-			loc.key = "#cgi.script_name##cgi.path_info##cgi.query_string#";
+			loc.key = "#request.cgi.script_name##request.cgi.path_info##request.cgi.query_string#";
 			loc.lockName = loc.category & loc.key;
 			loc.conditionArgs = {};
 			loc.conditionArgs.key = loc.key;
@@ -323,7 +341,7 @@
 			loc.executeArgs.key = loc.key;
 			loc.executeArgs.time = loc.timeToCache;
 			loc.executeArgs.category = loc.category;
-			$doubleCheckedLock(name=loc.lockName, condition="$getFromCache", execute="$callActionAndAddToCache", conditionArgs=loc.conditionArgs, executeArgs=loc.executeArgs);
+			request.wheels.response = $doubleCheckedLock(name=loc.lockName, condition="$getFromCache", execute="$callActionAndAddToCache", conditionArgs=loc.conditionArgs, executeArgs=loc.executeArgs);
 		}
 		else
 		{
@@ -338,7 +356,7 @@
 		// clear the flash (note that this is not done for redirectTo since the processing does not get here)
 		StructClear(session.flash);
 	</cfscript>
-	<cfreturn request.wheels.response>
+	<cfreturn Trim(request.wheels.response)>
 </cffunction>
 
 <cffunction name="$callActionAndAddToCache" returntype="string" access="public" output="false">
@@ -355,6 +373,10 @@
 	<cfargument name="actionName" type="string" required="true">
 	<cfscript>
 		var loc = {};
+		
+		if (Left(arguments.actionName, 1) == "$" || ListFindNoCase(application.wheels.protectedControllerMethods, arguments.actionName))
+			$throw(type="Wheels.ActionNotAllowed", message="You are not allowed to execute the `#arguments.actionName#` method as an action.", extendedInfo="Make sure your action does not have the same name as any of the built-in Wheels functions.");
+
 		if (StructKeyExists(arguments.controller, arguments.actionName))
 			$invoke(componentReference=arguments.controller, method=arguments.actionName);
 		if (!StructKeyExists(request.wheels, "response"))
@@ -374,7 +396,7 @@
 				{
 					if (application.wheels.showErrorInformation)
 					{
-						$throw(type="Wheels.ViewNotFound", message="Could not find the view page for the '#arguments.actionName#' action in the '#arguments.controllerName#' controller.", extendedInfo="Create a file named '#LCase(arguments.actionName)#.cfm' in the 'views/#LCase(arguments.controllerName)#' directory (create the directory as well if it doesn't already exist).");
+						$throw(type="Wheels.ViewNotFound", message="Could not find the view page for the `#arguments.actionName#` action in the `#arguments.controllerName#` controller.", extendedInfo="Create a file named `#LCase(arguments.actionName)#.cfm` in the `views/#LCase(arguments.controllerName)#` directory (create the directory as well if it doesn't already exist).");
 					}
 					else
 					{
