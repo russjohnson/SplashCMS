@@ -10,7 +10,7 @@
   <cfoutput query="snippets">
   <tr>
     <td>#linkTo(text=name, route="edit_snippet_path", key=id, class="snippet")#</td>
-    <td>#linkTo(text='#imageTag("remove.png")#', route='delete_snippet_path', id=id, confirm='Are you sure you want to delete this Snippet? This cannot be undone and you will need to remove all references to it in your pages and layouts!')#</td>
+    <td>#linkTo(text='#imageTag("remove.png")#', route='delete_snippet_path', key=id, confirm='Are you sure you want to delete this Snippet? This cannot be undone and you will need to remove all references to it in your pages and layouts!')#</td>
   </tr>
   </cfoutput>
 </table>

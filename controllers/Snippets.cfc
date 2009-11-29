@@ -69,7 +69,7 @@
   </cffunction>
   
   <cffunction name="delete">
-  	<cfset snippet = model('snippet').findByKey(params.id)>
+  	<cfset snippet = model('snippet').findByKey(params.key)>
 	
   	<cfif snippet.delete()>
   		<cfset flashInsert(success="The snippet was deleted successfully. Make sure that none of your pages or layouts are using it.")>	

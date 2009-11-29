@@ -71,7 +71,7 @@
   </cffunction>
   
   <cffunction name="delete">
-  	<cfset layout = model('layout').findByKey(params.id)>
+  	<cfset layout = model('layout').findByKey(params.key)>
 	
   	<cfif layout.delete()>
   		<cfset flashInsert(success="The layout was deleted successfully. Make sure that none of your pages are using it.")>	

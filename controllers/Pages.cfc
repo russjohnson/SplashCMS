@@ -95,7 +95,7 @@
   </cffunction>
   
   <cffunction name="delete">
-  	<cfset page = model('page').findByKey(params.id)>
+  	<cfset page = model('page').findByKey(params.key)>
     <cfset page.deleteAllPageParts()>
       
   	<cfif page.delete()>
