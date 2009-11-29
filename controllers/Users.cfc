@@ -90,10 +90,10 @@
 		<!--- Verify that the user deletes successfully --->
 		<cfif user.delete()>
 			<cfset flashInsert(success="The user was deleted successfully.")>	
-      <cfset redirectTo(action="index")>
+      <cfset redirectTo(route="users_path")>
 		<cfelse>
 			<cfset flashInsert(error="There was an error deleting the user.")>
-			<cfset redirectTo(action="index")>
+			<cfset redirectTo(action="users_path")>
 		</cfif>
 	</cffunction>
 	
