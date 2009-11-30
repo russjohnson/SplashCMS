@@ -9,9 +9,9 @@
     <cfset navigation = navigation & ' id="' & attributes.id & '"'>
   </cfif>
   <cfif attributes.class is NOT ''>
-    <cfset navigation = navigation & ' class="' & attributes.class>
+    <cfset navigation = navigation & ' class="' & attributes.class & '"'>
   </cfif>  
-  <cfset navigation = navigation & '">'>
+  <cfset navigation = navigation & '>'>
   
   <cfloop list="#attributes.urls#" index="item" delimiters="|">
     <cfset href = listLast(item, ':')>
