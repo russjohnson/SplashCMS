@@ -15,5 +15,6 @@ h2. Installation
 # Open config/environment.cfm and set the appropriate enivronment for your install
 # Open the directory for your environment. Rename the *settings_sample.cfm* file for that environment to *settings.cfm* ie, design/settings.cfm, production/settings.cfm and edit your datasource setting.
 # Open the Splash Admin and login. (http://yourwebroot/admin) Default username is 'admin' and password is 'splash'
+# Update all current layouts, snippets and pages (just hit update so the files get created on the file system)
 # Start building your site!
 

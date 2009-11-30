@@ -1,5 +1,6 @@
 /config/environment.cfm
 WEB-INF
+SplashCMS.esproj
 */.DS_Store
 .project
 /config/design/settings.cfm

@@ -34,7 +34,7 @@
         <cfif parentId is '0'>
           #imageTag("remove-disabled.png")#
         <cfelse>
-          #linkTo(text='#imageTag("remove.png")#', route='delete_page_path', id=id, confirm='Are you sure you want to delete this Page? This cannot be undone!')#
+          #linkTo(text='#imageTag("remove.png")#', route='delete_page_path', key=id, confirm='Are you sure you want to delete this Page? This cannot be undone!')#
         </cfif>
       </td>
     </tr>

@@ -35,6 +35,7 @@
 	<cfscript>
 		var loc = {};
 		var query = {};
+		arguments.sql = $removeColumnAliasesInOrderClause(arguments.sql);
 		if (arguments.limit > 0)
 		{
 			loc.beforeWhere = "SELECT * FROM (SELECT a.*, rownum rnum FROM (";
@@ -47,6 +48,8 @@
 		arguments.datasource = variables.instance.connection.datasource;
 		arguments.username = variables.instance.connection.username;
 		arguments.password = variables.instance.connection.password;
+		if (application.wheels.serverName == "Railo")
+			arguments.psq = false; // set queries in Railo to not preserve single quotes on the entire cfquery block (we'll handle this individually in the SQL statement instead)  
 		loc.sql = arguments.sql;
 		loc.limit = arguments.limit;
 		loc.offset = arguments.offset;
@@ -58,7 +61,7 @@
 		StructDelete(arguments, "parameterize");
 		StructDelete(arguments, "$primaryKey");
 	</cfscript>
-	<cfquery attributeCollection="#arguments#"><cfloop array="#loc.sql#" index="loc.i"><cfif IsStruct(loc.i)><cfif IsBoolean(loc.parameterize) AND loc.parameterize><cfset loc.queryParamAttributes = StructNew()><cfset loc.queryParamAttributes.cfsqltype = loc.i.type><cfset loc.queryParamAttributes.value = loc.i.value><cfif StructKeyExists(loc.i, "null")><cfset loc.queryParamAttributes.null = loc.i.null></cfif><cfif StructKeyExists(loc.i, "scale") AND loc.i.scale GT 0><cfset loc.queryParamAttributes.scale = loc.i.scale></cfif><cfqueryparam attributeCollection="#loc.queryParamAttributes#"><cfelse>'#loc.i.value#'</cfif><cfelse>#preserveSingleQuotes(loc.i)#</cfif>#chr(13)##chr(10)#</cfloop></cfquery>
+	<cfquery attributeCollection="#arguments#"><cfloop array="#loc.sql#" index="loc.i"><cfif IsStruct(loc.i)><cfif IsBoolean(loc.parameterize) AND loc.parameterize><cfset loc.queryParamAttributes = StructNew()><cfset loc.queryParamAttributes.cfsqltype = loc.i.type><cfset loc.queryParamAttributes.value = loc.i.value><cfif StructKeyExists(loc.i, "null")><cfset loc.queryParamAttributes.null = loc.i.null></cfif><cfif StructKeyExists(loc.i, "scale") AND loc.i.scale GT 0><cfset loc.queryParamAttributes.scale = loc.i.scale></cfif><cfqueryparam attributeCollection="#loc.queryParamAttributes#"><cfelse>'#loc.i.value#'</cfif><cfelse>#Replace(PreserveSingleQuotes(loc.i), "[[comma]]", ",", "all")#</cfif>#chr(13)##chr(10)#</cfloop></cfquery>
 	<cfscript>
 		loc.returnValue.result = loc.result;
 		if (StructKeyExists(query, "name"))

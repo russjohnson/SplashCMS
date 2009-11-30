@@ -1,29 +1,22 @@
-<cffunction name="renderPageToString" returntype="string" access="public" output="false" hint="Includes the view page for the specified controller and action and returns it as a string.">
-	<cfargument name="controller" type="string" required="false" default="#variables.params.controller#" hint="See documentation for renderPage">
-	<cfargument name="action" type="string" required="false" default="#variables.params.action#" hint="See documentation for renderPage">
-	<cfargument name="template" type="string" required="false" default="" hint="See documentation for renderPage">
-	<cfargument name="layout" type="any" required="false" default="#application.wheels.renderPageToString.layout#" hint="See documentation for renderPage">
-	<cfargument name="cache" type="any" required="false" default="" hint="See documentation for renderPage">
-	<cfargument name="$showDebugInformation" type="any" required="false" default="#application.wheels.showDebugInformation#">
-	<cfscript>
-		var returnValue = "";
-		renderPage(argumentCollection=arguments);
-		returnValue = request.wheels.response;
-		StructDelete(request.wheels, "response");
-	</cfscript>
-	<cfreturn returnValue>
-</cffunction>
+<cffunction name="renderPage" returntype="any" access="public" output="false"
+	hint="Renders content to the browser by including the view page for the specified controller and action."
+	examples=
+	'
+		<cfset renderPage(action="someOtherAction")>
 
-<cffunction name="renderPage" returntype="void" access="public" output="false" hint="Renders content to the browser by including the view page for the specified controller and action.">
+		<cfset renderPage(layout=false, cache=60)>
+	'
+	categories="controller-request" chapters="rendering-pages" functions="renderPageToString,renderNothing,renderText,renderPartial">
 	<cfargument name="controller" type="string" required="false" default="#variables.params.controller#" hint="Controller to include the view page for">
 	<cfargument name="action" type="string" required="false" default="#variables.params.action#" hint="Action to include the view page for">
 	<cfargument name="template" type="string" required="false" default="" hint="A specific template to render">
-	<cfargument name="layout" type="any" required="false" default="#application.wheels.renderPage.layout#" hint="The layout to wrap the content in">
+	<cfargument name="layout" type="any" required="false" default="#application.wheels.functions.renderPage.layout#" hint="The layout to wrap the content in">
 	<cfargument name="cache" type="any" required="false" default="" hint="Minutes to cache the content for">
-	<cfargument name="$showDebugInformation" type="any" required="false" default="#application.wheels.showDebugInformation#">
+	<cfargument name="returnAs" type="string" required="false" default="" hint="Set to `string` to return the result to the controller instead of sending it to the browser immediately">
+	<cfargument name="$showDebugInformation" type="any" required="false" default="#application.wheels.showDebugInformation#" hint="Whether or not to show debug information at the end of the output. This is useful to override as `false` when you're testing XML output in an environment where the value for `showDebugInformation` is set to `true`">
 	<cfscript>
 		var loc = {};
-		arguments = $dollarify(arguments, "controller,action,template,layout,cache");
+		arguments = $dollarify(arguments, "controller,action,template,layout,cache,returnAs");
 		if (application.wheels.showDebugInformation)
 			$debugPoint("view");
 		// if renderPage was called with a layout set a flag to indicate that it's ok to show debug info at the end of the request
@@ -46,35 +39,65 @@
 		{
 			loc.page = $renderPage(argumentCollection=arguments);
 		}
+		if (arguments.$returnAs == "string")
+			loc.returnValue = loc.page;
+		else
+			request.wheels.response = loc.page;
 		if (application.wheels.showDebugInformation)
 			$debugPoint("view");
-		
-		// we put the response in the request scope here so that the developer does not have to specifically return anything from the controller code
-		request.wheels.response = loc.page;
 	</cfscript>
+	<cfif StructKeyExists(loc, "returnValue")>
+		<cfreturn loc.returnValue>
+	</cfif>
 </cffunction>
 
-<cffunction name="renderNothing" returntype="void" access="public" output="false" hint="Renders a blank string to the browser. This is very similar to calling 'cfabort' with the advantage that any after filters you have set on the action will still be run.">
+<cffunction name="renderNothing" returntype="void" access="public" output="false"
+	hint="Renders a blank string to the browser. This is very similar to calling 'cfabort' with the advantage that any after filters you have set on the action will still be run."
+	examples=
+	'
+		<cfset renderNothing()>
+	'
+	categories="controller-request" chapters="rendering-pages" functions="renderPage,renderPageToString,renderText,renderPartial">
 	<cfscript>
 		request.wheels.response = "";
 	</cfscript>
 </cffunction>
 
-<cffunction name="renderText" returntype="void" access="public" output="false" hint="Renders the specified text to the browser.">
+<cffunction name="renderText" returntype="void" access="public" output="false"
+	hint="Renders the specified text to the browser."
+	examples=
+	'
+		<cfset renderText("Done!")>
+	'
+	categories="controller-request" chapters="rendering-pages" functions="renderPage,renderPageToString,renderNothing,renderPartial">
 	<cfargument name="text" type="any" required="true" hint="The text to be rendered">
 	<cfscript>
 		request.wheels.response = arguments.text;
 	</cfscript>
 </cffunction>
 
-<cffunction name="renderPartial" returntype="void" access="public" output="false" hint="Renders content to the browser by including a partial.">
-	<cfargument name="name" type="string" required="true" hint="The name of the file to be used (starting with an optional path and with the underscore and file extension excluded)">
-	<cfargument name="cache" type="any" required="false" default="" hint="See documentation for `renderPage`">
-	<cfargument name="layout" type="string" required="false" default="#application.wheels.renderPartial.layout#" hint="See documentation for `renderPage`">
-	<cfargument name="$partialType" type="string" required="false" default="render">
+<cffunction name="renderPartial" returntype="any" access="public" output="false"
+	hint="Renders content to the browser by including a partial."
+	examples=
+	'
+		<cfset renderPartial("comment")>
+	'
+	categories="controller-request" chapters="rendering-pages" functions="renderPage,renderPageToString,renderNothing,renderText">
+	<cfargument name="partial" type="string" required="true" hint="The name of the file to be used (starting with an optional path and with the underscore and file extension excluded)">
+	<cfargument name="cache" type="any" required="false" default="" hint="See documentation for @renderPage">
+	<cfargument name="layout" type="string" required="false" default="#application.wheels.functions.renderPartial.layout#" hint="See documentation for @renderPage">
+	<cfargument name="returnAs" type="string" required="false" default="" hint="See documentation for @renderPage">
 	<cfscript>
-		$includeOrRenderPartial(argumentCollection=$dollarify(arguments, "name,cache,layout"));
+		var loc = {};
+		loc.partial = $includeOrRenderPartial(argumentCollection=$dollarify(arguments, "partial,cache,layout,returnAs"));
+		if (arguments.$returnAs == "string")
+			loc.returnValue = loc.partial;
+		else
+			request.wheels.response = loc.partial;
 	</cfscript>
+	<cfif StructKeyExists(loc, "returnValue")>
+		<cfreturn loc.returnValue>
+	</cfif>
 </cffunction>
 
 <cffunction name="$renderPageAndAddToCache" returntype="string" access="public" output="false">
@@ -113,23 +136,38 @@
 <cffunction name="$renderPartial" returntype="string" access="public" output="false">
 	<cfscript>
 		var loc = {};
-		if (IsQuery(arguments.$name))
+		if (IsQuery(arguments.$partial) && arguments.$partial.recordCount)
 		{
-			loc.name = request.wheels[Hash(GetMetaData(arguments.$name).toString())];
-			arguments[loc.name] = arguments.$name;
-			arguments.$name = singularize(loc.name);
+			arguments.$name = request.wheels[Hash(GetMetaData(arguments.$partial).toString())];
+			arguments[pluralize(arguments.$name)] = arguments.$partial;
 		}
-		else if (IsObject(arguments.$name))
+		else if (IsObject(arguments.$partial))
 		{
-			loc.name = arguments.$name.$classData().name;
-			arguments[loc.name] = arguments.$name;
-			arguments.$name = loc.name;
+			arguments.$name = arguments.$partial.$classData().name;
+			arguments[arguments.$name] = arguments.$partial;
 		}
-		if (Len(arguments.$layout))
-			arguments.$layout = Replace("_" & arguments.$layout, "__", "_", "one");
-		arguments.$type = "partial";
-		loc.content = $includeFile(argumentCollection=arguments);
-		loc.returnValue = $renderLayout($content=loc.content, $layout=arguments.$layout);
+		else if (IsArray(arguments.$partial) && ArrayLen(arguments.$partial))
+		{
+			arguments.$name = arguments.$partial[1].$classData().name;
+			arguments[pluralize(arguments.$name)] = arguments.$partial;
+		}
+		else if (IsSimpleValue(arguments.$partial))
+		{
+			arguments.$name = arguments.$partial;
+		}
+		if (StructKeyExists(arguments, "$name"))
+		{
+			if (Len(arguments.$layout))
+				arguments.$layout = Replace("_" & arguments.$layout, "__", "_", "one");
+			arguments.$type = "partial";
+			loc.content = $includeFile(argumentCollection=arguments);
+			loc.returnValue = $renderLayout($content=loc.content, $layout=arguments.$layout);
+		}
+		else
+		{
+			// when $name has not been set (which means that it's either an empty array or query) we just return an empty string
+			loc.returnValue = "";
+		}
 	</cfscript>
 	<cfreturn loc.returnValue>
 </cffunction>
@@ -137,11 +175,10 @@
 <cffunction name="$includeOrRenderPartial" returntype="string" access="public" output="false">
 	<cfscript>
 		var loc = {};
-		loc.returnValue = "";
 		if (application.wheels.cachePartials && (isNumeric(arguments.$cache) || (IsBoolean(arguments.$cache) && arguments.$cache)))
 		{
 			loc.category = "partial";
-			loc.key = "#arguments.$name##$hashStruct(variables.params)##$hashStruct(arguments)#";
+			loc.key = "#arguments.$partial.toString()##$hashStruct(variables.params)##$hashStruct(arguments)#";
 			loc.lockName = loc.category & loc.key;
 			loc.conditionArgs = {};
 			loc.conditionArgs.category = loc.category;
@@ -149,16 +186,12 @@
 			loc.executeArgs = arguments;
 			loc.executeArgs.category = loc.category;
 			loc.executeArgs.key = loc.key;
-			loc.partial = $doubleCheckedLock(name=loc.lockName, condition="$getFromCache", execute="$renderPartialAndAddToCache", conditionArgs=loc.conditionArgs, executeArgs=loc.executeArgs);
+			loc.returnValue = $doubleCheckedLock(name=loc.lockName, condition="$getFromCache", execute="$renderPartialAndAddToCache", conditionArgs=loc.conditionArgs, executeArgs=loc.executeArgs);
 		}
 		else
 		{
-			loc.partial = $renderPartial(argumentCollection=arguments);
+			loc.returnValue = $renderPartial(argumentCollection=arguments);
 		}
-		if (arguments.$partialType == "include")
-			loc.returnValue = loc.partial;
-		else if (arguments.$partialType == "render")
-			request.wheels.response = loc.partial;
 	</cfscript>
 	<cfreturn loc.returnValue>
 </cffunction>
@@ -188,30 +221,93 @@
 				loc.query = arguments[loc.pluralizedName];
 				loc.returnValue = "";
 				loc.iEnd = loc.query.recordCount;
-				for (loc.i=1; loc.i <= loc.iEnd; loc.i++)
+				if (Len(arguments.$group))
 				{
-					arguments.currentRow = loc.i;
-					loc.jEnd = ListLen(loc.query.columnList);
-					for (loc.j=1; loc.j <= loc.jEnd; loc.j++)
+					// we want to group based on a column so loop through the rows until we find, this will break if the query is not ordered by the grouped column
+					loc.tempSpacer = "}|{";
+					loc.groupValue = "";
+					loc.groupQueryCount = 1;
+					arguments.group = QueryNew(loc.query.columnList);
+					if (application.wheels.showErrorInformation && !ListFindNoCase(loc.query.columnList, arguments.$group))
+						$throw(type="Wheels.GroupColumnNotFound", message="Wheels couldn't find a query column with the name of `#arguments.$group#`.", extendedInfo="Make sure your finder method has the column `#arguments.$group#` specified in the `select` argument. If the column does not exist, create it.");
+					for (loc.i=1; loc.i <= loc.iEnd; loc.i++)
 					{
-						loc.property = ListGetAt(loc.query.columnList, loc.j);
-						arguments[loc.property] = loc.query[loc.property][loc.i];
+						if (loc.i == 1)
+						{
+							loc.groupValue = loc.query[arguments.$group][loc.i];
+						}
+						else if (loc.groupValue != loc.query[arguments.$group][loc.i])
+						{
+							// we have a different group for this row so output what we have
+							loc.returnValue = loc.returnValue & $includeAndReturnOutput(argumentCollection=arguments);
+							if (StructKeyExists(arguments, "$spacer"))
+								loc.returnValue = loc.returnValue & loc.tempSpacer;
+							loc.groupValue = loc.query[arguments.$group][loc.i];
+							arguments.group = QueryNew(loc.query.columnList);
+							loc.groupQueryCount = 1;
+						}
+						loc.dump = QueryAddRow(arguments.group);
+						loc.jEnd = ListLen(loc.query.columnList);
+						for (loc.j=1; loc.j <= loc.jEnd; loc.j++)
+						{
+							loc.property = ListGetAt(loc.query.columnList, loc.j);
+							arguments[loc.property] = loc.query[loc.property][loc.i];
+							loc.dump = QuerySetCell(arguments.group, loc.property, loc.query[loc.property][loc.i], loc.groupQueryCount);
+						}
+						arguments.current = (loc.i+1) - arguments.group.recordCount;
+						loc.groupQueryCount++;
 					}
-					loc.returnValue = loc.returnValue & $includeAndReturnOutput(argumentCollection=arguments);
-					if (StructKeyExists(arguments, "$spacer") && loc.i < loc.iEnd)
-						loc.returnValue = loc.returnValue & arguments.$spacer;
+					// if we have anything left at the end we need to render it too
+					if (arguments.group.RecordCount > 0)
+					{
+						loc.returnValue = loc.returnValue & $includeAndReturnOutput(argumentCollection=arguments);
+						if (StructKeyExists(arguments, "$spacer") && loc.i < loc.iEnd)
+							loc.returnValue = loc.returnValue & loc.tempSpacer;
+					}
+					// now remove the last temp spacer and replace the tempSpacer with $spacer
+					if (Right(loc.returnValue, 3) == loc.tempSpacer)
+						loc.returnValue = Left(loc.returnValue, Len(loc.returnValue) - 3);
+					loc.returnValue = Replace(loc.returnValue, loc.tempSpacer, arguments.$spacer, "all");
+				}
+				else
+				{
+					for (loc.i=1; loc.i <= loc.iEnd; loc.i++)
+					{
+						arguments.current = loc.i;
+						loc.jEnd = ListLen(loc.query.columnList);
+						for (loc.j=1; loc.j <= loc.jEnd; loc.j++)
+						{
+							loc.property = ListGetAt(loc.query.columnList, loc.j);
+							arguments[loc.property] = loc.query[loc.property][loc.i];
+						}
+						loc.returnValue = loc.returnValue & $includeAndReturnOutput(argumentCollection=arguments);
+						if (StructKeyExists(arguments, "$spacer") && loc.i < loc.iEnd)
+							loc.returnValue = loc.returnValue & arguments.$spacer;
+					}
 				}
 			}
 			else if (StructKeyExists(arguments, arguments.$name) && IsObject(arguments[arguments.$name]))
 			{
 				loc.object = arguments[arguments.$name];
-				loc.properties = loc.object.$classData().propertyList;
-				loc.iEnd = ListLen(loc.properties);
+				StructAppend(arguments, loc.object.properties(), false);
+			}
+			else if (StructKeyExists(arguments, loc.pluralizedName) && IsArray(arguments[loc.pluralizedName]))
+			{
+				loc.originalArguments = Duplicate(arguments);
+				loc.array = arguments[loc.pluralizedName];
+				loc.returnValue = "";
+				loc.iEnd = ArrayLen(loc.array);
 				for (loc.i=1; loc.i <= loc.iEnd; loc.i++)
 				{
-					loc.property = ListGetAt(loc.properties, loc.i);
-					if (StructKeyExists(loc.object, loc.property) && IsSimpleValue(loc.object[loc.property]))
-						arguments[loc.property] = loc.object[loc.property];
+					arguments.current = loc.i;
+					loc.properties = loc.array[loc.i].properties();
+					for (loc.key in loc.originalArguments)
+						if (StructKeyExists(loc.properties, loc.key))
+							StructDelete(loc.properties, loc.key);
+					StructAppend(arguments, loc.properties, true);
+					loc.returnValue = loc.returnValue & $includeAndReturnOutput(argumentCollection=arguments);
+					if (StructKeyExists(arguments, "$spacer") && loc.i < loc.iEnd)
+						loc.returnValue = loc.returnValue & arguments.$spacer;
 				}
 			}
 		}

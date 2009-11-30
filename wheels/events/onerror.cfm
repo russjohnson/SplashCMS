@@ -1,6 +1,6 @@
 <cffunction name="onError" returntype="void" access="public" output="true">
 	<cfargument name="exception" type="any" required="true">
-	<cfargument name="eventname" type="any" required="true">
+	<cfargument name="eventName" type="any" required="true">
 	<cfscript>
 		var returnValue = "";
 		returnValue = $simpleLock(execute="$runOnError", executeArgs=arguments, name="wheelsReloadLock", type="readOnly");
@@ -12,7 +12,7 @@
 
 <cffunction name="$runOnError" returntype="string" access="public" output="false">
 	<cfargument name="exception" type="any" required="true">
-	<cfargument name="eventname" type="any" required="true">
+	<cfargument name="eventName" type="any" required="true">
 	<cfscript>
 		var loc = {};
 
@@ -26,8 +26,7 @@
 				loc.mailArgs.subject = "Error";
 				loc.mailArgs.type = "html";
 				loc.mailArgs.body = [$includeAndReturnOutput($template="wheels/events/onerror/cfmlerror.cfm", exception=arguments.exception)];
-				if (StructKeyExists(application.wheels, "errorEmailServer"))
-					loc.mailArgs.server = application.wheels.errorEmailServer;
+				$insertDefaults(name="sendEmail", input=loc.mailArgs);
 				$mail(argumentCollection=loc.mailArgs);
 			}
 	
@@ -51,7 +50,7 @@
 			else
 			{
 				$header(statusCode=500, statusText="Internal Server Error");
-				loc.returnValue = $includeAndReturnOutput($template="#application.wheels.eventPath#/onerror.cfm");
+				loc.returnValue = $includeAndReturnOutput($template="#application.wheels.eventPath#/onerror.cfm", exception=arguments.exception, eventName=arguments.eventName);
 			}
 		}
 		else

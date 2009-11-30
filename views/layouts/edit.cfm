@@ -13,6 +13,6 @@
 	#endFormTag()#
 	
 	<cfif layout.updatedByID is NOT "">
-	  #includePartial(name='/shared/last_update', updatedByID=layout.updatedByID, updatedAt=layout.updatedAt)#
+	  #includePartial(partial='/shared/last_update', updatedByID=layout.updatedByID, updatedAt=layout.updatedAt)#
 	</cfif>	
 </cfoutput>
