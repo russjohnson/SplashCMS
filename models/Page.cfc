@@ -16,26 +16,26 @@
 	</cffunction>
 	
 	<cffunction name="process">
-	  <cfargument name="currentPage" type="string" required="true" />
+	  	<cfargument name="currentPage" type="string" required="true" />
 	 
-    <!--- get the layout --->
-	  <cfset var layout = this.pageLayout().content>
+    	<!--- get the layout --->
+	  	<cfset var layout = this.pageLayout().content>
 	     
-    <!--- look for snippet tags in the layout and process them --->
-    <!--- <cfset layout = parseSnippets(layout)> --->
-    
-    <!--- look for content tags in the layout and process them --->
-    <cfset layout = parseContent(layout)>
-      
-    <!--- look for title tags and replace them with the page title attribute --->
-    <cfset layout = parseTitle(layout)>
-      
-    <!--- look for the navigation tags and parse them --->
-    <cfset layout = parseNavigation(layout,arguments.currentPage)>
-
-    <!--- this fixes our invalid tags due to CF's script protection --->
-    <cfset layout = fixScriptTags(layout)>
-	  <cfreturn layout>
+	    <!--- look for snippet tags in the layout and process them --->
+	    <!--- <cfset layout = parseSnippets(layout)> --->
+	    
+	    <!--- look for content tags in the layout and process them --->
+	    <cfset layout = parseContent(layout)>
+	      
+	    <!--- look for title tags and replace them with the page title attribute --->
+	    <cfset layout = parseTitle(layout)>
+	      
+	    <!--- look for the navigation tags and parse them --->
+	    <cfset layout = parseNavigation(layout,arguments.currentPage)>
+	
+	    <!--- this fixes our invalid tags due to CF's script protection --->
+	    <cfset layout = fixScriptTags(layout)>
+	  	<cfreturn layout>
 	</cffunction>
   
   <cffunction name="parseContent">
@@ -67,7 +67,7 @@
         <cfset hasContent = FALSE>
       </cfif>
     </cfloop>
-    <cfreturn localContent>
+	<cfreturn localContent>
   </cffunction>
   
   <cffunction name="parseSnippets">
