@@ -9,8 +9,9 @@
     <cfset navigation = navigation & ' id="' & attributes.id & '"'>
   </cfif>
   <cfif attributes.class is NOT ''>
-    <cfset navigation = navigation & ' class="' & attributes.class & '">'>
-  </cfif>
+    <cfset navigation = navigation & ' class="' & attributes.class>
+  </cfif>  
+  <cfset navigation = navigation & '">'>
   
   <cfloop list="#attributes.urls#" index="item" delimiters="|">
     <cfset href = listLast(item, ':')>
@@ -21,5 +22,8 @@
       <cfset navigation = navigation & '<li>' & '<a href="#href#">' & label & '</a>' & '</li>'>
     </cfif>
   </cfloop>
+  
+  <cfset navigation = navigation & "</ul>">
+  
   <cfoutput>#navigation#</cfoutput>
 </cfif>
