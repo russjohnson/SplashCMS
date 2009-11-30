@@ -44,7 +44,7 @@
 <body>
   <div id="container">
     <div id="header">
-      <h1><a href="/admin"><cfoutput>#application.admin.title#</cfoutput></a></h1>
+      <h1><cfoutput>#linkTo(text=application.admin.title, route="admin_path")#</cfoutput></h1>
       
       <cfoutput>
         #includePartial('/shared/user_navigation')#
