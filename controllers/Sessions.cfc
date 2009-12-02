@@ -1,4 +1,4 @@
-<cfcomponent extends="controller">
+<cfcomponent extends="Controller">
   
   <cffunction name="init">
     <cfset filters(through="loginProhibited", only="new, create")>
