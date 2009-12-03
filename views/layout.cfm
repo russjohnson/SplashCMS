@@ -44,12 +44,12 @@
 <body>
   <div id="container">
     <div id="header">
-      <h1><cfoutput>#linkTo(text=application.admin.title, route="admin_path")#</cfoutput></h1>
+        <cfoutput>
+            <h1>#linkTo(text="#application.admin.title#", route="admin_path")#</h1>
       
-      <cfoutput>
-        #includePartial('/shared/user_navigation')#
-        #includePartial('/shared/main_navigation')#
-      </cfoutput>
+            #includePartial('/shared/user_navigation')#
+            #includePartial('/shared/main_navigation')#
+        </cfoutput>
       
     </div>
     <div id="wrapper">

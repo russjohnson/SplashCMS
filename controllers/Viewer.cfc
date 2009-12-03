@@ -8,35 +8,35 @@
 	</cffunction>
 	
 	<cffunction name="index">
-    <cfparam name="params.slug" default="/">
+        <cfparam name="params.slug" default="/">
     
-    <cfset request.page = model('page').findOneBySlug(params.slug)>
+        <cfset request.page = model('page').findOneBySlug(params.slug)>
     
-    <cfif isObject(request.page) AND request.page.status is "published">
-      <cfset request.layoutFile = request.page.pageLayout().fileName>
+        <cfif isObject(request.page) AND request.page.status is "published">
+          <cfset request.layoutFile = request.page.pageLayout().fileName>
         
-      <cfsavecontent variable="renderedPage">
-        <!--- include the layout --->
-        <cfinclude template="#application.defaults.rootPath#public/layouts/#request.layoutFile#">
-      </cfsavecontent>
-      <!--- <cfset renderedPage = page.process(page.slug)> --->
-    <cfelse>
-      <!---
-        TODO this should redirect to an admin themed 404 page unless a "page not found" type of page exists
-      --->
-      <cfset request.page = model('page').findOneByPageClassID('2')>
-      <cfif isObject(request.page) AND request.page.status is "published">
-        <cfset request.layoutFile = request.page.pageLayout().fileName>
+          <cfsavecontent variable="renderedPage">
+            <!--- include the layout --->
+            <cfinclude template="#application.defaults.rootPath#public/layouts/#request.layoutFile#">
+          </cfsavecontent>
+          <!--- <cfset renderedPage = page.process(page.slug)> --->
+        <cfelse>
+          <!---
+            TODO this should redirect to an admin themed 404 page unless a "page not found" type of page exists
+          --->
+          <cfset request.page = model('page').findOneByPageClassID('2')>
+          <cfif isObject(request.page) AND request.page.status is "published">
+            <cfset request.layoutFile = request.page.pageLayout().fileName>
         
-        <cfsavecontent variable="renderedPage">
-          <!--- include the layout --->
-          <cfinclude template="#application.defaults.rootPath#public/layouts/#request.layoutFile#">
-        </cfsavecontent>
-      <cfelse>
-        <cfset flashInsert(warning="The page you were trying to access doesnt exist.")>
-        <cfset redirectTo(route="home")>
-      </cfif>
-    </cfif>
+            <cfsavecontent variable="renderedPage">
+              <!--- include the layout --->
+              <cfinclude template="#application.defaults.rootPath#public/layouts/#request.layoutFile#">
+            </cfsavecontent>
+          <cfelse>
+            <cfset flashInsert(warning="The page you were trying to access doesnt exist.")>
+            <cfset redirectTo(route="home")>
+          </cfif>
+        </cfif>
   </cffunction>
 	
 </cfcomponent>

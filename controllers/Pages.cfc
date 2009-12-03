@@ -1,4 +1,4 @@
-<cfcomponent extends="Controller">
+<cfcomponent extends="Controller" output="false">
   
   <cffunction name="init">
     <cfset filters(through="loginRequired")>
@@ -10,7 +10,6 @@
   </cffunction>
   
   <cffunction name="pageList">
-    
     <cfset renderNothing()>
   </cffunction>
   

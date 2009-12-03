@@ -1,4 +1,4 @@
-<cfcomponent extends="Model">
+<cfcomponent extends="Model" output="false">
 
 	<cffunction name="init">
 	  <cfset hasMany("pages")>
@@ -10,7 +10,5 @@
 	  <cfset beforeCreate('setCreatedByID')>
 	  <cfset beforeUpdate('setUpdatedByID')>
 	</cffunction>
-	
-	
 
 </cfcomponent>

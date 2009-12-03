@@ -5,7 +5,6 @@
 <cfcomponent output="false" extends="Model">
 	
 	<cffunction name="init">
-		
 	</cffunction>
 	
 </cfcomponent>

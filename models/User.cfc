@@ -1,4 +1,4 @@
-<cfcomponent extends="Model">
+<cfcomponent extends="Model" output="false">
 
 	<cffunction name="init">
 		<cfset validatesPresenceOf(property="username", message="Username is required")>
