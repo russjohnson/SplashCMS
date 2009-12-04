@@ -4,7 +4,7 @@
   <cfparam name="page" default="#request.page#">
 
   <cfquery name="pagePart" datasource="#caller.get('dataSourceName')#" maxrows="1">
-    select * from pageParts
+    select * from pageparts
     where pageID = #page.id#
     and name = '#attributes.part#'
   </cfquery>
