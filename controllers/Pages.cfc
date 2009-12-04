@@ -37,7 +37,7 @@
         <cfset pagePart = page.newPagePart()>
         <cfset pagePart.name = item>
         <cfset pagePart.content = evaluate("params.pagePart_#item#").content>
-        <cfset pagePart.fileName = dateTimeFormat(now()) & ".cfm">
+        <cfset pagePart.fileName = CreateUUID() & ".cfm">
         <cfset pagePart.save()>
         <cffile action="write" file="#application.defaults.pagesPath#/#pagePart.fileName#" output="<cfimport taglib='../../lib/splash/tags' prefix='s' />#pagePart.content#" addnewline="no" fixnewline="yes" />
       </cfloop>
@@ -80,7 +80,7 @@
         <cfset pagePart = page.newPagePart()>
         <cfset pagePart.name = item>
         <cfset pagePart.content = evaluate("params.pagePart_#item#").content>
-        <cfset pagePart.fileName = dateTimeFormat(now()) & ".cfm">
+        <cfset pagePart.fileName = CreateUUID() & ".cfm">
         <cfset pagePart.save()>
         <cffile action="write" file="#application.defaults.pagesPath#/#pagePart.fileName#" output="<cfimport taglib='../../lib/splash/tags' prefix='s' />#pagePart.content#" addnewline="no" fixnewline="yes" />
       </cfloop>

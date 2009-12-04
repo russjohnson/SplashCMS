@@ -32,8 +32,7 @@
     <cfset layout = model('layout').new(params.layout)>
       
     <!--- create our layouts filename --->
-    <cfset layout.fileName = dateTimeFormat(now()) & ".cfm">
-    <!--- <cfset layout.content = htmlEditFormat(layout.content)> --->
+    <cfset layout.fileName = CreateUUID() & ".cfm">
     <cfif layout.save()>
       <!--- write the file to disk --->
 		  <cffile action="write" file="#application.defaults.layoutsPath#/#layout.fileName#" output="<cfimport taglib='../../lib/splash/tags' prefix='s' />#layout.content#" addnewline="no" fixnewline="yes" />
@@ -54,9 +53,7 @@
   	  <cffile action="delete" file="#application.defaults.layoutsPath#/#layout.fileName#">
   	</cfif>
     <!--- change our filename to the new file --->
-		<cfset layout.fileName = dateTimeFormat(now()) & ".cfm">
-		
-        <!--- <cfset layout.content = htmlEditFormat(layout.content)> --->
+		<cfset layout.fileName = CreateUUID() & ".cfm">
 		
   	<cfif layout.update(params.layout)>
   	  <!--- write the file to disk --->
