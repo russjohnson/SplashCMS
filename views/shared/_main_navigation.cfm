@@ -13,14 +13,11 @@
             <li <cfif params.controller is 'users'>class="active"</cfif>>
                 #linkTo(text="Users", route="users_path")#
             </li>
-            <!---<li <cfif params.controller is 'settings'>class="active"</cfif>>
-            <a href="">Settings</a>
-            </li>--->
-            <!--- <cfdump var="#application.admin.tabs#" /> --->
+            <!--- this section will output the custom tabs you add to the admin --->
             <cfif structKeyExists(application, "tabs")>
                 <cfloop from="1" to="#arrayLen(application.tabs.titles)#" index="i">
-                <li>
-                    <a href="##">#titleize(application.tabs.titles[i])#</a>
+                <li <cfif params.controller is application.tabs.titles[i]>class="active"</cfif>>
+                    #linkTo(text=titleize(application.tabs.titles[i]), route=application.tabs.links[i])#
                 </li>
                 </cfloop>
             </cfif>
