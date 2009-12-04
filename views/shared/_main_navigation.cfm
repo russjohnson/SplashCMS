@@ -17,7 +17,7 @@
             <cfif structKeyExists(application, "tabs")>
                 <cfloop from="1" to="#arrayLen(application.tabs.titles)#" index="i">
                 <li <cfif params.controller is application.tabs.titles[i]>class="active"</cfif>>
-                    #linkTo(text=titleize(application.tabs.titles[i]), route=application.tabs.links[i])#
+                    #linkTo(text=titleize(application.tabs.titles[i]), route=application.tabs.routes[i])#
                 </li>
                 </cfloop>
             </cfif>

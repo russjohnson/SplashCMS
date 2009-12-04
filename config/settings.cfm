@@ -10,4 +10,4 @@
 
 <!--- ADMIN TABS --->
 <cfset application.tabs.titles = []>
-<cfset application.tabs.links = []>
+<cfset application.tabs.routes = []>
