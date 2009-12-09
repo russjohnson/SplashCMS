@@ -11,7 +11,7 @@
 	
 	<!----------------------------------------------------->
 	
-	<cffunction name="installPlugin" hint="Auto-installs a specified plugin from CFWheels.org.">
+	<cffunction name="installExtension" hint="Auto-installs a specified plugin from CFWheels.org.">
 		<cfargument name="pluginId" type="string" hint="ID of plugin to install.">
 		<cfargument name="pluginFilename" type="string" hint="Filename of plugin to install.">
 		
@@ -45,7 +45,7 @@
 	
 	<!----------------------------------------------------->
 	
-	<cffunction name="getAvailablePlugins" returntype="array" hint="Fetches a list of plugins from the database at CFWheels.org.">
+	<cffunction name="getAvailableExtensions" returntype="array" hint="Fetches a list of plugins from the database at CFWheels.org.">
 	
 		<cfset var loc = StructNew()>
 		

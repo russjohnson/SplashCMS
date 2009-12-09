@@ -11,3 +11,5 @@
 <!--- ADMIN TABS --->
 <cfset application.tabs.titles = []>
 <cfset application.tabs.routes = []>
+    
+<cfset set(overwritePlugins = false)>
