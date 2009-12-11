@@ -161,7 +161,7 @@ LOCK TABLES `snippets` WRITE;
 /*!40000 ALTER TABLE `snippets` DISABLE KEYS */;
 INSERT INTO `snippets` (`id`,`name`,`content`,`fileName`,`createdAt`,`updatedAt`,`createdByID`,`updatedByID`)
 VALUES
-	(2,'Footer','Splash CMS 0.2.0 - Copyright &copy; 2009 Mad Piranha, Inc. All Rights Reserved.','09052009005006608.cfm','2009-07-30 16:59:36','2009-09-05 00:50:06',1,1),
+	(2,'Footer','Splash CMS 0.2.5 - Copyright &copy; 2009 Mad Piranha, Inc. All Rights Reserved.','09052009005006608.cfm','2009-07-30 16:59:36','2009-09-05 00:50:06',1,1),
 	(1,'Header','<h1>Splash CMS</h1>','09052009004347813.cfm','2009-07-31 11:05:13','2009-09-05 00:43:47',1,1),
 	(3,'MainNav','<s:navigation urls=\"Home:/|Features:/features|SplashTags:/splash-tags|Contact:/contact\" id=\"nav\" currentClass=\"active\" />','09022009210000945.cfm','2009-08-07 18:35:09','2009-09-02 21:00:00',1,1),
 	(4,'Breadcrumbs','<div>\r\n<s:breadcrumb />\r\n</div>\r\n\r\n','09022009233938413.cfm','2009-09-01 21:34:05','2009-09-02 23:39:38',1,1);
