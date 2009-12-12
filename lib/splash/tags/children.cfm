@@ -1,8 +1,7 @@
 <cfif thisTag.executionMode is "start">
   <cfparam name="attributes.orderDirection" default="ASC" type="string" />
   <cfparam name="attributes.orderColumn" default="" type="string" />
-  <cfparam name="attributes.limit" default="1" type="numeric" />
-  <cfparam name="attributes.result" default="result" type="variableName" />
+  <cfparam name="attributes.maxRows" default="-1" type="numeric" />
   <cfparam name="attributes.page" default="#request.page#" type="struct" />
 
   <cfquery name="childPages" datasource="#caller.get('dataSourceName')#">
@@ -14,7 +13,13 @@
     	ORDER BY #attributes.orderColumn# #attributes.orderDirection#
     </cfif>
   </cfquery>
+</cfif>
 
-  <!--- Return the variable back to the user --->
-  <cfset caller[attributes.result] = childPages>
+<cfif thisTag.executionMode IS "end">
+	<cfset data = thisTag.generatedContent>
+	<cfset thisTag.generatedContent = "">
+	
+	<cfoutput query="childPages">
+		#Evaluate(DE(data))#
+	</cfoutput>	
 </cfif>
