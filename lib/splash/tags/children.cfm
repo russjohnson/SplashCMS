@@ -4,7 +4,7 @@
   <cfparam name="attributes.maxRows" default="-1" type="numeric" />
   <cfparam name="attributes.page" default="#request.page#" type="struct" />
 
-  <cfquery name="childPages" datasource="#caller.get('dataSourceName')#">
+  <cfquery name="childPages" datasource="#application.wheels.dataSourceName#" username="#application.wheels.dataSourceUserName#" password="#application.wheels.dataSourcePassword#" maxrows="#attributes.maxRows#">
     SELECT * FROM pages
     WHERE parentID = #attributes.page.id# AND status = 'Published'
     
