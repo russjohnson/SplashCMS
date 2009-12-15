@@ -1,6 +1,5 @@
-<cfif thisTag.executionMode is "start">
-  <cfparam name="attributes.orderDirection" default="ASC" type="string" />
-  <cfparam name="attributes.orderColumn" default="" type="string" />
+<cfif thisTag.executionMode IS "start">
+  <cfparam name="attributes.order" default="" type="string" />
   <cfparam name="attributes.maxRows" default="-1" type="numeric" />
   <cfparam name="attributes.page" default="#request.page#" type="struct" />
 
@@ -8,9 +7,9 @@
     SELECT * FROM pages
     WHERE parentID = #attributes.page.id# AND status = 'Published'
     
-    <!--- If an order by defined --->
-    <cfif attributes.orderColumn IS NOT "">
-    	ORDER BY #attributes.orderColumn# #attributes.orderDirection#
+    <!--- If an "order by" is defined --->
+    <cfif attributes.order IS NOT "">
+    	ORDER BY #attributes.order#
     </cfif>
   </cfquery>
 </cfif>

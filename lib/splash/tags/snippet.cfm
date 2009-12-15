@@ -1,14 +1,14 @@
-<cfif thisTag.executionMode is "start">
+<cfif thisTag.executionMode IS "start">
   <cfparam name="attributes.name" default="">
   
-  <cfquery name="snippet" datasource="#application.wheels.dataSourceName#" maxrows="1">
-    select * from snippets
-    where name = '#attributes.name#'
+  <cfquery name="snippet" datasource="#application.wheels.dataSourceName#" username="#application.wheels.dataSourceUserName#" password="#application.wheels.dataSourcePassword#" maxrows="1">
+    SELECT * FROM snippets
+    WHERE name = '#attributes.name#'
   </cfquery>
   
   <!--- <cfset snippet = caller.model('snippet').fineOneByName(attributes.name)> --->
 
-  <cfif snippet.recordCount gt 0>
+  <cfif snippet.recordCount GT 0>
     <cfoutput>
       <cfinclude template="#application.defaults.rootPath#public/snippets/#snippet.filename#">
     </cfoutput>

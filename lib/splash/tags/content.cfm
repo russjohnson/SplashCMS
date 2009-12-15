@@ -1,15 +1,15 @@
-<cfif thisTag.executionMode is "start">
+<cfif thisTag.executionMode IS "start">
   
   <cfparam name="attributes.part" default="">
   <cfparam name="page" default="#request.page#">
 
-  <cfquery name="pagePart" datasource="#caller.get('dataSourceName')#" maxrows="1">
-    select * from pageparts
-    where pageID = #page.id#
-    and name = '#attributes.part#'
+  <cfquery name="pagePart" datasource="#caller.get('dataSourceName')#" username="#caller.get('dataSourceUserName')#" password="#caller.get('dataSourcePassword')#" maxrows="1">
+    SELECT * FROM pageparts
+    WHERE pageID = #page.id#
+    AND name = '#attributes.part#'
   </cfquery>
 
-  <cfif pagePart.recordCount gt 0>
+  <cfif pagePart.recordCount GT 0>
     <cftry>
       <cfinclude template="#application.defaults.rootPath#public/pages/#pagePart.filename#">
       <cfcatch></cfcatch>

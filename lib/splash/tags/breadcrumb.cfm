@@ -33,11 +33,11 @@
     
       <cfset currentCrumb = thisPage.parentid>
 
-      <cfloop condition="currentCrumb is NOT 0">
-        <cfquery name="parent" datasource="#application.wheels.dataSourceName#" maxrows="1">
-          select * from pages
-          where ID = #currentCrumb#
-        </cfquery>
+  <cfloop condition="currentCrumb IS NOT 0">
+    <cfquery name="parent" datasource="#application.wheels.dataSourceName#" username="#application.wheels.dataSourceUserName#" password="#application.wheels.dataSourcePassword#" maxrows="1">
+      SELECT * FROM pages
+      WHERE ID = #currentCrumb#
+    </cfquery>
     
         <cfif parent.recordCount gt 0>
           <cfset crumbs[i] = parent.title>
