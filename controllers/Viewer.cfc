@@ -11,7 +11,7 @@
         <cfparam name="params.slug" default="/">
     
         <cfset request.page = model('page').findOneBySlug(params.slug)>
-    
+
         <cfif isObject(request.page) AND request.page.status is "published">
           <cfset request.layoutFile = request.page.pageLayout().fileName>
         
