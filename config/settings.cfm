@@ -1,4 +1,5 @@
 <cfset application.admin.title = "Splash CMS">
+<cfset application.admin.disclaimer = "Splash CMS 0.2.5 - Copyright &copy; 2009 Mad Piranha, Inc.">
 <cfset application.defaults.page.parts = ['body','extended']>
 
 <!--- PATH SETTINGS --->
