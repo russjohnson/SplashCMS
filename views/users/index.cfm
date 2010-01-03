@@ -18,7 +18,7 @@
     	  <cfif id eq '1'>
     	    #imageTag('remove-disabled.png')#
     	  <cfelse>
-    		#linkTo(text='#imageTag("remove.png")#', route='delete_user_path', id=id, confirm='Are you sure you want to delete this User? This cannot be undone!')#
+    		#linkTo(text='#imageTag("remove.png")#', route='delete_user_path', key=id, confirm='Are you sure you want to delete this User? This cannot be undone!')#
     		</cfif>
     	</td>            
 	  </tr>
