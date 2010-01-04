@@ -13,13 +13,19 @@
         <cfset request.page = model('page').findOneBySlug(params.slug)>
 
         <cfif isObject(request.page) AND request.page.status is "published">
-          <cfset request.layoutFile = request.page.pageLayout().fileName>
-        
-          <cfsavecontent variable="renderedPage">
-            <!--- include the layout --->
-            <cfinclude template="#application.defaults.rootPath#public/layouts/#request.layoutFile#">
-          </cfsavecontent>
-          <!--- <cfset renderedPage = page.process(page.slug)> --->
+            <cfset request.layoutFile = request.page.pageLayout().fileName>
+            <cfset fileToRender = application.defaults.rootPath & "public/layouts/" & request.layoutFile>
+            <cfif fileExists(expandPath(fileToRender))>
+                <cfsavecontent variable="renderedPage">
+                    <!--- include the layout --->
+                    <cfinclude template="#fileToRender#">
+                </cfsavecontent>
+            <cfelse>
+                <!---
+                    TODO Need to do something here that will try and generate the file for us
+                --->
+                <cfset renderedPage = "">
+            </cfif>
         <cfelse>
           <!---
             TODO this should redirect to an admin themed 404 page unless a "page not found" type of page exists

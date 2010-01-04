@@ -28,44 +28,35 @@
     </cfif>
   </cffunction>
   
-  <cffunction name="create">
-    <cfset layout = model('layout').new(params.layout)>
+    <cffunction name="create">
+        <cfset layout = model('layout').new(params.layout)>
       
-    <!--- create our layouts filename --->
-    <cfset layout.fileName = CreateUUID() & ".cfm">
-    <cfif layout.save()>
-      <!--- write the file to disk --->
-		  <cffile action="write" file="#application.defaults.layoutsPath#/#layout.fileName#" output="<cfimport taglib='../../lib/splash/tags' prefix='s' />#layout.content#" addnewline="no" fixnewline="yes" />
-		  
-      <cfset flashInsert(success="The layout was created successfully")>
-      <cfset redirectTo(route="layouts_path")>
-    <cfelse>
-      <cfset flashInsert(error="There was an error creating the layout.")>
-  		<cfset renderPage(action="new")>
-    </cfif>
-  </cffunction>
+        <!--- create our layouts filename --->
+        <cfset layout.fileName = CreateUUID() & ".cfm">
+        <cfif layout.save()>
+      		  
+            <cfset flashInsert(success="The layout was created successfully")>
+            <cfset redirectTo(route="layouts_path")>
+        <cfelse>
+            <cfset flashInsert(error="There was an error creating the layout.")>
+  		    <cfset renderPage(action="new")>
+        </cfif>
+    </cffunction>
   
-  <cffunction name="update">
-  	<cfset layout = model('layout').findByKey(params.key)>
-  	  
-	  <!--- delete our old file --->
-	  <cfif fileExists("#application.defaults.layoutsPath#/#layout.fileName#")>
-  	  <cffile action="delete" file="#application.defaults.layoutsPath#/#layout.fileName#">
-  	</cfif>
-    <!--- change our filename to the new file --->
-		<cfset layout.fileName = CreateUUID() & ".cfm">
+    <cffunction name="update">
+  	    <cfset layout = model('layout').findByKey(params.key)>
+      
+        <!--- change our filename to the new file --->
+	    <cfset layout.fileName = CreateUUID() & ".cfm">
 		
-  	<cfif layout.update(params.layout)>
-  	  <!--- write the file to disk --->
-		  <cffile action="write" file="#application.defaults.layoutsPath#/#layout.fileName#" output="<cfimport taglib='../../lib/splash/tags' prefix='s' />#layout.content#" addnewline="no" fixnewline="yes" />
-  	  
-  		<cfset flashInsert(success="The layout was updated successfully.")>	
-      <cfset redirectTo(route="layouts_path")>
-  	<cfelse>
-  		<cfset flashInsert(error="There was an error updating the layout.")>
-  		<cfset renderPage(action="edit")>
-  	</cfif>
-  </cffunction>
+        <cfif layout.update(params.layout)>
+      		<cfset flashInsert(success="The layout was updated successfully.")>	
+            <cfset redirectTo(route="layouts_path")>
+      	<cfelse>
+      		<cfset flashInsert(error="There was an error updating the layout.")>
+      		<cfset renderPage(action="edit")>
+      	</cfif>
+    </cffunction>
   
   <cffunction name="delete">
   	<cfset layout = model('layout').findByKey(params.key)>
