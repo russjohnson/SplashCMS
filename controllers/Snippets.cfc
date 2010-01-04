@@ -32,12 +32,9 @@
     <cfset snippet = model('snippet').new(params.snippet)>
     
     <!--- create our snippets filename --->
-    <cfset snippet.fileName = dateTimeFormat(now()) & ".cfm">
+    <cfset snippet.fileName = createUUID() & ".cfm">
     
     <cfif snippet.save()>
-    	<!--- write the file to disk --->
-		  <cffile action="write" file="#application.defaults.snippetsPath#/#snippet.fileName#" output="<cfimport taglib='../../lib/splash/tags' prefix='s' />#snippet.content#" addnewline="no" fixnewline="yes" />
-	
       <cfset flashInsert(success="The snippet was created successfully")>
       <cfset redirectTo(route="snippets_path")>
     <cfelse>
@@ -54,7 +51,7 @@
   	  <cffile action="delete" file="#application.defaults.snippetsPath#/#snippet.fileName#">
   	</cfif>
     <!--- change our filename to the new file --->
-		<cfset snippet.fileName = dateTimeFormat(now()) & ".cfm">
+		<cfset snippet.fileName = createUUID() & ".cfm">
 		  
   	<cfif snippet.update(params.snippet)>
   	  <!--- write the file to disk --->

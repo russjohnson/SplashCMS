@@ -13,4 +13,15 @@
 	    <cfset afterUpdate('write')>
 	</cffunction>
 	
+	<cffunction name="write">
+        <!--- write the file to disk --->
+        <cffile action="write" file="#application.defaults.layoutsPath#/#this.fileName#" output="<cfimport taglib='../../lib/splash/tags' prefix='s' />#this.content#" addnewline="no" fixnewline="yes" />
+	</cffunction>
+	
+	<cffunction name="deleteOldFile">
+	   <!--- delete our old file --->
+        <cfif fileExists("#application.defaults.layoutsPath#/#this.changedFrom(property='filename')#")>
+            <cffile action="delete" file="#application.defaults.layoutsPath#/#this.changedFrom(property='filename')#">
+        </cfif>
+	</cffunction>
 </cfcomponent>

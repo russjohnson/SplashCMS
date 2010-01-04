@@ -6,6 +6,21 @@
 	
 	<cffunction name="init">
 		<cfset belongsTo('page')>
+	    <cfset beforeUpdate('deleteOldFile')>
+        <cfset afterCreate('write')>
+	    <cfset afterUpdate('write')>
+	</cffunction>
+	
+	<cffunction name="write">
+        <!--- write the file to disk --->
+        <cffile action="write" file="#application.defaults.pagesPath#/#this.fileName#" output="<cfimport taglib='../../lib/splash/tags' prefix='s' />#this.content#" addnewline="no" fixnewline="yes" />
+	</cffunction>
+	
+	<cffunction name="deleteOldFile">
+	   <!--- delete our old file --->
+        <cfif fileExists("#application.defaults.pagesPath#/#this.changedFrom(property='filename')#")>
+            <cffile action="delete" file="#application.defaults.pagesPath#/#this.changedFrom(property='filename')#">
+        </cfif>
 	</cffunction>
 	
 </cfcomponent>

@@ -39,7 +39,7 @@
         <cfset pagePart.content = evaluate("params.pagePart_#item#").content>
         <cfset pagePart.fileName = CreateUUID() & ".cfm">
         <cfset pagePart.save()>
-        <cffile action="write" file="#application.defaults.pagesPath#/#pagePart.fileName#" output="<cfimport taglib='../../lib/splash/tags' prefix='s' />#pagePart.content#" addnewline="no" fixnewline="yes" />
+        <!--- <cffile action="write" file="#application.defaults.pagesPath#/#pagePart.fileName#" output="<cfimport taglib='../../lib/splash/tags' prefix='s' />#pagePart.content#" addnewline="no" fixnewline="yes" /> --->
       </cfloop>
       
       <cfset flashInsert(success="The page has been created successfully.")>
@@ -82,7 +82,7 @@
         <cfset pagePart.content = evaluate("params.pagePart_#item#").content>
         <cfset pagePart.fileName = CreateUUID() & ".cfm">
         <cfset pagePart.save()>
-        <cffile action="write" file="#application.defaults.pagesPath#/#pagePart.fileName#" output="<cfimport taglib='../../lib/splash/tags' prefix='s' />#pagePart.content#" addnewline="no" fixnewline="yes" />
+        <!--- <cffile action="write" file="#application.defaults.pagesPath#/#pagePart.fileName#" output="<cfimport taglib='../../lib/splash/tags' prefix='s' />#pagePart.content#" addnewline="no" fixnewline="yes" /> --->
       </cfloop>
       
   		<cfset flashInsert(success="The page was updated successfully.")>	
