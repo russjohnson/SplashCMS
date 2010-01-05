@@ -45,14 +45,14 @@
 		  	<p><label class="label">Slug</label>
 						#textField(objectName='page', property='slug', class="text_field slug")#</p>
 						
-				<p><label class="label">Breadcrumb</label>
-						#textField(objectName='page', property='breadcrumb', class="text_field")#</p>
-					
-				<p><label class="label">Description</label>
-						#textField(objectName='page', property='description', class="text_field")#</p>	
-							
-				<p><label class="label">Keywords</label>
-						#textField(objectName='page', property='keywords', class="text_field")#</p>
+			<p><label class="label">Breadcrumb</label>
+					#textField(objectName='page', property='breadcrumb', class="text_field")#</p>
+				
+			<p><label class="label">Description</label>
+					#textField(objectName='page', property='description', class="text_field")#</p>	
+						
+			<p><label class="label">Keywords</label>
+					#textField(objectName='page', property='keywords', class="text_field")#</p>
 		</div>
 	  </cfoutput>
 	  <div id="tabs">

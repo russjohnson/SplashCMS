@@ -22,4 +22,9 @@
             <cffile action="delete" file="#application.defaults.snippetsPath#/#this.changedFrom(property='filename')#">
         </cfif>
 	</cffunction>
+	
+	<cffunction name="rebuild">
+	    <cfset this.update()>
+	    <cfset this.write()>
+	</cffunction>
 </cfcomponent>

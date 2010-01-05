@@ -23,4 +23,10 @@
         </cfif>
 	</cffunction>
 	
+	<cffunction name="findByPage">
+	    <cfargument name="pageID" type="any" required="true">
+	    <cfargument name="part" type="any" required="true">
+	   <cfreturn this.findOne(where="pageID = #arguments.pageID# AND name = '#arguments.part#'")>
+	</cffunction>
+	
 </cfcomponent>

@@ -9,7 +9,7 @@
 	
 	<cffunction name="index">
         <cfparam name="params.slug" default="/">
-    
+        
         <cfset request.page = model('page').findOneBySlug(params.slug)>
 
         <cfif isObject(request.page) AND request.page.status is "published">
@@ -21,10 +21,12 @@
                     <cfinclude template="#fileToRender#">
                 </cfsavecontent>
             <cfelse>
-                <!---
-                    TODO Need to do something here that will try and generate the file for us
-                --->
-                <cfset renderedPage = "">
+                <cfset request.page.pageLayout().write()>
+                <cfif fileExists(expandPath("#application.defaults.rootPath#public/layouts/#request.layoutFile#"))>
+                    <cfsavecontent variable="renderedPage">
+                        <cfinclude template="#application.defaults.rootPath#public/layouts/#request.layoutFile#">
+                    </cfsavecontent>
+                </cfif>
             </cfif>
         <cfelse>
           <!---

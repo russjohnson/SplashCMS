@@ -1,16 +1,20 @@
 <cfif thisTag.executionMode IS "start">
     <cfparam name="attributes.name" default="">
-  
-    <cfquery name="snippet" datasource="#application.wheels.dataSourceName#" username="#application.wheels.dataSourceUserName#" password="#application.wheels.dataSourcePassword#" maxrows="1">
-        SELECT * FROM snippets
-        WHERE name = '#attributes.name#'
-    </cfquery>
-  
-  <!--- <cfset snippet = caller.model('snippet').fineOneByName(attributes.name)> --->
+    
+    <cfset wheelsProxy=CreateObject("component","controllers.Controller") >
+ 
+    <cfset snippet = wheelsProxy.wheelsExecute("model('snippet').findOneByName('#attributes.name#')")>
 
-      <cfif snippet.recordCount GT 0>
+      <cfif isObject(snippet)>
           <cfoutput>
-              <cfinclude template="#application.defaults.rootPath#public/snippets/#snippet.filename#">
-              </cfoutput>
+                <cfif fileExists(expandPath("#application.defaults.rootPath#public/snippets/#snippet.filename#"))>
+                  <cfinclude template="#application.defaults.rootPath#public/snippets/#snippet.filename#">
+                <cfelse>
+                    <cfset snippet.write()>
+                    <cfif fileExists(expandPath("#application.defaults.rootPath#public/snippets/#snippet.filename#"))>
+                        <cfinclude template="#application.defaults.rootPath#public/snippets/#snippet.filename#">
+                    </cfif>
+                </cfif>
+          </cfoutput>
       </cfif>
 </cfif>
