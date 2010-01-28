@@ -16,7 +16,7 @@
   <cfloop list="#attributes.urls#" index="item" delimiters="|">
     <cfset href = listLast(item, ':')>
     <cfset label = listFirst(item, ':')>
-    <cfif request.page.slug is listLast(href, '/')>
+    <cfif request.page.slug is listLast(href, '/') OR request.page.slug is href>
       <cfset navigation = navigation & '<li' & ' class="' & attributes.currentClass & '">' & '<a href="#href#">' & label & '</a>' & '</li>'>
     <cfelse>
       <cfset navigation = navigation & '<li>' & '<a href="#href#">' & label & '</a>' & '</li>'>
