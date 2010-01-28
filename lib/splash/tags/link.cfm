@@ -10,7 +10,7 @@
             linkText = thisTag.generatedContent;
             thisTag.generatedContent = "";
         } else {
-            linkText = "title";
+            linkText = title;
         }
         
         urlString = urlString & request.page.slug & '">' & linkText & '</a>';
