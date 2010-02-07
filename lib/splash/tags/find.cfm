@@ -9,11 +9,11 @@
 
   <!--- Return the variable back to the user --->
   <cfif IsObject(found)>
-  	<cfif NOT IsDefined("request.locals")>
-    	<cfset request.locals = {}>	
+  	<cfif NOT IsDefined("request.tags")>
+    	<cfset request.tags = {}>	
     </cfif>
-  	<cfset request.locals.page = found>
-  <!--- What if the slug isn't found? --->
+  	<cfset request.tags.page = found>
+  <!--- What if the slug isn't found? What should be put in request.tags.page? --->
   </cfif>
 </cfif>
 
