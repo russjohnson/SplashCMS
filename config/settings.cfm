@@ -10,7 +10,11 @@
     
 
 <!--- ADMIN TABS --->
-<cfset application.tabs.titles = []>
-<cfset application.tabs.routes = []>
+<cfset application.admin.tabs.titles = []>
+<cfset application.admin.tabs.routes = []>
+    
+
+<!--- EXTENSION SETTINGS --->
+<cfset application.extensions = {}>
     
 <cfset set(overwritePlugins = false)>
