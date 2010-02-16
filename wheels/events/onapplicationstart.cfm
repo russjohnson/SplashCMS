@@ -31,7 +31,7 @@
 		request.cgi = $cgiScope();
 		
 		// set up containers for routes, caches, settings etc
-		application.wheels.version = "1.0 Final";
+		application.wheels.version = "1.0.1";
 		application.wheels.controllers = {};
 		application.wheels.models = {};
 		application.wheels.existingModelFiles = "";
@@ -226,7 +226,7 @@
 
 		// add all public controller / view methods to a list of methods that you should not be allowed to call as a controller action from the url
 		loc.allowedGlobalMethods = "get,set,addroute";
-		loc.protectedControllerMethods = StructKeyList($createObjectFromRoot(path=application.wheels.controllerComponentPath, fileName="Controller", method="$initControllerClass"));
+		loc.protectedControllerMethods = StructKeyList($createObjectFromRoot(path=application.wheels.controllerComponentPath, fileName="Wheels", method="$initControllerClass"));
 		application.wheels.protectedControllerMethods = "";
 		loc.iEnd = ListLen(loc.protectedControllerMethods);
 		for (loc.i=1; loc.i <= loc.iEnd; loc.i++)

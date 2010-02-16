@@ -17,7 +17,7 @@
 			case "bit": {loc.returnValue = "cf_sql_bit"; break;}
 			case "char": case "nchar": case "uniqueidentifier": {loc.returnValue = "cf_sql_char"; break;}
 			case "date": {loc.returnValue = "cf_sql_date"; break;}
-			case "datetime": case "smalldatetime": {loc.returnValue = "cf_sql_timestamp"; break;}
+			case "datetime": case "datetime2": case "smalldatetime": {loc.returnValue = "cf_sql_timestamp"; break;}
 			case "decimal": case "money": case "smallmoney": {loc.returnValue = "cf_sql_decimal"; break;}
 			case "float": {loc.returnValue = "cf_sql_float"; break;}
 			case "int": {loc.returnValue = "cf_sql_integer"; break;}
@@ -46,6 +46,29 @@
 		var query = {};
 		if (arguments.limit > 0)
 		{
+			if (arguments.sql[ArrayLen(arguments.sql)] Contains ",")
+			{
+				// fix for pagination issue when ordering multiple columns with same name
+				loc.order = arguments.sql[ArrayLen(arguments.sql)];
+				loc.newOrder = "";
+				loc.doneColumns = "";
+				loc.done = 0;
+				loc.iEnd = ListLen(loc.order);
+				for (loc.i=1; loc.i <= loc.iEnd; loc.i++)
+				{
+					loc.item = ListGetAt(loc.order, loc.i);
+					loc.column = SpanExcluding(Reverse(SpanExcluding(Reverse(loc.item), ".")), " ");
+					if (ListFind(loc.doneColumns, loc.column))
+					{
+						loc.done++;
+						loc.item = loc.item & " AS tmp" & loc.done; 
+					}
+					loc.doneColumns = ListAppend(loc.doneColumns, loc.column);
+					loc.newOrder = ListAppend(loc.newOrder, loc.item);
+				}
+				arguments.sql[ArrayLen(arguments.sql)] = loc.newOrder;
+			}
+
 			// select clause always comes first in the array, the order by clause last, remove the leading keywords leaving only the columns and set to the ones used in the inner most sub query
 			loc.thirdSelect = ReplaceNoCase(ReplaceNoCase(arguments.sql[1], "SELECT DISTINCT ", ""), "SELECT ", "");
 			loc.thirdOrder = ReplaceNoCase(arguments.sql[ArrayLen(arguments.sql)], "ORDER BY ", "");
@@ -95,8 +118,10 @@
 		arguments.name = "query.name";
 		arguments.result = "loc.result";
 		arguments.datasource = variables.instance.connection.datasource;
-		arguments.username = variables.instance.connection.username;
-		arguments.password = variables.instance.connection.password;
+		if (Len(variables.instance.connection.username))
+			arguments.username = variables.instance.connection.username;
+		if (Len(variables.instance.connection.password))
+			arguments.password = variables.instance.connection.password;
 		if (application.wheels.serverName == "Railo")
 			arguments.psq = false; // set queries in Railo to not preserve single quotes on the entire cfquery block (we'll handle this individually in the SQL statement instead)  
 		loc.sql = arguments.sql;
