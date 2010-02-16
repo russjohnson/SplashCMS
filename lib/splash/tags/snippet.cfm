@@ -10,6 +10,7 @@
                 <cfif fileExists(expandPath("#application.defaults.rootPath#public/snippets/#snippet.filename#"))>
                   <cfinclude template="#application.defaults.rootPath#public/snippets/#snippet.filename#">
                 <cfelse>
+                    
                     <cfset snippet.write()>
                     <cfif fileExists(expandPath("#application.defaults.rootPath#public/snippets/#snippet.filename#"))>
                         <cfinclude template="#application.defaults.rootPath#public/snippets/#snippet.filename#">

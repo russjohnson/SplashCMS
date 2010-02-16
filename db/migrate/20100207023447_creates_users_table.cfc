@@ -1,4 +1,4 @@
-<cfcomponent extends="plugins.dbmigrate.migration" hint="creates users table">
+<cfcomponent extends="plugins.dbmigrate.Migration" hint="creates users table">
   <cffunction name="up">
     <cfscript>
     t = createTable('users');
