@@ -9,14 +9,23 @@
     
     <cfif isObject(pagePart)>
         <cfoutput>
+        <cfif pagePart.fileName is Not "">
+            <cfif fileExists(expandPath("#application.defaults.rootPath#public/pages/#pagePart.filename#"))>
+              <cfinclude template="#application.defaults.rootPath#public/pages/#pagePart.filename#">
+            <cfelse>
+                <cfset pagePart.write()>
                 <cfif fileExists(expandPath("#application.defaults.rootPath#public/pages/#pagePart.filename#"))>
-                  <cfinclude template="#application.defaults.rootPath#public/pages/#pagePart.filename#">
-                <cfelse>
-                    <cfset pagePart.write()>
-                    <cfif fileExists(expandPath("#application.defaults.rootPath#public/pages/#pagePart.filename#"))>
-                        <cfinclude template="#application.defaults.rootPath#public/pages/#pagePart.filename#">
-                    </cfif>
+                    <cfinclude template="#application.defaults.rootPath#public/pages/#pagePart.filename#">
                 </cfif>
-          </cfoutput>
+            </cfif>
+        <cfelse>
+            <cfset pagePart.fileName = createUUID()>
+            <cfset pagePart.write()>
+            <cfset partPart.save()>
+            <cfif fileExists(expandPath("#application.defaults.rootPath#public/pages/#pagePart.filename#"))>
+                <cfinclude template="#application.defaults.rootPath#public/pages/#pagePart.filename#">
+            </cfif>
+        </cfif>
+        </cfoutput>
     </cfif>
 </cfif>
