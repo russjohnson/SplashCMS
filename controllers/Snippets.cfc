@@ -10,6 +10,8 @@
   
   <cffunction name="new">
     <cfset snippet = model('snippet').new()>
+    <cfset category = model('categories').new()>
+    <cfset categories = model('categories').findAll()>
   </cffunction>
   
   <cffunction name="edit">
@@ -35,10 +37,12 @@
     <cfset snippet.fileName = createUUID() & ".cfm">
     
     <cfif snippet.save()>
-      <cfset flashInsert(success="The snippet was created successfully")>
-      <cfset redirectTo(route="snippets_path")>
+        <cfset flashInsert(success="The snippet was created successfully")>
+        <cfset redirectTo(route="snippets_path")>
     <cfelse>
-      <cfset flashInsert(error="There was an error creating the snippet.")>
+        <cfset category = model('categories').new()>
+    <cfset categories = model('categories').findAll()>
+        <cfset flashInsert(error="There was an error creating the snippet.")>
   		<cfset renderPage(action="new")>
     </cfif>
   </cffunction>

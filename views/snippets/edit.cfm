@@ -1,9 +1,3 @@
-<script type="text/javascript">
-  $(document).ready(function(){
-  	$('#snippet-content').markItUp(mySettings);
-  });
-</script>
-
 <div class="page-properties">
   <button id="viewSite" class="ui-button ui-state-default ui-corner-all" onclick="window.location('/admin/snippets/new');">New Snippet</button>
   <button id="viewSite" class="ui-button ui-state-default ui-corner-all" onclick="window.open('/');">View Site</button>

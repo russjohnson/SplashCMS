@@ -20,6 +20,12 @@
 <cfset addRoute(name="create_snippet_path", pattern="/admin/snippets/create", controller="snippets", action="create")>
 <cfset addRoute(name="update_snippet_path", pattern="/admin/snippets/update/[key]", controller="snippets", action="update")>
 <cfset addRoute(name="snippets_path", pattern="/admin/snippets", controller="snippets", action="index")>
+    
+<!--- CATEGORY ROUTES --->
+<cfset addRoute(name="delete_category_path", pattern="/admin/categories/delete/[key]", controller="categories", action="delete")>
+<cfset addRoute(name="create_category_path", pattern="/admin/categories/create", controller="categories", action="create")>
+<cfset addRoute(name="update_category_path", pattern="/admin/categories/update/[key]", controller="categories", action="update")>
+
 
 <!--- LAYOUT ROUTES --->
 <cfset addRoute(name="new_layout_path", pattern="/admin/layouts/new", controller="layouts", action="new")>

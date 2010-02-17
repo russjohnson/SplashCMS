@@ -17,6 +17,10 @@
     <cfoutput>#javascriptIncludeTag("pages")#</cfoutput>
   </cfif>
   
+  <cfif params.controller is "snippets" and (params.action is "new" or params.action is "edit")>
+    <cfoutput>#javascriptIncludeTag("snippets")#</cfoutput>
+  </cfif>
+  
   <!---
     TODO Needs to be conditional upon controller/action
   --->
