@@ -178,6 +178,12 @@ hr {
   border-bottom:1px solid #F0F0EE;
 }
 
+.table td.title {
+  background:#eaeaea;
+  font-weight:bold;
+  font-size:18px;
+}
+
 /* forms */
 
 .form input.text_field, .form textarea.text_area {

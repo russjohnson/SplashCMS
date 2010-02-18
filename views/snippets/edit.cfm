@@ -20,4 +20,6 @@
 	<cfif snippet.updatedByID is NOT "">
 	  #includePartial(partial='/shared/last_update', updatedByID=snippet.updatedByID, updatedAt=snippet.updatedAt)#
 	</cfif>
+	
+	#includePartial("category_form")#
 </cfoutput>
