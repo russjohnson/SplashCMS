@@ -13,10 +13,21 @@
   </cfif>  
   <cfset navigation = navigation & '>'>
   
+  <cfif application.wheels.URLRewriting EQ "Partial">
+  	<cfset partialHref = "/index.cfm">
+  <cfelse>
+    <cfset partialHref = "">
+  </cfif>
+
   <cfloop list="#attributes.urls#" index="item" delimiters="|">
-    <cfset href = listLast(item, ':')>
-    <cfset label = listFirst(item, ':')>
-    <cfif request.page.slug is listLast(href, '/') OR request.page.slug is href>
+    <cfset href = trim(listLast(item, ':'))>
+    <cfset label = trim(listFirst(item, ':'))>
+    
+    <cfif href NEQ "/">
+        <cfset href = partialHref & href>
+    </cfif>
+    
+    <cfif request.page.slug is listLast(href, '/')>
       <cfset navigation = navigation & '<li' & ' class="' & attributes.currentClass & '">' & '<a href="#href#">' & label & '</a>' & '</li>'>
     <cfelse>
       <cfset navigation = navigation & '<li>' & '<a href="#href#">' & label & '</a>' & '</li>'>

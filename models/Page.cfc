@@ -1,3 +1,6 @@
+<!--- TODO:
+			Implement all the options in getChildren
+  --->
 <cfcomponent extends="Model" output="false">
 
     <cffunction name="init">
@@ -15,6 +18,21 @@
         <cfset beforeSave('checkPublished')>
     </cffunction>
 
+    <cffunction name="getChildren" access="public">
+		<cfset var loc = arguments.attributeCollection >
+		<cfset var childPages = "">
+		
+		<cfif StructKeyExists(loc, "where") >
+			<cfset loc.where = "(" & loc.where>
+			<cfset loc.where &= ") AND (parentID = #this.id#)">
+		<cfelse>
+			<cfset loc.where = "parentID = #this.id#">
+		</cfif>
+		
+		<cfset childPages = this.findAll(argumentCollection=loc)>
+  	
+        <cfreturn childPages>
+    </cffunction>
 
     <!--- PRIVATE METHODS --->
 
