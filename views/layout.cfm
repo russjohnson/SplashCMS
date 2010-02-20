@@ -21,19 +21,6 @@
     <cfoutput>#javascriptIncludeTag("snippets")#</cfoutput>
   </cfif>
   
-  <!---
-    TODO Needs to be conditional upon controller/action
-  --->
-  <cfoutput>
-    #javascriptIncludeTag("markitup/jquery.markitup.pack.js, markitup/sets/html/set.js")#
-  </cfoutput>
- 
- <!---
-  TODO need to figure out a way to either move these to the stylesheets folder or make the path relevant
- --->
-  <link rel="stylesheet" type="text/css" href="/javascripts/markitup/skins/simple/style.css" />
-  <link rel="stylesheet" type="text/css" href="/javascripts/markitup/sets/html/style.css" />
-  
   <script type="text/javascript">
     $(document).ready(function(){
       

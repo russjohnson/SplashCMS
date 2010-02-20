@@ -69,7 +69,8 @@
 			<cfoutput query="pageParts">
 	        <div id="tabs-#name#">
 	          #hiddenFieldTag(name="pagePart[#name#]", value="#name#")#
-	          #textAreaTag(name="pagePart_#name#[content]", content="#content#", class="text_area", rows="15")#
+	          #richTextTag(name="pagePart_#name#[content]", content="#content#", class="rteditor", rows="15", editor="markitup", includeJSLibrary="false")#
+              <!--- #textAreaTag(name="pagePart_#name#[content]", content="#content#", class="text_area", rows="15")# --->
 	        </div>
 	    </cfoutput>
 

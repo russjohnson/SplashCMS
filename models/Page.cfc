@@ -1,6 +1,3 @@
-<!--- TODO:
-			Implement all the options in getChildren
-  --->
 <cfcomponent extends="Model" output="false">
 
     <cffunction name="init">

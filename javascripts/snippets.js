@@ -1,10 +1,3 @@
-$(document).ready(function(){
-  
-  // Add markItUp! to our textarea
-	$('.text_area').markItUp(mySettings);
-  
-});
-
 $(function() {
 		
 		var name = $("#category-name"),

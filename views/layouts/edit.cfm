@@ -1,9 +1,3 @@
-<script type="text/javascript">
-  $(document).ready(function(){
-  	$('#layout-content').markItUp(mySettings);
-  });
-</script>
-
 <h1>Edit Layout</h1>
 
 <cfoutput>

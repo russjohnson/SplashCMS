@@ -8,5 +8,7 @@
 <span class="description">Categories are simply a way to organize your snippets.</span></p>
 
 <p><label class="label">Body</label>
-#textArea(objectName='snippet', property='content', class="text_area", rows="15")#</p>
+<!--- #textArea(objectName='snippet', property='content', class="text_area", rows="15")# --->
+#richTextField(objectName='snippet', property='content', class="rteditor", rows="15", editor="markitup", includeJSLibrary="false")#
+</p>
 </cfoutput>

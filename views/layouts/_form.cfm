@@ -3,5 +3,5 @@
 #textField(objectName='layout', property='name', class="text_field")#</p>
 
 <p><label class="label">Body</label>
-#textArea(objectName='layout', property='content', class="text_area", rows="10")#</p>
+#richTextField(objectName='layout', property='content', class="rteditor", rows="15", editor="markitup", includeJSLibrary="false")#</p>
 </cfoutput>

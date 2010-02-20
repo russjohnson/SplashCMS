@@ -66,7 +66,8 @@
 			<cfloop from="1" to="#arrayLen(application.defaults.page.parts)#" index="i">
 	        <div id="tabs-#application.defaults.page.parts[i]#">
 	          #hiddenFieldTag(name="pagePart[#application.defaults.page.parts[i]#]", value="#application.defaults.page.parts[i]#")#
-	          #textAreaTag(name="pagePart_#application.defaults.page.parts[i]#[content]", class="text_area", rows="15")#
+              <!--- #textAreaTag(name="pagePart_#application.defaults.page.parts[i]#[content]", class="text_area", rows="15")# --->
+              #richTextTag(name="pagePart_#application.defaults.page.parts[i]#[content]", class="rteditor", rows="15", editor="markitup", includeJSLibrary="false")#
 	        </div>
 	    </cfloop>
 

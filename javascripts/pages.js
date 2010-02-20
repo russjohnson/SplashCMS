@@ -4,7 +4,7 @@ $(document).ready(function(){
   $("#page-title").slug({hide: false});
   
   // Add markItUp! to our textarea
-	$('.text_area').markItUp(mySettings);
+	//$('.text_area').markItUp(mySettings);
   
   
 });
