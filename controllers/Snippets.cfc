@@ -5,7 +5,7 @@
   </cffunction>
   
   <cffunction name="index">
-      <cfset snippetsAndCategories = model('snippet').findAll(order="name", include="category", groupby="categoryid")>
+      <cfset snippetsAndCategories = model('snippet').findAll(order="categoryid,name", include="category", groupby="categoryid")>
     <!--- <cfset categories = model('category').findAll(order="name")> --->
   </cffunction>
   
