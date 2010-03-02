@@ -21,7 +21,7 @@
         <cfelse>
             <cfset pagePart.fileName = createUUID()>
             <cfset pagePart.write()>
-            <cfset partPart.save()>
+            <cfset pagePart.save()>
             <cfif fileExists(expandPath("#application.defaults.rootPath#public/pages/#pagePart.filename#"))>
                 <cfinclude template="#application.defaults.rootPath#public/pages/#pagePart.filename#">
             </cfif>
