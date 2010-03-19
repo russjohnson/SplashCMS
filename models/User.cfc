@@ -1,6 +1,8 @@
 <cfcomponent extends="Model" output="false">
 
-	<cffunction name="init">
+	<cffunction name="init">		
+		<cfset hasMany("pages")>
+		
 		<cfset validatesPresenceOf(property="username", message="Username is required")>
 		<cfset validatesPresenceOf(property="email" , message="Email is required.")>
 		<cfset validatesPresenceOf(property="password", message="Password is required")>

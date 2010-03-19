@@ -2,9 +2,9 @@
 
     <cffunction name="init">
         <cfset belongsTo(name='pageLayout', class="layout", foreignKey="layoutID")>
-        <cfset hasOne('pageClass')>
         <cfset hasMany('PageParts')>
-        <cfset hasOne(name="author", class="user", foreignKey="createdByID")>
+        <cfset belongsTo('PageClass')>
+        <cfset belongsTo(name="author", class="user", foreignKey="createdByID")>
 
         <cfset validatesPresenceOf(property="title" , message="Your page must have a title.")>
         <cfset validatesPresenceOf(property="slug" , message="Your page must have a slug." )>

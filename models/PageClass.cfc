@@ -5,6 +5,7 @@
 <cfcomponent output="false" extends="Model">
 	
 	<cffunction name="init">
+		<cfset hasMany("Pages")>
 	</cffunction>
 	
 </cfcomponent>
