@@ -15,7 +15,7 @@
 	
 	<cffunction name="write">
         <!--- write the file to disk --->
-        <cffile action="write" file="#application.defaults.layoutsPath#/#this.fileName#" output="<cfimport taglib='../../lib/splash/tags' prefix='s' />#this.content#" addnewline="no" fixnewline="yes" />
+        <cffile action="write" file="#application.defaults.layoutsPath#/#this.fileName#" output="<cfimport taglib='../../lib/splash/tags' prefix='s' />#this.content#" addnewline="no" fixnewline="yes" charset="utf-16" />
 	</cffunction>
 	
 	<cffunction name="deleteOldFile">
