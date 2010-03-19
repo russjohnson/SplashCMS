@@ -1,4 +1,4 @@
-<cfcomponent extends="plugins.dbmigrate.migration" hint="enter default data">
+<cfcomponent extends="plugins.dbmigrate.Migration" hint="enter default data">
   <cffunction name="up">
     <cfscript>
     // add the admin user record

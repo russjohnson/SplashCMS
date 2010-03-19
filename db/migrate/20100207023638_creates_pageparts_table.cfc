@@ -1,4 +1,4 @@
-<cfcomponent extends="plugins.dbmigrate.migration" hint="creates pageparts table">
+<cfcomponent extends="plugins.dbmigrate.Migration" hint="creates pageparts table">
   <cffunction name="up">
     <cfscript>
     t = createTable('pageparts');

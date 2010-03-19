@@ -1,4 +1,4 @@
-<cfcomponent extends="plugins.dbmigrate.migration" hint="add categoryid to snippets table">
+<cfcomponent extends="plugins.dbmigrate.Migration" hint="add categoryid to snippets table">
   <cffunction name="up">
     <cfscript>
     t = changeTable('snippets');

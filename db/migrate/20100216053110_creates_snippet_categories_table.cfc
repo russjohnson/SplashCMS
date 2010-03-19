@@ -1,4 +1,4 @@
-<cfcomponent extends="plugins.dbmigrate.migration" hint="creates snippet categories table">
+<cfcomponent extends="plugins.dbmigrate.Migration" hint="creates snippet categories table">
   <cffunction name="up">
     <cfscript>
     t = createTable('categories');

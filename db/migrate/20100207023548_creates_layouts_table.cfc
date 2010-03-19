@@ -1,4 +1,4 @@
-<cfcomponent extends="plugins.dbmigrate.migration" hint="creates layouts table">
+<cfcomponent extends="plugins.dbmigrate.Migration" hint="creates layouts table">
   <cffunction name="up">
     <cfscript>
     t = createTable('layouts');

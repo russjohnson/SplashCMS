@@ -1,4 +1,4 @@
-<cfcomponent extends="plugins.dbmigrate.migration" hint="creates pages table">
+<cfcomponent extends="plugins.dbmigrate.Migration" hint="creates pages table">
   <cffunction name="up">
     <cfscript>
     t = createTable('pages');

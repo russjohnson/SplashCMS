@@ -1,4 +1,4 @@
-<cfcomponent extends="plugins.dbmigrate.migration" hint="creates snippets table">
+<cfcomponent extends="plugins.dbmigrate.Migration" hint="creates snippets table">
   <cffunction name="up">
     <cfscript>
     t = createTable('snippets');
