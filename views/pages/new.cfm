@@ -75,7 +75,7 @@
 	 
 	   <p>
     	<label><strong>Layout</strong></label>
-    	  #select(objectName='page', property='layoutID', options=layouts, valueField="id", textField="name")#
+    	  #select(objectName='page', property='layoutID', options=layouts, valueField="id", textField="name", includeBlank="Inherit")#
     	  &nbsp;&nbsp;&nbsp;&nbsp;
     	<label><strong>Page Type</strong></label>
     	  #select(objectName='page', property='pageClassID', options=pageClasses, valueField="id", textField="name")#

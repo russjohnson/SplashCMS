@@ -12,7 +12,7 @@
 
         <cfset beforeCreate('setCreatedByID')>
         <cfset beforeUpdate('setUpdatedByID')>
-        <cfset beforeSave('checkPublished')>
+        <cfset beforeSave('checkPublished,setLayoutId')>
     </cffunction>
 
     <cffunction name="getChildren" access="public">
@@ -45,6 +45,14 @@
         <cfelseif this.StatusHasChanged() and this.status is 'published'>
             <cfset this.publishedAt = now()>
         </cfif>
+    </cffunction>
+    
+    <cffunction name="setLayoutId" access="private">
+    	<cfset var loc = {}>
+    	<cfif this.layoutId IS "">
+    		<cfset loc.parentPageId = this.findByKey(key=this.parentId, select="layoutId")>
+    		<cfset this.layoutId = loc.parentPageId.layoutId>
+    	</cfif>
     </cffunction>
 
 </cfcomponent>

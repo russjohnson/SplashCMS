@@ -29,7 +29,7 @@
     <cfset page.parentid = params.parentid>
     <cfset status = ['Draft', 'Reviewed', 'Published', 'Hidden']>
     <cfset page = model('page').new(params.page)>
-    
+        
     <cfif page.save()>
       
       <!--- need to loop through the pageParts that get passed in params and save them --->
@@ -64,6 +64,7 @@
     <cfset status = ['Draft', 'Reviewed', 'Published', 'Hidden']>
     <cfset page = model('page').findbykey(params.key)>
     <cfset pageParts = page.pageParts()>
+    
     <cfif page.update(params.page)>
       
       <!--- first delete all existing page parts before saving the new ones --->
