@@ -1,11 +1,11 @@
 <cfif thisTag.executionMode IS "start">
   
     <cfparam name="attributes.part" default="">
-    <cfparam name="page" default="#request.page#">
+    <cfparam name="attributes.page" default="#request.page#">
 
     <cfset wheelsProxy=CreateObject("component","controllers.Controller") >
  
-    <cfset pagePart = wheelsProxy.wheelsExecute("model('pagePart').findByPage(pageID=#page.ID#, part = '#attributes.part#')")>
+    <cfset pagePart = wheelsProxy.wheelsExecute("model('pagePart').findByPage(pageID=#attributes.page.ID#, part = '#attributes.part#')")>
     
     <cfif isObject(pagePart)>
         <cfoutput>
