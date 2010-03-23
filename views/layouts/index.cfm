@@ -11,7 +11,7 @@
   </thead>
   <tbody>
 	  <cfoutput query="layouts">
-	  <tr id="order_#id#">
+	  <tr id="#id#">
 	    <td>#linkTo(text=name, route="edit_layout_path", key=id, class="layout")#</td>
 	    <td>#linkTo(text='#imageTag("remove.png")#', route='delete_layout_path', key=id, confirm='Are you sure you want to delete this Layout? This cannot be undone!')#</td>
 	  </tr>
@@ -39,7 +39,7 @@
 	   				var order = $(this).sortable('toArray');
 			
 	   				$.ajax({
-					      url: "/admin/layouts/reorder/" + order,
+					      url: <cfoutput>"#URLFor(route='reorder_layouts_path')#?order="+order</cfoutput>,
 					      type: "POST",
 					      success: function(msg){
 					         $(".table tbody").effect("highlight", {}, 1000);

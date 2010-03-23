@@ -33,7 +33,7 @@
 <cfset addRoute(name="create_layout_path", pattern="/admin/layouts/create", controller="layouts", action="create")>
 <cfset addRoute(name="update_layout_path", pattern="/admin/layouts/update/[key]", controller="layouts", action="update")>
 <cfset addRoute(name="edit_layout_path", pattern="/admin/layouts/edit/[key]", controller="layouts", action="edit")>
-<cfset addRoute(name="reorder_layouts_path", pattern="/admin/layouts/reorder/[order]", controller="layouts", action="reorder")>
+<cfset addRoute(name="reorder_layouts_path", pattern="/admin/layouts/reorder", controller="layouts", action="reorder")>
 <cfset addRoute(name="layouts_path", pattern="/admin/layouts", controller="layouts", action="index")>
 
 <!--- USER MANAGEMENT ROUTES --->

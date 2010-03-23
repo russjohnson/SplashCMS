@@ -71,7 +71,7 @@
   </cffunction>
 	
 	<cffunction name="reorder">
-		<cfset photo = model("Layout").reorder(order=params.order)>
+		<cfset layout = model("Layout").reorder(order=params.order)>
 		
 		<!--- Maybe I should use the Remote Form Helper plugin here and do the jQuery effects in a "remote view" --->
 		<cfset renderNothing()>
