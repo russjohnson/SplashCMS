@@ -175,7 +175,7 @@
 			<cffile action="read" file="#loc.templateFile#" variable="loc.templateContent">
 			
 			<!--- TODO: need to determine if app sits in subfolder under webroot and needs different extends path --->
-			<cfset loc.templateContent = replace(loc.templateContent, "[extends]", "plugins.dbmigrate.migration")>
+			<cfset loc.templateContent = replace(loc.templateContent, "[extends]", "plugins.dbmigrate.Migration")>
 			
 			<cfset loc.templateContent = replace(loc.templateContent, "[description]", arguments.migrationName)>
 			
