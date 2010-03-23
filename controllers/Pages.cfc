@@ -16,7 +16,7 @@
   <cffunction name="new">
     <cfset page = model('page').new()>
     <cfset page.parentid = params.parentid>
-    <cfset layouts = model('layout').findAll()>
+    <cfset layouts = model('layout').findAll(order="stackOrder")>
     <cfset pageClasses = model('pageClass').findAll()>
     <cfset status = ['Draft', 'Reviewed', 'Published', 'Hidden']>
     <cfset pagePart = model('pagePart').new()>
@@ -24,7 +24,7 @@
   </cffunction>
   
   <cffunction name="create">
-    <cfset layouts = model('layout').findAll()>
+    <cfset layouts = model('layout').findAll(order="stackOrder")>
     <cfset pageClasses = model('pageClass').findAll()>
     <cfset page.parentid = params.parentid>
     <cfset status = ['Draft', 'Reviewed', 'Published', 'Hidden']>
@@ -51,7 +51,7 @@
   </cffunction>
   
   <cffunction name="edit">
-    <cfset layouts = model('layout').findAll()>
+    <cfset layouts = model('layout').findAll(order="stackOrder")>
     <cfset pageClasses = model('pageClass').findAll()>
     <cfset status = ['Draft', 'Reviewed', 'Published', 'Hidden']>
     <cfset page = model('page').findbykey(params.key)>
@@ -59,7 +59,7 @@
   </cffunction>
   
   <cffunction name="update">
-    <cfset layouts = model('layout').findAll()>
+    <cfset layouts = model('layout').findAll(order="stackOrder")>
     <cfset pageClasses = model('pageClass').findAll()>
     <cfset status = ['Draft', 'Reviewed', 'Published', 'Hidden']>
     <cfset page = model('page').findbykey(params.key)>
