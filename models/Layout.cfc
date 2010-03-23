@@ -24,4 +24,15 @@
             <cffile action="delete" file="#application.defaults.layoutsPath#/#this.changedFrom(property='filename')#">
         </cfif>
 	</cffunction>
+	
+	<cffunction name="reorder">
+		<cfargument name="order" type="string" required="yes" />
+		
+		<cfset var loc = {}>
+		
+		<!--- For every item passed, update it's position --->
+		<cfloop from="1" to="#ListLen(arguments.order)#" index="loc.position">	
+			<cfset this.updateByKey(key=ListLast(ListGetAt(arguments.order, loc.position), '_'), stackOrder=loc.position) />
+		</cfloop>
+	</cffunction>
 </cfcomponent>

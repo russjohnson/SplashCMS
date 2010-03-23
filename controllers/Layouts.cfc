@@ -5,7 +5,7 @@
   </cffunction>
   
   <cffunction name="index">
-    <cfset layouts = model('layout').findAll() />
+    <cfset layouts = model('layout').findAll(order="stackOrder") />
   </cffunction>
   
   <cffunction name="new">
@@ -69,5 +69,12 @@
   		<cfset redirectTo(route="layouts_path")>
   	</cfif>
   </cffunction>
+	
+	<cffunction name="reorder">
+		<cfset photo = model("Layout").reorder(order=params.order)>
+		
+		<!--- Maybe I should use the Remote Form Helper plugin here and do the jQuery effects in a "remote view" --->
+		<cfset renderNothing()>
+	</cffunction>
 	
 </cfcomponent>
