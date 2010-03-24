@@ -33,12 +33,6 @@
 
     <!--- PRIVATE METHODS --->
 
-    <cffunction name="fixScriptTags" access="private">
-        <cfargument name="code" type="string" required="true">
-        <cfset var loc = arguments.code>
-        <cfreturn replaceNoCase(loc, 'invalidtag', 'script', 'ALL')>
-    </cffunction>
-
     <cffunction name="checkPublished" access="private">
         <cfif this.isNew() and this.status is 'published'>
             <cfset this.publishedAt = now()>
