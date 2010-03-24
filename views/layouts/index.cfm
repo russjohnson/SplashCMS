@@ -24,15 +24,7 @@
 	<p>#linkTo(text="<span class='new-layout'>New Layout</span>", route="new_layout_path", class="button_wide")#</p>
 </cfoutput>
 
-<script type="text/javascript">
-	// Return a helper with preserved width of cells
-	var fixHelper = function(e, ui) {
-		ui.children().each(function() {
-			$(this).width($(this).width());
-		});
-		return ui;
-	};
-	
+<script type="text/javascript">	
 	$(".table tbody").sortable({
 		helper: fixHelper,
 		update: function(event, ui) { 

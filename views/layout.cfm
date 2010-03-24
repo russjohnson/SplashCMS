@@ -10,7 +10,7 @@
 	
 	<cfoutput>
 	 #stylesheetLinkTag("base, jquery.treeTable.css, themes/blue/style.css, splash/jquery-ui-1.7.2.custom.css")#
-     #javascriptIncludeTag("jquery.treeTable.min.js")#
+     #javascriptIncludeTag("jquery.treeTable.min.js,application")#
 	</cfoutput>
   
   <cfif params.controller is "pages" and (params.action is "new" or params.action is "edit")>
