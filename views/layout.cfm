@@ -2,9 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title>
-	 <cfoutput>#application.admin.title#</cfoutput>
-	</title>
+	<title><cfoutput>#application.admin.title#</cfoutput></title>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js" type="text/javascript"></script>
 	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js" type="text/javascript"></script>
 	
@@ -21,19 +19,6 @@
     <cfoutput>#javascriptIncludeTag("snippets")#</cfoutput>
   </cfif>
   
-  <script type="text/javascript">
-    $(document).ready(function(){
-      
-      // this adds the nice hover state to all of our buttons    	
-    	$('.ui-button').hover(function() {
-      		$(this).addClass("ui-state-hover");
-      	}, function() {
-      		$(this).removeClass("ui-state-hover");
-    	});
-    	
-    });
-  </script>
-
 </head>
 <body>
   <div id="container">

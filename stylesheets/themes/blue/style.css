@@ -1,5 +1,6 @@
 .small { font-size:12px; }
 .gray { color:#999999; }
+.red {color:#ff0000;}
 .hightlight { background-color:#FFFFCC; }
 
 a:link, a:visited, a:hover, a:active, h1, h2, h3 { color: #0073ea; }

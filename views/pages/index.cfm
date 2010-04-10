@@ -5,17 +5,17 @@
       // expand the home node by default
       $("#node-1").expand();
     });
-  </script>
+</script>
 
 <h1>Pages</h1>
 
 <table id="pageTree" class="table">
   <thead>
-  <tr>
-    <th class="first">Page</th>
-    <th>Status</th>
-    <th class="last">&nbsp;</th>
-  </tr>
+  	<tr>
+	    <th class="first">Page</th>
+	    <th>Status</th>
+	    <th class="last">&nbsp;</th>
+	</tr>
   </thead>
   <tbody>
   <cfoutput query="pages">
@@ -28,9 +28,9 @@
         </cfif>
         #linkTo(text=pageTitle, route="edit_page_path", key=id, parentID=parentid, class="page")#
       </td>
-      <td><cfif status is "Draft"><span style="color:red;">#status#</span><cfelse>#status#</cfif></td>
+      <td><cfif status is "Draft"><span class="red">#status#</span><cfelse>#status#</cfif></td>
       <td>
-        #linkTo(text='#imageTag("add-child.png")#', route='new_page_path', parentid=id)#
+          #linkTo(text='#imageTag("add-child.png")#', route='new_page_path', parentid=id)#
         <cfif parentId is '0'>
           #imageTag("remove-disabled.png")#
         <cfelse>

@@ -1,14 +1,5 @@
 <cfhtmlhead text='<script type="text/javascript" src="/javascripts/jquery.slug.js"></script>'>
 
-<style type="text/css">
-	#dialog label, #dialog input { display:block; }
-	#dialog label { margin-top: 0.5em; }
-	#dialog input, #dialog textarea { width: 95%; }
-	#tabs { margin-top: 1em; }
-	#tabs li .ui-icon-close { float: left; margin: 0.4em 0.2em 0 0; cursor: pointer; }
-	#add_tab, #hideShow { cursor: pointer; }
-</style>
-
 <div class="page-properties">
   <button id="add_tab" class="ui-button ui-state-default ui-corner-all">Add Page Part</button> 
   <button id="hideShow" class="ui-button ui-state-default ui-corner-all">Page Properties</button>
@@ -81,7 +72,7 @@
     	  #select(objectName='page', property='pageClassID', options=pageClasses, valueField="id", textField="name")#
     	  &nbsp;&nbsp;&nbsp;&nbsp;
     	<label><strong>Status</strong></label>
-    	 #select(objectName="page", property="status", options=status)#
+    	  #select(objectName="page", property="status", options=status)#
     </p>
 					
 	  <p>#submitTag(class="ui-button ui-state-default ui-corner-all", value="Save Page &rarr;")# or #linkTo(text="Cancel", route="pages_path")#</p>

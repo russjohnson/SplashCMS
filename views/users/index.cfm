@@ -8,7 +8,7 @@
   </tr>
   <cfoutput query="users">
   	<tr>
-		  <td>
+		<td>
     		#linkTo(text="#name#", route="edit_user_path", key="#id#", class="user")# <span class="gray">#username#</span>
     	</td>
     	<td>
