@@ -1,14 +1,17 @@
 <cfcomponent extends="Model" output="false">
 
     <cffunction name="init">
-        <cfset belongsTo(name='pageLayout', class="layout", foreignKey="layoutID")>
-        <cfset hasMany('PageParts')>
+		<cfset hasMany('PageParts')>
+        <cfset belongsTo(name='pageLayout', class="layout", foreignKey="layoutID")>      
         <cfset belongsTo('PageClass')>
         <cfset belongsTo(name="author", class="user", foreignKey="createdByID")>
 
         <cfset validatesPresenceOf(property="title" , message="Your page must have a title.")>
+		<cfset validatesLengthOf(properties="title,keywords,description", message="You have exceeded the maximun length", allowBlank="true", maximum="255")>
         <cfset validatesPresenceOf(property="slug" , message="Your page must have a slug." )>
         <cfset validatesUniquenessOf(property="slug", message="The slug you entered already exists.")>
+		<cfset validatesLengthOf(property="slug", message="You have exceeded the maximun length for the slug", maximum="100")>
+		<cfset validatesLengthOf(property="breadcrumb", message="You have exceeded the maximun length for the breadcrumb", allowBlank="true", maximum="160")>
 
         <cfset beforeCreate('setCreatedByID')>
         <cfset beforeUpdate('setUpdatedByID')>

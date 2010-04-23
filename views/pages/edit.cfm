@@ -29,21 +29,21 @@
 	</cfif>
 				
 		<p><label class="label">Page Title</label>
-			#textField(objectName='page', property='title', class="text_field")#</p>
+			#textField(objectName='page', property='title', class="text_field", maxlength="255")#</p>
 		
 		<div class="more">
 		  
 		  	<p><label class="label">Slug</label>
-					#textField(objectName='page', property='slug', class="text_field slug")#</p>
+					#textField(objectName='page', property='slug', class="text_field slug", maxlength="100")#</p>
 						
 			<p><label class="label">Breadcrumb</label>
-					#textField(objectName='page', property='breadcrumb', class="text_field")#</p>
+					#textField(objectName='page', property='breadcrumb', class="text_field", maxlength="160")#</p>
 				
 			<p><label class="label">Description</label>
-					#textField(objectName='page', property='description', class="text_field")#</p>	
+					#textField(objectName='page', property='description', class="text_field", maxlength="255")#</p>	
 						
 			<p><label class="label">Keywords</label>
-					#textField(objectName='page', property='keywords', class="text_field")#</p>
+					#textField(objectName='page', property='keywords', class="text_field", maxlength="255")#</p>
 		</div>
 	  </cfoutput>
 	  <div id="tabs">
