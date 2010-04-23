@@ -7,14 +7,14 @@ MySQL or MSSQL
 You will need either Apache or IIS rewrite module to use the friendly url support
 
 
-
 h2. Installation
 # Unzip the archive to the root of your webserver
-# Create a MySQL or MSSQL database named whatever you want (db scripts included in the INSTALL folder)
+# Create a MySQL or MSSQL database named whatever you want
 # Open the Railo web-admin or ColdFusion admin and add a DSN for the database you created.
 # Open config/environment.cfm and set the appropriate enivronment for your install
-# Open the directory for your environment. Rename the *settings_sample.cfm* file for that environment to *settings.cfm* ie, design/settings.cfm, production/settings.cfm and edit your datasource setting.
+# Open the directory for your environment under the config directory. Rename the *settings_sample.cfm* file for that environment to *settings.cfm* ie, design/settings.cfm, production/settings.cfm and edit your datasource setting.
+# Use the DBMigration Plugin to "migrate" your site (will create all tables and insert the initial data)
 # Open the Splash Admin and login. (http://yourwebroot/admin) Default username is 'admin' and password is 'splash'
-# Update all current layouts, snippets and pages (just hit update so the files get created on the file system)
+
 # Start building your site!
 
