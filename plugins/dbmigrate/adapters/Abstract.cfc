@@ -46,7 +46,9 @@
 		<cfscript>
 		if(StructKeyExists(arguments.options,'type') && arguments.options.type != 'primaryKey') {
 			if(StructKeyExists(arguments.options,'default') && optionsIncludeDefault(argumentCollection=arguments.options)) {
-				if(arguments.options.type == 'boolean') {
+				if(arguments.options.default eq "NULL" || (arguments.options.default eq "" && ListFindNoCase("boolean,date,datetime,time,timestamp,decimal,float,integer",arguments.options.type))) {
+					arguments.sql = arguments.sql & " DEFAULT NULL";
+				} else if(arguments.options.type == 'boolean') {
 					arguments.sql = arguments.sql & " DEFAULT #IIf(arguments.options.default,1,0)#";
 				} else {
 					arguments.sql = arguments.sql & " DEFAULT #quote(value=arguments.options.default,options=arguments.options)#";
@@ -129,7 +131,7 @@
 	<cffunction name="changeColumnInTable" returntype="string" access="public" hint="generates sql to change an existing column in a table">
 		<cfargument name="name" type="string" required="true" hint="table name">
 		<cfargument name="column" type="any" required="true" hint="column definition object">
-		<cfreturn "ALTER TABLE #quoteTableName(LCase(arguments.name))# CHANGE #arguments.column.toSQL()#">
+		<cfreturn "ALTER TABLE #quoteTableName(LCase(arguments.name))# CHANGE #quoteColumnName(arguments.column.name)# #arguments.column.toSQL()#">
 	</cffunction>
 	
 	<cffunction name="renameColumnInTable" returntype="string" access="public" hint="generates sql to rename an existing column in a table">

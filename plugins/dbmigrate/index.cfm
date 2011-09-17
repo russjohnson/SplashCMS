@@ -1,20 +1,20 @@
 <cfsetting enablecfoutputonly="true">
 
 <cfif isDefined("Form.version")>
-	<cfset flashInsert(DBMigrateFeedback=application.wheels.plugins.DBMigrate.migrateTo(Form.version))>
+	<cfset flashInsert(dbmigrateFeedback=application.wheels.plugins.dbmigrate.migrateTo(Form.version))>
 	<cfset redirectTo(back=true)>
 <cfelseif isDefined("Form.migrationName")>
 	<cfparam name="Form.templateName" default="">
 	<cfparam name="Form.migrationPrefix" default="">
-	<cfset flashInsert(DBMigrateFeedback2=application.wheels.plugins.DBMigrate.createMigration(Form.migrationName,Form.templateName,Form.migrationPrefix))>
+	<cfset flashInsert(dbmigrateFeedback2=application.wheels.plugins.dbmigrate.createMigration(Form.migrationName,Form.templateName,Form.migrationPrefix))>
 	<cfset redirectTo(back=true)>
 </cfif>
 
 <!--- Get current database version --->
-<cfset currentVersion = application.wheels.plugins.DBMigrate.getCurrentMigrationVersion()>
+<cfset currentVersion = application.wheels.plugins.dbmigrate.getCurrentMigrationVersion()>
 
 <!--- Get current list of migrations --->
-<cfset migrations = application.wheels.plugins.DBMigrate.getAvailableMigrations()>
+<cfset migrations = application.wheels.plugins.dbmigrate.getAvailableMigrations()>
 <cfif ArrayLen(migrations)>
 	<cfset lastVersion = migrations[ArrayLen(migrations)].version>
 <cfelse>
@@ -29,9 +29,9 @@
 <h2>inspired by Active Record migrations</h2>
 <p>Database Migrations are an easy way to build and alter your database structure using cfscript.</p>
 
-<cfif flashKeyExists("DBMigrateFeedback")>
+<cfif flashKeyExists("dbmigrateFeedback")>
 	<h2>Migration result</h2>
-	<pre>#flash("DBMigrateFeedback")#</pre>
+	<pre>#flash("dbmigrateFeedback")#</pre>
 </cfif>
 
 <h2>Datasource</h2>
@@ -71,16 +71,31 @@
 
 	<h2 style="padding-top:10px;">Create new migration file from template</h2>
 	
-	<cfif flashKeyExists("DBMigrateFeedback2")>
-	<pre style="margin-top:10px;">#flash("DBMigrateFeedback2")#</pre>
+	<cfif flashKeyExists("dbmigrateFeedback2")>
+	<pre style="margin-top:10px;">#flash("dbmigrateFeedback2")#</pre>
 	</cfif>
 	
 	<form action="#CGI.script_name & '?' & CGI.query_string#" method="post">
 	<p style="padding-top:10px;">Select template:
 	<select name="templateName">
 	 <option value="blank">Blank migration</option>
+	 <option value="">-- Table Operations --</option>
 	 <option value="create-table">Create table</option>
-	 <option value="change-table">Change table</option>
+	 <option value="change-table">Change table (multi-column)</option>
+	 <option value="rename-table">Rename table</option>
+	 <option value="remove-table">Remove table</option>
+	 <option value="">-- Column Operations --</option>
+	 <option value="create-column">Create single column</option>
+	 <option value="change-column">Change single column</option>
+	 <option value="rename-column">Rename single column</option>
+	 <option value="remove-column">Remove single column</option>
+	 <option value="">-- Index Operations --</option>
+	 <option value="create-index">Create index</option>
+	 <option value="remove-index">Remove index</option>
+	 <option value="">-- Record Operations --</option>
+	 <option value="create-record">Create record</option>
+	 <option value="update-record">Update record</option>
+	 <option value="remove-record">Remove record</option>
 	</select>
 	</p>
 	

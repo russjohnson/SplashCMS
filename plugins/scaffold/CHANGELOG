@@ -1,3 +1,30 @@
+CHANGES 0.8:
+===========
+- Compatibility with Wheels 1.1.5
+- Fixes for the $checkIfFileExists() function (by webonix)
+- Added more scaffold types (by Mike Henke)
+- Matching Rails verbiage on the new actions (by Mike Henke)
+- Included the display of flash messages in the views (by talltroym)
+- Moves the new action link on the index page to the top of the table rather then at the bottom for easy access with a model that has numerous records. (by talltroym)
+
+CHANGES 0.7:
+=============
+- Fix for issue #15, 14 and 18
+- Compatibility with Wheels 1.1.
+
+CHANGES 0.6:
+=============
+- Compatibility with Wheels 1.0.5.
+- Made the "default" template appear at the top.
+- Updated the docs to reflect why the flash messages are not used in the views.
+
+CHANGES 0.5:
+=============
+- Compatibility with Wheels 1.0.2.
+- Removed CF9 script syntax option (Thanks to Russ Johnson).
+- Added ability to use different templates for scaffolding (Thanks to Russ Johnson). 
+- Added CF9 script style templates and CF8 script style templates(Thanks to Russ Johnson). 
+
 CHANGES 0.4:
 =============
 

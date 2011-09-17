@@ -46,7 +46,7 @@
 		<cfargument name="name" type="string" required="true" hint="table name">
 		<cfargument name="columnName" type="string" required="true" hint="old column name">
 		<cfargument name="newColumnName" type="string" required="true" hint="new column name">
-		<cfreturn "ALTER TABLE #quoteTableName(LCase(arguments.name))# CHANGE #quoteColumnName(arguments.columnName)# #quoteColumnName(arguments.newColumnName)# #$getColumnDefinition(tableName=arguments.name,columnName=arguments.columnName)#">
+		<cfreturn "ALTER TABLE #quoteTableName(LCase(arguments.name))# CHANGE COLUMN #quoteColumnName(arguments.columnName)# #quoteColumnName(arguments.newColumnName)# #$getColumnDefinition(tableName=arguments.name,columnName=arguments.columnName)#">
 	</cffunction>
 
 	<!--- MySQL requires table name as well as index name --->
