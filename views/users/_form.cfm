@@ -3,37 +3,30 @@
 
 <cfoutput>
   <p>
-    <label class="label">Login</label>
-	  #textField(objectName='user', property='username', class="text_field")#
+	  #textField(objectName='user', property='username', label="Login", labelClass="label", class="text_field")#
 	</p>
 	
 	<p>
-	  <label class="label">Name</label>
-		#textField(objectName='user', property='name', class="text_field")#
+		#textField(objectName='user', property='name', label="Name", labelClass="label", class="text_field")#
 	</p>
 	
 	<p>
-	  <label class="label">Email</label>
-		#textField(objectName='user', property='email', class="text_field")#
+		#textField(objectName='user', property='email', label="Email", labelClass="label", class="text_field")#
 	</p>
 		
 	<p>
-	  <label class="label">Password</label>
-	  #passwordField(objectName='user', property='password', class="text_field")#
+	  #passwordField(objectName='user', property='password', label="Password", labelClass="label", class="text_field")#
 	</p>
 	
 	<p>
-	  <label class="label">Confirm Password</label>
-		#passwordField(objectName='user', property='passwordConfirmation', class="text_field")#
+		#passwordField(objectName='user', property='passwordConfirmation', label="Confirm Password", labelClass="label", class="text_field")#
 	</p>
 	
 	<p>
-	  <label class="label">Administrator
-	  #checkBox(objectName="user", property="admin", checkedValue="1", uncheckedValue="0")#</label>
+	  #checkBox(objectName="user", property="admin", checkedValue="1", label="Administrator ", labelClass="label", uncheckedValue="0")#
 	</p>
 	
 	<p>
-	  <label class="label">Developer
-	  #checkBox(objectName="user", property="developer", checkedValue="1", uncheckedValue="0")#</label>
+	  #checkBox(objectName="user", property="developer", checkedValue="1", label="Developer ", labelClass="label", uncheckedValue="0")#
 	</p>
 </cfoutput>
