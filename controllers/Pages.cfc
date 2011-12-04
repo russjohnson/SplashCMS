@@ -5,7 +5,7 @@
   </cffunction>
   
   <cffunction name="index">
-    <cfset pages = model('page').findAll(order="pageClassId DESC,title")>
+    <cfset pages = model('page').findAll(order="pageClassId ASC, parentid, pageOrder")>
     <cfset pages = queryTreeSort(pages)>
   </cffunction>
   

@@ -13,6 +13,7 @@
   <thead>
   	<tr>
 	    <th class="first">Page</th>
+			<th>Order</th>
 	    <th>Status</th>
 	    <th class="last">&nbsp;</th>
 	</tr>
@@ -28,6 +29,7 @@
         </cfif>
         #linkTo(text=pageTitle, route="edit_page_path", key=id, parentID=parentid, class="page")#
       </td>
+			<td<cfif !parentid is 1 and !parentid is 0> style="color:##ccc;"</cfif>>#pageorder#</td>
       <td><cfif status is "Draft"><span class="red">#status#</span><cfelse>#status#</cfif></td>
       <td>
           #linkTo(text='#imageTag("add-child.png")#', route='new_page_path', parentid=id)#
