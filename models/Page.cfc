@@ -2,9 +2,9 @@
 
    <cffunction name="init">
 		<cfset hasMany('PageParts')>
-		<cfset belongsTo(name='pageLayout', class="layout", foreignKey="layoutID")>      
+		<cfset belongsTo(name='pageLayout', modelName="layout", foreignKey="layoutID")>      
 		<cfset belongsTo('PageClass')>
-		<cfset belongsTo(name="author", class="user", foreignKey="createdByID")>
+		<cfset belongsTo(name="author", modelName="user", foreignKey="createdByID")>
 
 		<cfset validatesPresenceOf(property="title" , message="Your page must have a title.")>
 		<cfset validatesLengthOf(properties="title,keywords,description", message="You have exceeded the maximun length", allowBlank="true", maximum="255")>
