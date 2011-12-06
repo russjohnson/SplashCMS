@@ -72,6 +72,8 @@
 </strong>", options=pageClasses, valueField="id", textField="name")#
     	&nbsp;&nbsp;&nbsp;&nbsp;
     	#select(objectName="page", property="status", label="<strong>Status </strong>", options=status)#
+			&nbsp;&nbsp;&nbsp;&nbsp;
+			#textField(objectName="page", property="pageorder", label="Page Order ", labelPlacement="before", class="text_field", style="width:20px;")#
     </p>
 					
 	  <p>#submitTag(class="ui-button ui-state-default ui-corner-all", value="Save Page &rarr;")# or #linkTo(text="Cancel", route="pages_path")#</p>
