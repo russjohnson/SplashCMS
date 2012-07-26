@@ -4,7 +4,7 @@
 		<cfscript>
 		var dbType = $getDBType();
 		if(dbType == '') {
-			$throw(type="Plugins.DBMigrate.DatabaseNotSupported", message="#dbType# is not supported by DBMigrate plugin.", extendedInfo="Use Microsoft SQL Server, MySQL, Oracle or PostgreSQL.");
+			$throw(type="Plugins.dbmigrate.DatabaseNotSupported", message="#dbType# is not supported by DBMigrate plugin.", extendedInfo="Use Microsoft SQL Server, MySQL, Oracle, SQLite or PostgreSQL.");
 		} else {
 			this.adapter = CreateObject("component","adapters.#dbType#");
 		}
@@ -52,13 +52,6 @@
 	<cffunction name="dropTable" returntype="void" access="public" hint="drops a table from the database">
 		<cfargument name="name" type="string" required="true" hint="table name">
 		<cfscript>
-		var loc = {};
-		loc.foreignKeys = $getForeignKeys(arguments.name);
-		loc.iEnd = ListLen(loc.foreignKeys);
-		for (loc.i=1; loc.i <= loc.iEnd; loc.i++) {
-			loc.foreignKeyName = ListGetAt(loc.foreignKeys,loc.i);
-			dropForeignKey(table=arguments.name,keyname=loc.foreignKeyName);
-		}
 		$execute(this.adapter.dropTable(name=arguments.name));
 		announce("Dropped table #arguments.name#");
 		</cfscript>
@@ -120,7 +113,7 @@
 		<cfargument name="referenceName" type="string" required="false" default="" hint="reference to column to remove">
 		<cfscript>
 		if(arguments.referenceName != "") {
-			arguments.columnName = arguments.referenceName & "Id";
+			arguments.columnName = arguments.referenceName & "id";
 		}
 		$execute(this.adapter.dropColumnFromTable(name=arguments.table,columnName=arguments.columnName));
 		announce("Removed column #arguments.columnName# from #arguments.table#");
@@ -185,6 +178,8 @@
 					loc.columnValues = ListAppend(loc.columnValues,arguments[loc.key]);
 				} else if(IsBoolean(arguments[loc.key])) {
 					loc.columnValues = ListAppend(loc.columnValues,IIf(arguments[loc.key],1,0));
+				} else if(IsDate(arguments[loc.key])) {
+					loc.columnValues = ListAppend(loc.columnValues,"#arguments[loc.key]#");
 				} else {
 					loc.columnValues = ListAppend(loc.columnValues,"'#arguments[loc.key]#'");
 				}
@@ -217,7 +212,7 @@
 			}
 		}
 		if(loc.columnUpdates != '') {
-			loc.sql = 'UPDATE #this.adapter.quoteTableName(LCase(arguments.table))# SET #loc.columnsUpdates#';
+			loc.sql = 'UPDATE #this.adapter.quoteTableName(LCase(arguments.table))# SET #loc.columnUpdates#';
 			loc.message = 'Updated record(s) in table #arguments.table#';
 			if(arguments.where != '') {
 				loc.sql = loc.sql & ' WHERE #arguments.where#';

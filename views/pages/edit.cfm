@@ -28,23 +28,24 @@
 	    #hiddenField(objectName="page", property="parentID")#
 	</cfif>
 				
-		<p><label class="label">Page Title</label>
-			#textField(objectName='page', property='title', class="text_field", maxlength="255")#</p>
+		<p>
+			#textField(objectName='page', property='title', class="text_field", maxlength="255", label="Page Title", labelClass="label")#
+		</p>
 		
-		<div class="more">
-		  
-		  	<p><label class="label">Slug</label>
-					#textField(objectName='page', property='slug', class="text_field slug", maxlength="100")#</p>
-						
-			<p><label class="label">Breadcrumb</label>
-					#textField(objectName='page', property='breadcrumb', class="text_field", maxlength="160")#</p>
-				
-			<p><label class="label">Description</label>
-					#textField(objectName='page', property='description', class="text_field", maxlength="255")#</p>	
-						
-			<p><label class="label">Keywords</label>
-					#textField(objectName='page', property='keywords', class="text_field", maxlength="255")#</p>
-		</div>
+			<div class="more">
+				<p>
+					#textField(objectName='page', property='slug', class="text_field slug", maxlength="100", label="Slug", labelClass="label")#
+				</p>
+				<p>
+					#textField(objectName='page', property='breadcrumb', class="text_field", maxlength="160", label="Breadcrumb", labelClass="label")#
+				</p>
+				<p>
+					#textField(objectName='page', property='description', class="text_field", maxlength="255", label="Description", labelClass="label")#
+				</p>	
+				<p>
+					#textField(objectName='page', property='keywords', class="text_field", maxlength="255", label="Keywords", labelClass="label")#
+				</p>
+			</div>
 	  </cfoutput>
 	  <div id="tabs">
 	    <!--- navigation for tabs --->
@@ -60,25 +61,25 @@
 			<cfoutput query="pageParts">
 	        <div id="tabs-#name#">
 	          #hiddenFieldTag(name="pagePart[#name#]", value="#name#")#
-	          #richTextTag(name="pagePart_#name#[content]", content="#content#", class="rteditor", rows="15", editor="markitup", includeJSLibrary="false")#
-              <!--- #textAreaTag(name="pagePart_#name#[content]", content="#content#", class="text_area", rows="15")# --->
+	          #richTextTag(name="pagePart_#name#[content]", content="#content#", class="rteditor", rows="15", editor="ckeditor", includeJSLibrary="false")#
 	        </div>
 	    </cfoutput>
 
 		</div>
 	 <cfoutput>
-	 <p>
-  	<label><strong>Layout</strong></label>
-  	  #select(objectName='page', property='layoutID', options=layouts, valueField="id", textField="name", includeBlank="Inherit")#
-  	  &nbsp;&nbsp;&nbsp;&nbsp;
-  	<label><strong>Page Type</strong></label>
-  	  #select(objectName='page', property='pageClassID', options=pageClasses, valueField="id", textField="name")#
-  	  &nbsp;&nbsp;&nbsp;&nbsp;
-  	<label><strong>Status</strong></label>
-  	  #select(objectName="page", property="status", options=status)#
-  </p>
+		
+		<p>
+			#select(objectName='page', property='layoutID', label="<strong>Layout </strong>", options=layouts, valueField="id", textField="name", includeBlank="Inherit")#
+    	&nbsp;&nbsp;&nbsp;&nbsp;
+   	  #select(objectName='page', property='pageClassID', label="<strong>Page Type 
+</strong>", options=pageClasses, valueField="id", textField="name")#
+    	&nbsp;&nbsp;&nbsp;&nbsp;
+    	#select(objectName="page", property="status", label="<strong>Status </strong>", options=status)#
+			&nbsp;&nbsp;&nbsp;&nbsp;
+			#textField(objectName="page", property="pageorder", label="Page Order ", labelPlacement="before", class="text_field", style="width:20px;")#
+    </p>
 					
-	  	<p>#submitTag(class="ui-button ui-state-default ui-corner-all", value="Update Page &rarr;")# or #linkTo(text="Cancel", route="pages_path")#</p>
+	  <p>#submitTag(class="ui-button ui-state-default ui-corner-all", value="Update Page &rarr;")# or #linkTo(text="Cancel", route="pages_path")#</p>
 		
 	#endFormTag()#
 	

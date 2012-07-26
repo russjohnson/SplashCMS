@@ -1,14 +1,14 @@
 <cfcomponent output="false" mixin="controller" environment="design,development">
 
 	<cffunction name="init">
-		<cfset this.version = "1.0">
+		<cfset this.version = "1.0,1.0.1,1.0.2,1.1,1.1.4,1.1.5">
 		<cfreturn this>
 	</cffunction>
 	
 	<cffunction name="generateScaffold" access="public" returnType="string" hint="Creates a Model a Controller and the Views for the name of the argument passed" output="false">
 		<cfargument name="name" type="string" required="true" hint="Name of the object to scaffold">
 		<cfargument name="type" type="string" required="true" default="everything" hint="Type of generation to execute, values are: everything, controller, model">
-		<cfargument name="scriptStyle" type="string" required="false" default="false" hint="This option determines if it should generate tag based or script based controllers and models.">
+		<cfargument name="template" type="string" required="true" default="default" hint="The template to use for generating the scaffolds.">
 		
 		<cfset var loc = {}>
 		
@@ -21,19 +21,26 @@
 		<!--- Check which type of scaffold to execute --->
 		<cfif arguments.type IS "everything">
 			<!--- Create the model --->
-		    <cfset loc.message = loc.message & $generateModel(arguments.name, arguments.scriptStyle) & "<br/>">
+		    <cfset loc.message = loc.message & $generateModel(arguments.name, arguments.template) & "<br/>">
 		    <!--- Create the views --->
-			<cfset loc.message = loc.message & $generateViews(arguments.name) & "<br/>">
+			<cfset loc.message = loc.message & $generateViews(arguments.name, arguments.template) & "<br/>">
 			<!--- Create the controller --->
-		    <cfset loc.message = loc.message & $generateController(arguments.name, arguments.scriptStyle) & "<br/>">
+		    <cfset loc.message = loc.message & $generateController(arguments.name, arguments.template) & "<br/>">
+		<cfelseif arguments.type IS "model_controller">
+			<!--- Create the model --->
+		    <cfset loc.message = loc.message & $generateModel(arguments.name, arguments.template) & "<br/>">
+			<!--- Create the controller --->
+		    <cfset loc.message = loc.message & $generateController(arguments.name, arguments.template) & "<br/>">
+		<cfelseif arguments.type IS "view">
+		    <!--- Create the views --->
+			<cfset loc.message = loc.message & $generateViews(arguments.name, arguments.template) & "<br/>">
 		<cfelseif arguments.type IS "model">
 			<!--- Create the model --->
-		    <cfset loc.message = loc.message & $generateModel(arguments.name, arguments.scriptStyle) & "<br/>">
+		    <cfset loc.message = loc.message & $generateModel(arguments.name, arguments.template) & "<br/>">
 		<cfelseif arguments.type IS "controller">
 		    <!--- Create the controller --->
-		    <cfset loc.message = loc.message & $generateController(arguments.name, arguments.scriptStyle) & "<br/>">
+		    <cfset loc.message = loc.message & $generateController(arguments.name, arguments.template) & "<br/>">
 	    </cfif>
-	    
 		<cfreturn loc.message>	    
 	</cffunction>
 	
@@ -60,7 +67,7 @@
 	    <cfdirectory name="loc.files" action="list" directory="#loc.targetFolderPath#" type="file">
 	    
 	    <!--- Check if the desired file is already in the targeted folder --->
-		<cfif FindNoCase(arguments.name, ValueList(loc.files.name)) GT 0 OR DirectoryExists(loc.targetFolderPath) AND arguments.type IS "View">
+		<cfif (ListFindNoCase("#arguments.name#.cfc", ValueList(loc.files.name)) GT 0 AND arguments.type NEQ "View") OR (DirectoryExists(loc.targetFolderPath) AND arguments.type IS "View")>
 	    	<cfset loc.wasFound = true>
 	    <cfelse>
 	    	<cfset loc.wasFound = false>
@@ -72,7 +79,7 @@
 	<cffunction name="$moveFileToFolder" access="public" returntype="void" hint="Checks if the desired Model is already created" output="false">
 		<cfargument name="name" type="string" required="true" hint="Name to set the file when moved">
 	    <cfargument name="type" type="string" required="true" hint="Type of file to move for (Model, View, Controller)">
-	    <cfargument name="scriptStyle" type="string" required="false" default="false">
+	    <cfargument name="template" type="string" required="true" default="default">
 	     
 	    <cfset var loc = {}>
 	    
@@ -81,15 +88,11 @@
 	    	<cfcase value="Model">
 	            
 				<!--- Expand the from and destination folders --->
-	    		<cfset loc.fromFolderPath = expandPath("plugins/scaffold/templates")>
+	    		<cfset loc.fromFolderPath = expandPath("plugins/scaffold/templates/#arguments.template#")>
 				<cfset loc.destinationFolderPath = expandPath("models")>
 	            
 	            <!--- Read the template file --->
-	            <cfif arguments.scriptStyle is "true">
-	             <cffile action="read" file="#loc.fromFolderPath#/model_script.cfm" variable="loc.file">
-	            <cfelse>
-	              <cffile action="read" file="#loc.fromFolderPath#/model.cfm" variable="loc.file">
-	            </cfif>
+                <cffile action="read" file="#loc.fromFolderPath#/model.cfm" variable="loc.file">
 	            
 	            <!--- Replace the placeholders with real data to the user 
 	    		<cfset loc.file = $replacePlaceHolders(loc.file, arguments.name)> --->
@@ -101,7 +104,7 @@
 	        <cfcase value="View">
 	        	
 	            <!--- Expand the from and destination folders --->
-	    		<cfset loc.fromFolderPath = expandPath("plugins/scaffold/templates/views")>
+	    		<cfset loc.fromFolderPath = expandPath("plugins/scaffold/templates/#arguments.template#/views")>
 	            <cfset loc.destinationFolderPath = expandPath("views/" & LCase(pluralize(arguments.name)))>
 	            
 	            <!--- Create the directory to store the views in --->
@@ -114,6 +117,7 @@
 	            <cffile action="read" file="#loc.fromFolderPath#/show.cfm" variable="loc.fileShow">
 	            <cffile action="read" file="#loc.fromFolderPath#/new.cfm" variable="loc.fileNew">
 	            <cffile action="read" file="#loc.fromFolderPath#/edit.cfm" variable="loc.fileEdit">
+	            <cffile action="read" file="#loc.fromFolderPath#/_showFlash.cfm" variable="loc.fileShowFlash">
 	            
 	            <!--- Generate the forms and listing for the views --->
 	            <cfset loc.entryForm = $generateEntryFormFromModel(arguments.name)>
@@ -142,20 +146,17 @@
 	            <cffile action="write" file="#loc.destinationFolderPath#/show.cfm" output="#loc.fileShow#" mode="777"> 
 	            <cffile action="write" file="#loc.destinationFolderPath#/new.cfm" output="#loc.fileNew#" mode="777"> 
 	            <cffile action="write" file="#loc.destinationFolderPath#/edit.cfm" output="#loc.fileEdit#" mode="777"> 
+	            <cffile action="write" file="#loc.destinationFolderPath#/_showFlash.cfm" output="#loc.fileShowFlash#" mode="777"> 
 	            
 	        </cfcase>
 	        
 	        <cfcase value="Controller">
 	        	<!--- Expand the from and destination folders --->
-	    		<cfset loc.fromFolderPath = expandPath("plugins/scaffold/templates")>
+	    		<cfset loc.fromFolderPath = expandPath("plugins/scaffold/templates/#arguments.template#")>
 	            <cfset loc.destinationFolderPath = expandPath("controllers")>
 	            
 	            <!--- Read the template file --->
-	            <cfif arguments.scriptStyle is 'true'>
-	               <cffile action="read" file="#loc.fromFolderPath#/controller_script.cfm" variable="loc.file">
-	            <cfelse>
-	                <cffile action="read" file="#loc.fromFolderPath#/controller.cfm" variable="loc.file">
-	            </cfif> 
+	            <cffile action="read" file="#loc.fromFolderPath#/controller.cfm" variable="loc.file">
 	            
 				<!--- Replace the placeholders with real data to the user --->
 	    		<cfset loc.file = $replacePlaceHolders(loc.file, arguments.name)>
@@ -371,7 +372,7 @@
 		<cfsavecontent variable="loc.form">
 			<cfoutput>
 				<cfloop list="#loc.columns#" index="loc.column">
-					<p><label>#humanize(loc.column)#</label> <br />
+					<p><span>#humanize(loc.column)#</span> <br />
 						###loc.nameInSingularLowercase & "." & loc.column###</p>
 				</cfloop>
 			</cfoutput>
@@ -387,14 +388,14 @@
 	
 	<cffunction name="$generateModel" access="public" returnType="string" hint="Creates a Model for the name of the argument passed" output="false">
 		<cfargument name="name" type="string" required="true" hint="Name of the object">
-		<cfargument name="scriptStyle" type="string" required="true">
+		<cfargument name="template" type="string" required="true" default="default">
 		<cfset var loc = {}>
 		
 		<!--- Check that the file has not been already created --->
 		<cfif $checkIfFileExists(arguments.name, "Model")>
 		    <cfset loc.message = "File 'models/#capitalize(arguments.name)#.cfc' already exists so skipped.">
 		<cfelse>
-			<cfset $moveFileToFolder(arguments.name, "Model", arguments.scriptStyle)>
+			<cfset $moveFileToFolder(arguments.name, "Model", arguments.template)>
 		    <cfset loc.message = "File 'models/#capitalize(arguments.name)#.cfc' created.">
 		</cfif>
 		
@@ -403,14 +404,15 @@
 	
 	<cffunction name="$generateViews" access="public" returnType="string" hint="Creates the 'index,show,new and edit' Views for the name of the argument passed" output="false">
 		<cfargument name="name" type="string" required="true" hint="Name of the object">
-		
+		<cfargument name="template" type="string" required="true" default="default">
+		    
 		<cfset var loc = {}>
 		
 		<!--- Check that the folder to store the views has not been already created --->
 		<cfif $checkIfFileExists(arguments.name, "View")>
 		    <cfset loc.message = "Folder 'views/#LCase(pluralize(arguments.name))#/' already exists so skipped.">  
 		<cfelse>
-			<cfset $moveFileToFolder(arguments.name, "View")>
+			<cfset $moveFileToFolder(arguments.name, "View", arguments.template)>
 			<cfset loc.message = "Folder 'views/#LCase(pluralize(arguments.name))#/' created.">		
 		</cfif>
 		
@@ -419,7 +421,7 @@
 	
 	<cffunction name="$generateController" access="public" returnType="string" hint="Creates a Controller for the name of the argument passed" output="false">
 		<cfargument name="name" type="string" required="true" hint="Name of the object">
-		<cfargument name="scriptStyle" type="string" required="true">
+		<cfargument name="template" type="string" required="true" default="default">
 		    
 		<cfset var loc = {}>
 		
@@ -427,7 +429,7 @@
 		<cfif $checkIfFileExists(arguments.name, "Controller")>
 		    <cfset loc.message = "File 'controllers/#capitalize(pluralize(arguments.name))#.cfc' already exists so skipped.">
 		<cfelse>
-			<cfset $moveFileToFolder(arguments.name, "Controller", arguments.scriptStyle)>
+			<cfset $moveFileToFolder(arguments.name, "Controller", arguments.template)>
 		    <cfset loc.message = "File 'controllers/#capitalize(pluralize(arguments.name))#.cfc' created.">
 		</cfif>
 		
@@ -457,6 +459,16 @@
 		<cfset loc.returnValue = REReplace(arguments.text, "([[:upper:]])", "-\1", "all")>
 		
 		<cfreturn loc.returnValue>
+	</cffunction>
+	
+	<cffunction name="getTemplates" access="public" output="false" hint="Gets a list of the available templates from the template folder to make a select list.">
+	   
+	    <cfset var loc = {}>
+	    <cfset loc.templateFolderPath = ExpandPath("plugins/scaffold/templates")>
+	            
+	    <cfdirectory action="list" directory="#loc.templateFolderPath#" name="loc.templateList" sort="name DESC">
+	            
+	    <cfreturn loc.templateList>
 	</cffunction>
 	
 </cfcomponent>

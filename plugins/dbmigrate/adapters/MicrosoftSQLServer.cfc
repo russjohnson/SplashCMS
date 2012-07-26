@@ -34,7 +34,7 @@
 	<cffunction name="renameTable" returntype="string" access="public" hint="generates sql to rename a table">
 		<cfargument name="oldName" type="string" required="true" hint="old table name">
 		<cfargument name="newName" type="string" required="true" hint="new table name">
-		<cfreturn "EXEC sp_rename '#arguments.oldName#', '#quoteTableName(arguments.newName)#'">
+		<cfreturn "EXEC sp_rename '#arguments.oldName#', '#arguments.newName#'">
 	</cffunction>
 
 	<cffunction name="dropTable" returntype="string" access="public" hint="generates sql to drop a table">
@@ -48,7 +48,11 @@
 		<cfreturn "ALTER TABLE #quoteTableName(LCase(arguments.name))# ADD #arguments.column.toSQL()#">
 	</cffunction>
 	
-	<!--- changeColumnInTable - use default --->
+	<cffunction name="changeColumnInTable" returntype="string" access="public" hint="generates sql to change an existing column in a table">
+		<cfargument name="name" type="string" required="true" hint="table name">
+		<cfargument name="column" type="any" required="true" hint="column definition object">
+		<cfreturn "ALTER TABLE #quoteTableName(LCase(arguments.name))# ALTER COLUMN #arguments.column.toSQL()#">
+	</cffunction>
 	
 	<cffunction name="renameColumnInTable" returntype="string" access="public" hint="generates sql to rename an existing column in a table">
 		<cfargument name="name" type="string" required="true" hint="table name">
@@ -61,7 +65,11 @@
 	
 	<!--- addForeignKeyToTable - use default --->
 	
-	<!--- dropForeignKeyFromTable - use default --->
+	<cffunction name="dropForeignKeyFromTable" returntype="string" access="public" hint="generates sql to add a foreign key constraint to a table">
+		<cfargument name="name" type="string" required="true" hint="table name">
+		<cfargument name="keyName" type="any" required="true" hint="foreign key name">
+		<cfreturn "ALTER TABLE #quoteTableName(LCase(arguments.name))# DROP CONSTRAINT #arguments.keyname#">
+	</cffunction>
 	
 	<!--- foreignKeySQL - use default --->
 	

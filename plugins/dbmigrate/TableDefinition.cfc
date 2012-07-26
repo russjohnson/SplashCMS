@@ -214,7 +214,7 @@
 	
 	<cffunction name="timestamps" returntype="void" access="public" hint="adds CFWheels convention automatic timestamp and soft delete columns to table definition">
 		<cfscript>
-		timestamp(columnNames="createdAt,updatedAt,deletedAt",null=true);
+		timestamp(columnNames="createdat,updatedat,deletedat",null=true);
 		</cfscript>
 	</cffunction>
     
@@ -229,13 +229,13 @@
 		loc.iEnd = ListLen(arguments.referenceNames);
 		for (loc.i=1; loc.i <= loc.iEnd; loc.i++) {
 			loc.referenceName = ListGetAt(arguments.referenceNames,loc.i);
-			column(columnName = loc.referenceName & "Id",columnType="integer",default=arguments.default,null=arguments.null);
+			column(columnName = loc.referenceName & "id",columnType="integer",default=arguments.default,null=arguments.null);
 			if(arguments.polymorphic) {
-				column(columnName=loc.referenceName & "Type",columnType="string");
+				column(columnName=loc.referenceName & "type",columnType="string");
 			}
 			if(arguments.foreignKey && !arguments.polymorphic) {
 				loc.referenceTable = pluralize(loc.referenceName);
-				loc.foreignKey = CreateObject("component","ForeignKeyDefinition").init(adapter=this.adapter,table=this.name,referenceTable=loc.referenceTable,column="#loc.referenceName#Id",referenceColumn="id");
+				loc.foreignKey = CreateObject("component","ForeignKeyDefinition").init(adapter=this.adapter,table=this.name,referenceTable=loc.referenceTable,column="#loc.referenceName#id",referenceColumn="id");
 				ArrayAppend(this.foreignKeys,loc.foreignKey);
 			}
 		}

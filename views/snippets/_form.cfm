@@ -1,14 +1,15 @@
 <cfoutput>
-<p><label class="label">Name</label>
-#textField(objectName='snippet', property='name', class="text_field")#</p>
+	<p>
+		#textField(objectName='snippet', property='name', label="Name", labelClass="label", class="text_field")#
+	</p>
 
-<p><label class="label">Category</label>
-#select(objectName="snippet", property="categoryid", options="#categories#", includeBlank="true")# 
-<a id="add-new" class="ui-button ui-state-default ui-corner-all">add new</a><br/>
-<span class="description">Categories are simply a way to organize your snippets.</span></p>
+	<p>
+		#select(objectName="snippet", property="categoryid", label="Category", labelClass="label", options="#categories#", includeBlank="true")# 
+		<a id="add-new" class="ui-button ui-state-default ui-corner-all">add new</a><br/>
+		<span class="description">Categories are simply a way to organize your snippets.</span>
+	</p>
 
-<p><label class="label">Body</label>
-<!--- #textArea(objectName='snippet', property='content', class="text_area", rows="15")# --->
-#richTextField(objectName='snippet', property='content', class="rteditor", rows="15", editor="markitup", includeJSLibrary="false")#
-</p>
+	<p>
+		#richTextField(objectName='snippet', property='content', label="Content", labelClass="label", class="rteditor", rows="15", editor="markitup", includeJSLibrary="false")#
+	</p>
 </cfoutput>

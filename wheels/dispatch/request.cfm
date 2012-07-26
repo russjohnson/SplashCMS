@@ -1,91 +1,128 @@
-<cffunction name="$returnDispatcher" returntype="any" access="public" output="false">
+<cffunction name="$init" returntype="any" access="public" output="false">
 	<cfreturn this>
 </cffunction>
 
-<cffunction name="$runFilters" returntype="void" access="public" output="false">
-	<cfargument name="controller" type="any" required="true">
-	<cfargument name="actionName" type="string" required="true">
-	<cfargument name="type" type="string" required="true">
+<cffunction name="$createParams" returntype="struct" access="public" output="false">
+	<cfargument name="path" type="string" required="true">
+	<cfargument name="route" type="struct" required="true">
+	<cfargument name="formScope" type="struct" required="true">
+	<cfargument name="urlScope" type="struct" required="true">
 	<cfscript>
 		var loc = {};
-		if (arguments.type == "before")
-			loc.filters = arguments.controller.$getBeforeFilters();
-		else
-			loc.filters = arguments.controller.$getAfterFilters();
-		loc.iEnd = ArrayLen(loc.filters);
-		for (loc.i=1; loc.i <= loc.iEnd; loc.i++)
+
+		loc.params = {};
+		loc.params = $mergeURLAndFormScopes(loc.params, arguments.urlScope, arguments.formScope);
+		loc.params = $mergeRoutePattern(loc.params, arguments.route, arguments.path);
+		loc.params = $decryptParams(loc.params);
+		loc.params = $translateBlankCheckBoxSubmissions(loc.params);
+		loc.params = $translateDatePartSubmissions(loc.params);
+		loc.params = $createNestedParamStruct(loc.params);
+		/***********************************************
+		*	We now do the routing and controller
+		*	params after we have built all other params
+		*	so that we don't have more logic around
+		*	params in arrays
+		***********************************************/
+		loc.params = $ensureControllerAndAction(loc.params, arguments.route);
+		loc.params = $addRouteFormat(loc.params, arguments.route);
+		loc.params = $addRouteName(loc.params, arguments.route);
+	</cfscript>
+	<cfreturn loc.params>
+</cffunction>
+
+<cffunction name="$createNestedParamStruct" returntype="struct" access="public" output="false">
+	<cfargument name="params" type="struct" required="true" />
+	<cfscript>
+		var loc = {};
+		for (loc.key in arguments.params)
 		{
-			if ((!Len(loc.filters[loc.i].only) && !Len(loc.filters[loc.i].except)) || (Len(loc.filters[loc.i].only) && ListFindNoCase(loc.filters[loc.i].only, arguments.actionName)) || (Len(loc.filters[loc.i].except) && !ListFindNoCase(loc.filters[loc.i].except, arguments.actionName)))
+			if (Find("[", loc.key) && Right(loc.key, 1) == "]")
 			{
-				loc.args = {};
-				loc.args.meth = loc.filters[loc.i].through;
-				$invoke(componentReference=arguments.controller, method="$executeFilters", argumentCollection=loc.args);
+				// object form field
+				loc.name = SpanExcluding(loc.key, "[");
+				
+				// we split the key into an array so the developer can have unlimited levels of params passed in
+				loc.nested = ListToArray(ReplaceList(loc.key, loc.name & "[,]", ""), "[", true);
+				if (!StructKeyExists(arguments.params, loc.name))
+					arguments.params[loc.name] = {};
+				
+				loc.struct = arguments.params[loc.name]; // we need a reference to the struct so we can nest other structs if needed
+				loc.iEnd = ArrayLen(loc.nested);
+				for (loc.i = 1; loc.i lte loc.iEnd; loc.i++) // looping over the array allows for infinite nesting
+				{
+					loc.item = loc.nested[loc.i];
+					if (!StructKeyExists(loc.struct, loc.item))
+						loc.struct[loc.item] = {};
+					if (loc.i != loc.iEnd)
+						loc.struct = loc.struct[loc.item]; // pass the new reference (structs pass a reference instead of a copy) to the next iteration
+					else
+						loc.struct[loc.item] = arguments.params[loc.key];
+				}
+				// delete the original key so it doesn't show up in the params
+				StructDelete(arguments.params, loc.key, false);
 			}
 		}
 	</cfscript>
+	<cfreturn arguments.params />
 </cffunction>
 
-<cffunction name="$runVerifications" returntype="void" access="public" output="false">
-	<cfargument name="controller" type="any" required="true">
-	<cfargument name="actionName" type="string" required="true">
-	<cfargument name="params" type="struct" required="true">
+<cffunction name="$findMatchingRoute" returntype="struct" access="public" output="false">
+	<cfargument name="path" type="string" required="true">
 	<cfscript>
 		var loc = {};
-		loc.returnValue = "";
-		loc.verifications = arguments.controller.$getVerifications();
-		loc.abort = false;
-		loc.iEnd = ArrayLen(loc.verifications);
+	
+		loc.iEnd = ArrayLen(application.wheels.routes);
 		for (loc.i=1; loc.i <= loc.iEnd; loc.i++)
 		{
-			loc.verification = loc.verifications[loc.i];
-			if ((!Len(loc.verification.only) && !Len(loc.verification.except)) || (Len(loc.verification.only) && ListFindNoCase(loc.verification.only, arguments.actionName)) || (Len(loc.verification.except) && !ListFindNoCase(loc.verification.except, arguments.actionName)))
+			loc.format = "";
+			if (StructKeyExists(application.wheels.routes[loc.i], "format"))
+				loc.format = application.wheels.routes[loc.i].format;
+				
+			loc.currentRoute = application.wheels.routes[loc.i].pattern;
+			if (loc.currentRoute == "*") {
+				loc.returnValue = application.wheels.routes[loc.i];
+				break;
+			} 
+			else if (arguments.path == "" && loc.currentRoute == "")
 			{
-				if (IsBoolean(loc.verification.post) && ((loc.verification.post && request.cgi.request_method != "post") || (!loc.verification.post && request.cgi.request_method == "post")))
-					loc.abort = true;
-				if (IsBoolean(loc.verification.get) && ((loc.verification.get && request.cgi.request_method != "get") || (!loc.verification.get && request.cgi.request_method == "get")))
-					loc.abort = true;
-				if (IsBoolean(loc.verification.ajax) && ((loc.verification.ajax && request.cgi.http_x_requested_with != "XMLHTTPRequest") || (!loc.verification.ajax && request.cgi.http_x_requested_with == "XMLHTTPRequest")))
-					loc.abort = true;
-				loc.jEnd = ListLen(loc.verification.params);
-				for (loc.j=1; loc.j <= loc.jEnd; loc.j++)
-				{
-					if (!StructKeyExists(arguments.params, ListGetAt(loc.verification.params, loc.j)))
-						loc.abort = true;
-				}
-				loc.jEnd = ListLen(loc.verification.session);
-				for (loc.j=1; loc.j <= loc.jEnd; loc.j++)
-				{
-					if (!StructKeyExists(session, ListGetAt(loc.verification.session, loc.j)))
-						loc.abort = true;
-				}
-				loc.jEnd = ListLen(loc.verification.cookie);
-				for (loc.j=1; loc.j <= loc.jEnd; loc.j++)
-				{
-					if (!StructKeyExists(cookie, ListGetAt(loc.verification.cookie, loc.j)))
-						loc.abort = true;
-				}
+				loc.returnValue = application.wheels.routes[loc.i];
+				break;
 			}
-			if (loc.abort)
+			else if (ListLen(arguments.path, "/") gte ListLen(loc.currentRoute, "/") && loc.currentRoute != "")
 			{
-				if (Len(loc.verification.handler))
+				loc.match = true;
+				loc.jEnd = ListLen(loc.currentRoute, "/");
+				for (loc.j=1; loc.j <= loc.jEnd; loc.j++)
 				{
-					$invoke(componentReference=arguments.controller, method=loc.verification.handler);
-					$location(url=request.cgi.http_referer, addToken=false);
+					loc.item = ListGetAt(loc.currentRoute, loc.j, "/");
+					loc.thisRoute = ReplaceList(loc.item, "[,]", "");
+					loc.thisURL = ListGetAt(arguments.path, loc.j, "/");
+					if (Left(loc.item, 1) != "[" && loc.thisRoute != loc.thisURL)
+						loc.match = false;
 				}
-				else
+				if (loc.match)
 				{
-					$abort();
+					loc.returnValue = application.wheels.routes[loc.i];
+					if (len(loc.format))
+					{
+						loc.returnValue[ReplaceList(loc.format, "[,]", "")] = $getFormatFromRequest(pathInfo=arguments.path);
+					}
+					break;
 				}
 			}
 		}
-	</cfscript>
+		if (!StructKeyExists(loc, "returnValue"))
+			$throw(type="Wheels.RouteNotFound", message="Wheels couldn't find a route that matched this request.", extendedInfo="Make sure there is a route setup in your `config/routes.cfm` file that matches the `#arguments.path#` request.");
+		</cfscript>
+		<cfreturn loc.returnValue>
 </cffunction>
 
-<cffunction name="$getRouteFromRequest" returntype="string" access="public" output="false">
-	<cfargument name="pathInfo" type="string" required="false" default="#request.cgi.path_info#">
-	<cfargument name="scriptName" type="string" required="false" default="#request.cgi.script_name#">
+<cffunction name="$getPathFromRequest" returntype="string" access="public" output="false">
+	<cfargument name="pathInfo" type="string" required="true">
+	<cfargument name="scriptName" type="string" required="true">
 	<cfscript>
 		var returnValue = "";
+		// we want the path without the leading "/" so this is why we do some checking here
 		if (arguments.pathInfo == arguments.scriptName || arguments.pathInfo == "/" || arguments.pathInfo == "")
 			returnValue = "";
 		else
@@ -94,322 +131,282 @@
 	<cfreturn returnValue>
 </cffunction>
 
-<cffunction name="$findMatchingRoute" returntype="struct" access="public" output="false">
-	<cfargument name="route" type="string" required="true">
-	<cfargument name="routes" type="array" required="false" default="#application.wheels.routes#">
+<cffunction name="$getFormatFromRequest" returntype="string" access="public" output="false">
+	<cfargument name="pathInfo" type="string" required="true">
 	<cfscript>
-		var loc = {};
-		loc.iEnd = ArrayLen(arguments.routes);
-		for (loc.i=1; loc.i <= loc.iEnd; loc.i++)
-		{
-			loc.currentRoute = arguments.routes[loc.i].pattern;
-			if (arguments.route == "" && loc.currentRoute == "")
-			{
-				loc.returnValue = arguments.routes[loc.i];
-				break;
-			}
-			else
-			{
-				if (ListLen(arguments.route, "/") >= ListLen(loc.currentRoute, "/") && loc.currentRoute != "")
-				{
-					loc.match = true;
-					loc.jEnd = ListLen(loc.currentRoute, "/");
-					for (loc.j=1; loc.j <= loc.jEnd; loc.j++)
-					{
-						loc.item = ListGetAt(loc.currentRoute, loc.j, "/");
-						loc.thisRoute = ReplaceList(loc.item, "[,]", ",");
-						loc.thisURL = ListGetAt(arguments.route, loc.j, "/");
-						if (Left(loc.item, 1) != "[" && loc.thisRoute != loc.thisURL)
-							loc.match = false;
-					}
-					if (loc.match)
-					{
-						loc.returnValue = arguments.routes[loc.i];
-						break;
-					}
-				}
-			}
-		}
-		if (!StructKeyExists(loc, "returnValue"))
-			$throw(type="Wheels.RouteNotFound", message="Wheels couldn't find a route that matched this request.", extendedInfo="Make sure there is a route setup in your `config/routes.cfm` file that matches the `#arguments.route#` request.");
-		</cfscript>
-		<cfreturn loc.returnValue>
-</cffunction>
-
-<cffunction name="$createParams" returntype="struct" access="public" output="false">
-	<cfargument name="route" type="string" required="true">
-	<cfargument name="foundRoute" type="struct" required="true">
-	<cfargument name="formScope" type="struct" required="false" default="#form#">
-	<cfargument name="urlScope" type="struct" required="false" default="#url#">
-	<cfscript>
-		var loc = {};
-
-		// add all normal URL variables to struct (i.e. ?x=1&y=2 etc)
-		loc.returnValue = arguments.urlScope;
-
-		// go through the matching route pattern and add URL variables from the route to the struct
-		loc.iEnd = ListLen(arguments.foundRoute.pattern, "/");
-		for (loc.i=1; loc.i <= loc.iEnd; loc.i++)
-		{
-			loc.item = ListGetAt(arguments.foundRoute.pattern, loc.i, "/");
-			if (Left(loc.item, 1) == "[")
-				loc.returnValue[ReplaceList(loc.item, "[,]", ",")] = ListGetAt(arguments.route, loc.i, "/");
-		}
-
-		// add controller and action unless they already exist
-		if (!StructKeyExists(loc.returnValue, "controller"))
-			loc.returnValue.controller = arguments.foundRoute.controller;
-		if (!StructKeyExists(loc.returnValue, "action"))
-			loc.returnValue.action = arguments.foundRoute.action;
-
-		// convert controller to upperCamelCase and action to normal camelCase
-		loc.returnValue.controller = REReplace(loc.returnValue.controller, "-([a-z])", "\u\1", "all");
-		loc.returnValue.action = REReplace(loc.returnValue.action, "-([a-z])", "\u\1", "all");
-
-		// add name of route to params if a named route is running
-		if (StructKeyExists(arguments.foundRoute, "name") && Len(arguments.foundRoute.name) && !StructKeyExists(loc.returnValue, "route"))
-			loc.returnValue.route = arguments.foundRoute.name;
-
-		// decrypt all values except controller and action
-		if (application.wheels.obfuscateUrls)
-		{
-			for (loc.key in loc.returnValue)
-			{
-				if (loc.key != "controller" && loc.key != "action")
-				{
-					try
-					{
-						loc.returnValue[loc.key] = deobfuscateParam(loc.returnValue[loc.key]);
-					}
-					catch(Any e) {}
-				}
-			}
-		}
-
-		if (StructCount(arguments.formScope))
-		{
-			// loop through form variables, merge any date variables into one, fix checkbox submissions
-			loc.dates = {};
-			for (loc.key in arguments.formScope)
-			{
-				if (FindNoCase("($checkbox)", loc.key))
-				{
-					// if no other form parameter exists with this name it means that the checkbox was left blank and therefore we force the value to the unchecked values for the checkbox (to get around the problem that unchecked checkboxes don't post at all)
-					loc.formParamName = ReplaceNoCase(loc.key, "($checkbox)", "");
-					if (!StructKeyExists(arguments.formScope, loc.formParamName))
-						arguments.formScope[loc.formParamName] = arguments.formScope[loc.key];
-					StructDelete(arguments.formScope, loc.key);
-				}
-				else if (REFindNoCase(".*\((\$year|\$month|\$day|\$hour|\$minute|\$second)\)$", loc.key))
-				{
-					loc.temp = ListToArray(loc.key, "(");
-					loc.firstKey = loc.temp[1];
-					loc.secondKey = SpanExcluding(loc.temp[2], ")");
-					if (!StructKeyExists(loc.dates, loc.firstKey))
-						loc.dates[loc.firstKey] = {};
-					loc.dates[loc.firstKey][ReplaceNoCase(loc.secondKey, "$", "")] = arguments.formScope[loc.key];
-				}
-			}
-			for (loc.key in loc.dates)
-			{
-				if (!StructKeyExists(loc.dates[loc.key], "year"))
-					loc.dates[loc.key].year = 1899;
-				if (!StructKeyExists(loc.dates[loc.key], "month"))
-					loc.dates[loc.key].month = 12;
-				if (!StructKeyExists(loc.dates[loc.key], "day"))
-					loc.dates[loc.key].day = 30;
-				if (!StructKeyExists(loc.dates[loc.key], "hour"))
-					loc.dates[loc.key].hour = 0;
-				if (!StructKeyExists(loc.dates[loc.key], "minute"))
-					loc.dates[loc.key].minute = 0;
-				if (!StructKeyExists(loc.dates[loc.key], "second"))
-					loc.dates[loc.key].second = 0;
-				try
-				{
-					arguments.formScope[loc.key] = CreateDateTime(loc.dates[loc.key].year, loc.dates[loc.key].month, loc.dates[loc.key].day, loc.dates[loc.key].hour, loc.dates[loc.key].minute, loc.dates[loc.key].second);
-				}
-				catch(Any e)
-				{
-					arguments.formScope[loc.key] = "";
-				}
-				if (StructKeyExists(arguments.formScope, "#loc.key#($year)"))
-					StructDelete(arguments.formScope, "#loc.key#($year)");
-				if (StructKeyExists(arguments.formScope, "#loc.key#($month)"))
-					StructDelete(arguments.formScope, "#loc.key#($month)");
-				if (StructKeyExists(arguments.formScope, "#loc.key#($day)"))
-					StructDelete(arguments.formScope, "#loc.key#($day)");
-				if (StructKeyExists(arguments.formScope, "#loc.key#($hour)"))
-					StructDelete(arguments.formScope, "#loc.key#($hour)");
-				if (StructKeyExists(arguments.formScope, "#loc.key#($minute)"))
-					StructDelete(arguments.formScope, "#loc.key#($minute)");
-				if (StructKeyExists(arguments.formScope, "#loc.key#($second)"))
-					StructDelete(arguments.formScope, "#loc.key#($second)");
-			}
-
-			// add form variables to the params struct
-			for (loc.key in arguments.formScope)
-			{
-				if (loc.key != "fieldnames")
-				{
-					if (Find("[", loc.key) && Right(loc.key, 1) == "]")
-					{
-						// object form field
-						loc.name = SpanExcluding(loc.key, "[");
-						loc.property = SpanExcluding(Reverse(SpanExcluding(Reverse(loc.key), "[")), "]");
-						if (!StructKeyExists(loc.returnValue, loc.name))
-							loc.returnValue[loc.name] = {};
-						if (Find("][", loc.key))
-						{
-							// a collection of objects was passed in
-							loc.primaryKeyValue = Replace(SpanExcluding(loc.key, "]"), loc.name & "[", "", "one");
-							if (!StructKeyExists(loc.returnValue[loc.name], loc.primaryKeyValue))
-								loc.returnValue[loc.name][loc.primaryKeyValue] = {};
-							loc.returnValue[loc.name][loc.primaryKeyValue][loc.property] = arguments.formScope[loc.key];
-						}
-						else
-						{
-							// just one object was passed in
-							loc.returnValue[loc.name][loc.property] = arguments.formScope[loc.key];
-						}
-					}
-					else
-					{
-						// normal form field
-						loc.returnValue[loc.key] = arguments.formScope[loc.key];
-					}
-				}
-			}
-		}
+		var returnValue = "";
+		if (Find(".", arguments.pathInfo))
+			returnValue = ListLast(arguments.pathInfo, ".");
 	</cfscript>
-	<cfreturn loc.returnValue>
+	<cfreturn returnValue>
 </cffunction>
 
 <cffunction name="$request" returntype="string" access="public" output="false">
+	<cfargument name="pathInfo" type="string" required="false" default="#request.cgi.path_info#">
+	<cfargument name="scriptName" type="string" required="false" default="#request.cgi.script_name#">
+	<cfargument name="formScope" type="struct" required="false" default="#form#">
+	<cfargument name="urlScope" type="struct" required="false" default="#url#">
 	<cfscript>
 		var loc = {};
 		if (application.wheels.showDebugInformation)
 			$debugPoint("setup");
 
-		// set route from incoming url, find a matching one and create the params struct
-		loc.route = $getRouteFromRequest();
-		loc.foundRoute = $findMatchingRoute(route=loc.route);
-		loc.params = $createParams(route=loc.route, foundRoute=loc.foundRoute);
-
-		// set params in the request scope as well so we can display it in the debug info outside of the controller context
+		loc.params = $paramParser(argumentCollection=arguments);
+		
+		// set params in the request scope as well so we can display it in the debug info outside of the dispatch / controller context
 		request.wheels.params = loc.params;
 
-		// create an empty flash unless it already exists
-		if (!StructKeyExists(session, "flash"))
-			session.flash = {};
+		if (application.wheels.showDebugInformation)
+			$debugPoint("setup");
 
 		// create the requested controller
-		loc.controller = $controller(loc.params.controller).$createControllerObject(loc.params);
-
-		if (application.wheels.showDebugInformation)
-			$debugPoint("setup,beforeFilters");
-
-		// run verifications and before filters if they exist on the controller
-		$runVerifications(controller=loc.controller, actionName=loc.params.action, params=loc.params);
-		$runFilters(controller=loc.controller, type="before", actionName=loc.params.action);
-
-		if (application.wheels.showDebugInformation)
-			$debugPoint("beforeFilters,action");
-
-		// call action on controller if it exists
-		loc.actionIsCachable = false;
-		if (application.wheels.cacheActions && StructIsEmpty(session.flash) && StructIsEmpty(form))
+		loc.controller = controller(name=loc.params.controller, params=loc.params);
+		
+		// if the controller fails to process, instantiate a new controller and try again
+		if (!loc.controller.$processAction())
 		{
-			loc.cachableActions = loc.controller.$getCachableActions();
-			loc.iEnd = ArrayLen(loc.cachableActions);
-			for (loc.i=1; loc.i <= loc.iEnd; loc.i++)
+			loc.controller = controller(name=loc.params.controller, params=loc.params);
+			loc.controller.$processAction();
+		}
+		
+		// if there is a delayed redirect pending we execute it here thus halting the rest of the request
+		if (loc.controller.$performedRedirect())
+			$location(argumentCollection=loc.controller.$getRedirect());
+
+		// clear out the flash (note that this is not done for redirects since the processing does not get here)
+		loc.controller.$flashClear();
+	</cfscript>
+	<cfreturn loc.controller.response()>
+</cffunction>
+
+<cffunction name="$paramParser" returntype="struct" access="public" output="false">
+	<cfargument name="pathInfo" type="string" required="false" default="#request.cgi.path_info#">
+	<cfargument name="scriptName" type="string" required="false" default="#request.cgi.script_name#">
+	<cfargument name="formScope" type="struct" required="false" default="#form#">
+	<cfargument name="urlScope" type="struct" required="false" default="#url#">
+	<cfscript>
+		var loc = {};
+		loc.path = $getPathFromRequest(pathInfo=arguments.pathInfo, scriptName=arguments.scriptName);
+		loc.route = $findMatchingRoute(path=loc.path);
+		return $createParams(path=loc.path, route=loc.route, formScope=arguments.formScope, urlScope=arguments.urlScope);
+	</cfscript>
+</cffunction>
+
+<cffunction name="$mergeURLAndFormScopes" returntype="struct" access="public" output="false"
+	hint="merges the url and form scope into a single structure. url scope has presidence">
+	<cfargument name="params" type="struct" required="true">
+	<cfargument name="urlScope" type="struct" required="true">
+	<cfargument name="formScope" type="struct" required="true">
+	<cfscript>
+		structAppend(arguments.params, arguments.formScope, true);
+		structAppend(arguments.params, arguments.urlScope, true);
+	
+		// get rid of the fieldnames
+		StructDelete(arguments.params, "fieldnames", false);
+	</cfscript>
+	<cfreturn arguments.params>
+</cffunction>
+
+<cffunction name="$mergeRoutePattern" returntype="struct" access="public" output="false"
+	hint="parses the route pattern. identifies the variable markers within the pattern and assigns the value from the url variables with the path">
+	<cfargument name="params" type="struct" required="true">
+	<cfargument name="route" type="struct" required="true">
+	<cfargument name="path" type="string" required="true">
+	<cfscript>
+		var loc = {};
+		loc.iEnd = ListLen(arguments.route.pattern, "/");
+		if (StructKeyExists(arguments.route, "format") AND len(arguments.route.format))
+		{
+			arguments.path = Reverse(ListRest(Reverse(arguments.path), "."));
+		}
+		for (loc.i=1; loc.i <= loc.iEnd; loc.i++)
+		{
+			loc.item = ListGetAt(arguments.route.pattern, loc.i, "/");
+			if (Left(loc.item, 1) == "[")
 			{
-				if (loc.cachableActions[loc.i].action == loc.params.action)
+				arguments.params[ReplaceList(loc.item, "[,]", "")] = ListGetAt(arguments.path, loc.i, "/");
+			}
+		}
+	</cfscript>
+	<cfreturn arguments.params>
+</cffunction>
+
+<cffunction name="$decryptParams" returntype="struct" access="public" output="false"
+	hint="loops through the params struct passed in and attempts to deobfuscate them. ignores the controller and action params values.">
+	<cfargument name="params" type="struct" required="true">
+	<cfscript>
+		var loc = {};
+		if (application.wheels.obfuscateUrls)
+		{
+			for (loc.key in arguments.params)
+			{
+				if (loc.key != "controller" && loc.key != "action")
 				{
-					loc.actionIsCachable = true;
-					loc.timeToCache = loc.cachableActions[loc.i].time;
+					try
+					{
+						arguments.params[loc.key] = deobfuscateParam(arguments.params[loc.key]);
+					}
+					catch(Any e)
+					{}
 				}
 			}
 		}
-		if (loc.actionIsCachable)
-		{
-			loc.category = "action";
-			loc.key = "#request.cgi.script_name##request.cgi.path_info##request.cgi.query_string#";
-			loc.lockName = loc.category & loc.key;
-			loc.conditionArgs = {};
-			loc.conditionArgs.key = loc.key;
-			loc.conditionArgs.category = loc.category;
-			loc.executeArgs = {};
-			loc.executeArgs.controller = loc.controller;
-			loc.executeArgs.controllerName = loc.params.controller;
-			loc.executeArgs.actionName = loc.params.action;
-			loc.executeArgs.key = loc.key;
-			loc.executeArgs.time = loc.timeToCache;
-			loc.executeArgs.category = loc.category;
-			request.wheels.response = $doubleCheckedLock(name=loc.lockName, condition="$getFromCache", execute="$callActionAndAddToCache", conditionArgs=loc.conditionArgs, executeArgs=loc.executeArgs);
-		}
-		else
-		{
-			$callAction(controller=loc.controller, controllerName=loc.params.controller, actionName=loc.params.action);
-		}
-		if (application.wheels.showDebugInformation)
-			$debugPoint("action,afterFilters");
-		$runFilters(controller=loc.controller, type="after", actionName=loc.params.action);
-		if (application.wheels.showDebugInformation)
-			$debugPoint("afterFilters");
-
-		// clear the flash (note that this is not done for redirectTo since the processing does not get here)
-		StructClear(session.flash);
 	</cfscript>
-	<cfreturn Trim(request.wheels.response)>
+	<cfreturn arguments.params>
 </cffunction>
 
-<cffunction name="$callActionAndAddToCache" returntype="string" access="public" output="false">
-	<cfscript>
-		$callAction(controller=arguments.controller, controllerName=arguments.controllerName, actionName=arguments.actionName);
-		$addToCache(key=arguments.key, value=request.wheels.response, time=arguments.time, category=arguments.category);
-	</cfscript>
-	<cfreturn request.wheels.response>
-</cffunction>
-
-<cffunction name="$callAction" returntype="void" access="public" output="false">
-	<cfargument name="controller" type="any" required="true">
-	<cfargument name="controllerName" type="string" required="true">
-	<cfargument name="actionName" type="string" required="true">
+<cffunction name="$translateBlankCheckBoxSubmissions" returntype="struct" access="public" output="false"
+	hint="loops through the params struct and handle the cases where checkboxes are unchecked">
+	<cfargument name="params" type="struct" required="true">
 	<cfscript>
 		var loc = {};
-
-		if (Left(arguments.actionName, 1) == "$" || ListFindNoCase(application.wheels.protectedControllerMethods, arguments.actionName))
-			$throw(type="Wheels.ActionNotAllowed", message="You are not allowed to execute the `#arguments.actionName#` method as an action.", extendedInfo="Make sure your action does not have the same name as any of the built-in Wheels functions.");
-
-		if (StructKeyExists(arguments.controller, arguments.actionName))
-			$invoke(componentReference=arguments.controller, method=arguments.actionName);
-		if (!StructKeyExists(request.wheels, "response"))
+		for (loc.key in arguments.params)
 		{
-			// a render function has not been called yet so call it here
+			if (FindNoCase("($checkbox)", loc.key))
+			{
+				// if no other form parameter exists with this name it means that the checkbox was left 
+				// blank and therefore we force the value to the unchecked values for the checkbox 
+				// (to get around the problem that unchecked checkboxes don't post at all)
+				loc.formParamName = ReplaceNoCase(loc.key, "($checkbox)", "");
+				if (!StructKeyExists(arguments.params, loc.formParamName))
+				{
+					arguments.params[loc.formParamName] = arguments.params[loc.key];
+				}
+				StructDelete(arguments.params, loc.key, false);
+			}
+		}
+	</cfscript>
+	<cfreturn arguments.params>
+</cffunction>
+
+<cffunction name="$translateDatePartSubmissions" returntype="struct" access="public" output="false"
+	hint="combines date parts into a single value">
+	<cfargument name="params" type="struct" required="true">
+	<cfscript>
+		var loc = {};
+		loc.dates = {};
+
+		for (loc.key in arguments.params)
+		{
+			if (REFindNoCase(".*\((\$year|\$month|\$day|\$hour|\$minute|\$second|\$ampm)\)$", loc.key))
+			{
+				loc.temp = ListToArray(loc.key, "(");
+				loc.firstKey = loc.temp[1];
+				loc.secondKey = SpanExcluding(loc.temp[2], ")");
+	
+				if (!StructKeyExists(loc.dates, loc.firstKey))
+				{
+					loc.dates[loc.firstKey] = {};
+				}
+				loc.dates[loc.firstKey][ReplaceNoCase(loc.secondKey, "$", "")] = arguments.params[loc.key];
+			}
+		}
+
+		for (loc.key in loc.dates)
+		{
+			if (!StructKeyExists(loc.dates[loc.key], "year"))
+			{
+				loc.dates[loc.key].year = 1899;
+			}
+			if (!StructKeyExists(loc.dates[loc.key], "month"))
+			{
+				loc.dates[loc.key].month = 1;
+			}
+			if (!StructKeyExists(loc.dates[loc.key], "day"))
+			{
+				loc.dates[loc.key].day = 1;
+			}
+			if (!StructKeyExists(loc.dates[loc.key], "hour"))
+			{
+				loc.dates[loc.key].hour = 0;
+			}
+			if (!StructKeyExists(loc.dates[loc.key], "minute"))
+			{
+				loc.dates[loc.key].minute = 0;
+			}
+			if (!StructKeyExists(loc.dates[loc.key], "second"))
+			{
+				loc.dates[loc.key].second = 0;
+			}
+			if (StructKeyExists(loc.dates[loc.key], "ampm"))
+			{
+				if (loc.dates[loc.key].ampm IS "AM" && loc.dates[loc.key].hour EQ 12)
+				{
+					loc.dates[loc.key].hour = 0;
+				}
+				else if (loc.dates[loc.key].ampm IS "PM")
+				{
+					loc.dates[loc.key].hour += 12;
+				}
+			}
+			if (!StructKeyExists(arguments.params, loc.key) || !IsArray(arguments.params[loc.key]))
+			{
+				arguments.params[loc.key] = [];
+			}
 			try
 			{
-				arguments.controller.renderPage();
+				arguments.params[loc.key] = CreateDateTime(loc.dates[loc.key].year, loc.dates[loc.key].month, loc.dates[loc.key].day, loc.dates[loc.key].hour, loc.dates[loc.key].minute, loc.dates[loc.key].second);
 			}
 			catch(Any e)
 			{
-				if (FileExists(ExpandPath("#application.wheels.viewPath#/#LCase(arguments.controllerName)#/#LCase(arguments.actionName)#.cfm")))
-				{
-					$throw(object=e);
-				}
-				else
-				{
-					if (application.wheels.showErrorInformation)
-					{
-						$throw(type="Wheels.ViewNotFound", message="Could not find the view page for the `#arguments.actionName#` action in the `#arguments.controllerName#` controller.", extendedInfo="Create a file named `#LCase(arguments.actionName)#.cfm` in the `views/#LCase(arguments.controllerName)#` directory (create the directory as well if it doesn't already exist).");
-					}
-					else
-					{
-						$header(statusCode="404", statusText="Not Found");
-						$includeAndOutput(template="#application.wheels.eventPath#/onmissingtemplate.cfm");
-						$abort();
-					}
-				}
+				arguments.params[loc.key] = "";
 			}
+			
+			StructDelete(arguments.params, "#loc.key#($year)", false);
+			StructDelete(arguments.params, "#loc.key#($month)", false);
+			StructDelete(arguments.params, "#loc.key#($day)", false);
+			StructDelete(arguments.params, "#loc.key#($hour)", false);
+			StructDelete(arguments.params, "#loc.key#($minute)", false);
+			StructDelete(arguments.params, "#loc.key#($second)", false);
 		}
 	</cfscript>
+	<cfreturn arguments.params>
 </cffunction>
+
+<cffunction name="$ensureControllerAndAction" returntype="struct" access="public" output="false"
+	hint="ensure that the controller and action params exists and camelized">
+	<cfargument name="params" type="struct" required="true">
+	<cfargument name="route" type="struct" required="true">
+	<cfscript>
+		if (!StructKeyExists(arguments.params, "controller"))
+		{
+			arguments.params.controller = arguments.route.controller;
+		}
+		if (!StructKeyExists(arguments.params, "action"))
+		{
+			arguments.params.action = arguments.route.action;
+		}
+
+		// convert controller to upperCamelCase and action to normal camelCase
+		arguments.params.controller = REReplace(arguments.params.controller, "(^|-)([a-z])", "\u\2", "all");
+		arguments.params.action = REReplace(arguments.params.action, "-([a-z])", "\u\1", "all");
+	</cfscript>
+	<cfreturn arguments.params>
+</cffunction>
+
+<cffunction name="$addRouteFormat" returntype="struct" access="public" output="false"
+	hint="adds in the format variable from the route if it exists">
+	<cfargument name="params" type="struct" required="true">
+	<cfargument name="route" type="struct" required="true">
+	<cfscript>
+		if (StructKeyExists(arguments.route, "formatVariable") && StructKeyExists(arguments.route, "format"))
+		{
+			arguments.params[arguments.route.formatVariable] = arguments.route.format;
+		}
+	</cfscript>
+	<cfreturn arguments.params>
+</cffunction>
+
+<cffunction name="$addRouteName" returntype="struct" access="public" output="false"
+	hint="adds in the name variable from the route if it exists">
+	<cfargument name="params" type="struct" required="true">
+	<cfargument name="route" type="struct" required="true">
+	<cfscript>
+		if (StructKeyExists(arguments.route, "name") && Len(arguments.route.name) && !StructKeyExists(arguments.params, "route"))
+		{
+			arguments.params.route = arguments.route.name;
+		}
+	</cfscript>
+	<cfreturn arguments.params>
+</cffunction>
+
