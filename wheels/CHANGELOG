@@ -1,3 +1,67 @@
+WHEELS VERSION 1.1.8 (UNRELEASE)
+
+Model Enhancements
+==================
+
+* Add boolean type to validatesFormatOf() - [Andy Bellenie]
+
+View Enhancements
+=================
+
+* Add delimiter parameter to the highlight() function - #826 [Per Djurner, Tony Petruzzi]
+* Use mark tag in highlight - #836 [Per Djurner, Tony Petruzzi]
+* add parameters append and prepend to the submitTag() - #593 [Per Djurner, Tony Petruzzi]
+
+Bug Fixes
+=========
+
+* Turned off URL rewriting in IIS 7 by default - [Per Djurner, Tony Petruzzi]
+* Add CFFileServlet to the pattern list, of the rewrite rules file, to…be able to display an image when using <cfimage action='writeToBrowser'> - [ellor1138]
+* radioButtonTag() checked attribute is ignored if value attribute is empty - #733 [Per Djurner, Tony Petruzzi]
+* make cached queries respect the 'maxrows' argument (findAll) - #824 [Per Djurner, Tony Petruzzi]
+
+Other Enhancements
+==================
+
+* update web.config, htaccess to ignore favicon.ico - [Cathy Shapiro, Tony Petruzzi]
+* route with only format specified was throwing error - [jjallen, Tony Petruzzi]
+ 
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+WHEELS VERSION 1.1.7 (12/11/2011)
+
+Bug Fixes
+=========
+
+* Filter controller and action params - [Pete Freitag, Andy Bellenie, Tony Petruzzi] 
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+WHEELS VERSION 1.1.6 (10/08/2011)
+
+Model Enhancements
+==================
+
+* validatesUniquenessOf only selects primary keys - [Jordan Clark, Don Humphreys]
+
+View Enhancements
+=================
+
+* Allow removal height and/or width attributes from imageTag when set to false - [downtroden, Tony Petruzzi]
+* Allow delimiter to be specified for stylesheets and javascripts - [Derek, Tony Petruzzi]
+
+Bug Fixes
+=========
+
+* hasChanged was incorrectly evaluating boolean values - [Jordan Clark, Don Humphreys]
+* Do not perform update when no changes have been made to the properties of a model - #786 [Mohamad El-Husseini, Tony Petruzzi]
+* OnlyPath argument of urlFor does not correctly recognise HTTPS urls - [Andy Bellenie, Tony Petruzzi]
+* Pagination clause wasn't enclosed - [Karl Deterville, Tony Petruzzi]
+* Pagination endrow was incorrectly calculated - [Karl Deterville, Tony Petruzzi]
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 WHEELS VERSION 1.1.5 (08/01/2011)
 
 View Enhancements
