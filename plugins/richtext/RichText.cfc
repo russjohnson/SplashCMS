@@ -26,7 +26,7 @@
     	<cfargument name="includeJSLibrary" type="string" required="false" default="true" hint="Tells the plugin wether or not it should add the primary JS library to the html head section.">
     	<cfscript>
     		var loc = {};
-    		$args(name="textArea", reserved="name", args=arguments);
+    		$insertDefaults(name="textArea", reserved="name", input=arguments);
     		loc.before = $formBeforeElement(argumentCollection=arguments);
     		loc.after = $formAfterElement(argumentCollection=arguments);
     		arguments.name = $tagName(arguments.objectName, arguments.property);

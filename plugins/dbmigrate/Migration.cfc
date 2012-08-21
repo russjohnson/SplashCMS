@@ -52,8 +52,15 @@
 	<cffunction name="dropTable" returntype="void" access="public" hint="drops a table from the database">
 		<cfargument name="name" type="string" required="true" hint="table name">
 		<cfscript>
-		$execute(this.adapter.dropTable(name=arguments.name));
-		announce("Dropped table #arguments.name#");
+    	var loc = {};
+    	loc.foreignKeys = $getForeignKeys(arguments.name);
+    	loc.iEnd = ListLen(loc.foreignKeys);
+    	for (loc.i=1; loc.i <= loc.iEnd; loc.i++) {
+    		loc.foreignKeyName = ListGetAt(loc.foreignKeys,loc.i);
+    		dropForeignKey(table=arguments.name,keyname=loc.foreignKeyName);
+    	}
+    $execute(this.adapter.dropTable(name=arguments.name));
+    announce("Dropped table #arguments.name#");
 		</cfscript>
 	</cffunction>
 	
@@ -168,27 +175,27 @@
 	<cffunction name="addRecord" returntype="void" access="public" hint="adds a record to a table">
 		<cfargument name="table" type="string" required="true" hint="table name">
 		<cfscript>
-		var loc = {};
-		loc.columnNames = "";
-		loc.columnValues = "";
-		for (loc.key in arguments) {
-			if(loc.key neq "table") {
-				loc.columnNames = ListAppend(loc.columnNames,this.adapter.quoteColumnName(loc.key));
-				if(IsNumeric(arguments[loc.key])) {
-					loc.columnValues = ListAppend(loc.columnValues,arguments[loc.key]);
-				} else if(IsBoolean(arguments[loc.key])) {
-					loc.columnValues = ListAppend(loc.columnValues,IIf(arguments[loc.key],1,0));
-				} else if(IsDate(arguments[loc.key])) {
-					loc.columnValues = ListAppend(loc.columnValues,"#arguments[loc.key]#");
-				} else {
-					loc.columnValues = ListAppend(loc.columnValues,"'#arguments[loc.key]#'");
+			var loc = {};
+			loc.columnNames = "";
+			loc.columnValues = "";
+			for (loc.key in arguments) {
+				if(loc.key neq "table") {
+					loc.columnNames = ListAppend(loc.columnNames,this.adapter.quoteColumnName(loc.key));
+					if(IsNumeric(arguments[loc.key])) {
+						loc.columnValues = ListAppend(loc.columnValues,arguments[loc.key]);
+					} else if(IsBoolean(arguments[loc.key])) {
+						loc.columnValues = ListAppend(loc.columnValues,IIf(arguments[loc.key],1,0));
+					} else if(IsDate(arguments[loc.key])) {
+						loc.columnValues = ListAppend(loc.columnValues,"#arguments[loc.key]#");
+					} else {
+						loc.columnValues = ListAppend(loc.columnValues,"'#ReplaceNoCase(arguments[loc.key],"'","''","all")#'");
+					}
 				}
 			}
-		}
-		if(loc.columnNames != '') {
-			$execute("INSERT INTO #this.adapter.quoteTableName(LCase(arguments.table))# ( #loc.columnNames# ) VALUES ( #loc.columnValues# )");
-			announce("Added record to table #arguments.table#");
-		}
+			if(loc.columnNames != '') {
+				$execute("INSERT INTO #this.adapter.quoteTableName(LCase(arguments.table))# ( #loc.columnNames# ) VALUES ( #loc.columnValues# )");
+				announce("Added record to table #arguments.table#");
+			}
 		</cfscript>
 	</cffunction>
 
@@ -205,6 +212,8 @@
 					loc.update = loc.update & "#arguments[loc.key]#";
 				} else if(IsBoolean(arguments[loc.key])) {
 					loc.update = loc.update & "#IIf(arguments[loc.key],1,0)#";
+				} else if(IsDate(arguments[loc.key])) {
+					loc.update = loc.update & "#arguments[loc.key]#";
 				} else {
 					loc.update = loc.update & "'#arguments[loc.key]#'";
 				}

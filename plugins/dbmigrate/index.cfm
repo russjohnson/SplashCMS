@@ -1,5 +1,8 @@
 <cfsetting enablecfoutputonly="true">
 
+<cfset dbmigrateMeta = {}>
+<cfset dbmigrateMeta.version = "0.9">
+
 <cfif isDefined("Form.version")>
 	<cfset flashInsert(dbmigrateFeedback=application.wheels.plugins.dbmigrate.migrateTo(Form.version))>
 	<cfset redirectTo(back=true)>
@@ -8,6 +11,11 @@
 	<cfparam name="Form.migrationPrefix" default="">
 	<cfset flashInsert(dbmigrateFeedback2=application.wheels.plugins.dbmigrate.createMigration(Form.migrationName,Form.templateName,Form.migrationPrefix))>
 	<cfset redirectTo(back=true)>
+<cfelseif isDefined("url.migrateToVersion") And Len(Trim(url.migrateToVersion)) GT 0 And IsNumeric(url.migrateToVersion)>
+  <cfif isDefined("url.password") And Trim(url.password) EQ application.wheels.reloadPassword>
+  	<cfset flashInsert(dbmigrateFeedback=application.wheels.plugins.dbmigrate.migrateTo(url.migrateToVersion))>
+  	<cfset redirectTo(back=true)>
+  </cfif>
 </cfif>
 
 <!--- Get current database version --->
@@ -25,7 +33,7 @@
 
 <cfinclude template="css.cfm">
 
-<h1>DBMigrate</h1>
+<h1>DBMigrate v#dbmigrateMeta.version#</h1>
 <h2>inspired by Active Record migrations</h2>
 <p>Database Migrations are an easy way to build and alter your database structure using cfscript.</p>
 
@@ -96,6 +104,9 @@
 	 <option value="create-record">Create record</option>
 	 <option value="update-record">Update record</option>
 	 <option value="remove-record">Remove record</option>
+	 <option value="">-- Miscellaneous Operations --</option>
+	 <option value="announce">Announce operation</option>
+	 <option value="execute">Execute operation</option>
 	</select>
 	</p>
 	
